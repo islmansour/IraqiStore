@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/delivery.dart';
 
 class DeliveryMiniAdmin extends StatelessWidget {
-  const DeliveryMiniAdmin({Key? key}) : super(key: key);
+  final Delivery item;
+
+  const DeliveryMiniAdmin({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class DeliveryMiniAdmin extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'order number',
+                    item.orderId,
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ],
@@ -39,19 +42,19 @@ class DeliveryMiniAdmin extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text('account name',
+                    Text(item.accountId,
                         style: Theme.of(context).textTheme.headline3),
                   ],
                 ),
                 Column(
                   children: [
-                    Text('contact name',
+                    Text(item.contactId,
                         style: Theme.of(context).textTheme.headline3),
                   ],
                 ),
                 Column(
                   children: [
-                    Text(' phone',
+                    Text(item.status,
                         style: Theme.of(context).textTheme.headline3),
                   ],
                 )

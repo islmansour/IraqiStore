@@ -35,7 +35,10 @@ class _DeliverysListState extends State<DeliverysList> {
                                         .deliverys
                                         .length,
                                 itemBuilder: (context, index) {
-                                  return DeliveryMiniAdmin();
+                                  return DeliveryMiniAdmin(
+                                      item: Provider.of<CurrentDeliverysUpdate>(
+                                              context)
+                                          .deliverys[index]);
                                 }))))
               ])
         : const Text('אין הוברלות');

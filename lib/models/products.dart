@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'products.g.dart';
+
+@JsonSerializable()
 class Product {
   String id;
   String name;
@@ -25,4 +30,10 @@ class Product {
       required this.price,
       required this.discount,
       required this.created});
+
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
+
+  /// Connect the generated [_$PersonToJson] function to the `toJson` method.
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
 }

@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'quote.g.dart';
+
+@JsonSerializable()
 class Quote {
   String id;
   String quoteDate;
@@ -26,4 +31,8 @@ class Quote {
     this.town = "",
     this.wazeLink = "",
   });
+  factory Quote.fromJson(Map<String, dynamic> json) => _$QuoteFromJson(json);
+
+  /// Connect the generated [_$PersonToJson] function to the `toJson` method.
+  Map<String, dynamic> toJson() => _$QuoteToJson(this);
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/models/delivery.dart';
@@ -16,6 +18,7 @@ class HomeAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Random random = new Random();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: (() => {
@@ -26,14 +29,19 @@ class HomeAdmin extends StatelessWidget {
                         .quotes
                         .length)
                   Provider.of<CurrentOrdersUpdate>(context, listen: false)
-                      .updateOrder(Order(accountId: '123', contactId: '345,'))
+                      .updateOrder(Order(
+                          accountId: random.nextInt(100).toString(),
+                          contactId: random.nextInt(100).toString()))
                 else
                   {
                     Provider.of<CurrentQuotesUpdate>(context, listen: false)
-                        .updateQuote(
-                            Quote(accountId: '123', contactId: '345,')),
+                        .updateQuote(Quote(
+                            accountId: random.nextInt(100).toString(),
+                            contactId: random.nextInt(100).toString())),
                     Provider.of<CurrentDeliverysUpdate>(context, listen: false)
-                        .updateDelivery(Delivery(id: '1', accountId: '2'))
+                        .updateDelivery(Delivery(
+                            id: random.nextInt(100).toString(),
+                            accountId: random.nextInt(100).toString()))
                   }
               })),
       body: SingleChildScrollView(
