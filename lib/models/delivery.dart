@@ -31,9 +31,9 @@ class Delivery {
   Map<String, dynamic> toJson() => _$DeliveryToJson(this);
 }
 
-List<Delivery> productFromJson(String str) {
+List<Delivery> deliveryFromJson(String str) {
   return List<Delivery>.from(json.decode(str).map((x) => Delivery.fromJson(x)));
 }
 
-String productToJson(List<Delivery> data) =>
+String deliveryToJson(List<Delivery> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/quote.dart';
-import 'package:provider/provider.dart';
 
+import '../services/django_services.dart';
 import '../widgets/quote_mini_admin.dart';
 
 class QuotesList extends StatefulWidget {
@@ -14,31 +14,33 @@ class QuotesList extends StatefulWidget {
 class _QuotesListState extends State<QuotesList> {
   @override
   Widget build(BuildContext context) {
-    return Provider.of<CurrentQuotesUpdate>(context).quotes.isNotEmpty
-        ? ExpansionTile(
-            title: Text(
-                'הצעות ' +
-                    Provider.of<CurrentQuotesUpdate>(context)
-                        .quotes
-                        .length
-                        .toString(),
-                style: Theme.of(context).textTheme.headline1),
-            children: [
+    return FutureBuilder<List<Quote>?>(
+        future: DjangoServices().getQuotes(),
+        builder: (context, AsyncSnapshot<List<Quote>?> orderSnap) {
+          if (orderSnap.connectionState == ConnectionState.none &&
+              orderSnap.hasData == null) {
+            return Container();
+          }
+          int len = orderSnap.data?.length ?? 0;
+
+          return ExpansionTile(
+              title: Text('הצעות ' + len.toString(),
+                  style: Theme.of(context).textTheme.headline1),
+              children: [
                 ListTile(
                     title: SizedBox(
                         height: MediaQuery.of(context).size.height / 2,
                         child: Scrollbar(
                             child: ListView.builder(
+                                scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount:
-                                    Provider.of<CurrentQuotesUpdate>(context)
-                                        .quotes
-                                        .length,
+                                itemCount: orderSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  return QuoteMiniAdmin();
+                                  return QuoteMiniAdmin(
+                                      item: orderSnap.data![index]);
                                 }))))
-              ])
-        : const Text('אין הצעות');
+              ]);
+        });
   }
 }
 

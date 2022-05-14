@@ -19,19 +19,7 @@ class _OrdersListState extends State<OrdersList> {
   @override
   void initState() {
     super.initState();
-    //  getOrders();
   }
-
-/*   getOrders() async {
-    myOrders = await DjangoServices().getOrders();
-    if (myOrders != null) {
-      setState(() {
-        isLoaded = true;
-        Provider.of<CurrentOrdersUpdate>(context, listen: false).orders =
-            myOrders!;
-      });
-    }
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +45,8 @@ class _OrdersListState extends State<OrdersList> {
                                 shrinkWrap: true,
                                 itemCount: orderSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
+                                  Provider.of<CurrentOrdersUpdate>(context)
+                                      .orders = orderSnap.data;
                                   return OrderMiniAdmin(
                                       item: orderSnap.data![index]);
                                 }))))
@@ -66,9 +56,9 @@ class _OrdersListState extends State<OrdersList> {
 }
 
 class CurrentOrdersUpdate extends ChangeNotifier {
-  List<Order> orders = [];
+  List<Order>? orders;
   void updateOrder(Order order) {
-    orders.add((order));
+    orders?.add((order));
     notifyListeners();
   }
 }

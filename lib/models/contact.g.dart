@@ -1,33 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'quote.dart';
+part of 'contact.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Quote _$QuoteFromJson(Map<String, dynamic> json) => Quote(
-      accountId: json['accountId'] as int?,
-      contactId: json['contactId'] as int?,
+Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
+      active: json['active'] as bool?,
       createdBy: json['createdBy'] as int?,
+      email: json['email'] as String?,
       id: json['id'] as int?,
-      notes: json['notes'] as String?,
-      status: json['status'] as String?,
+      phone: json['phone'] as String?,
+      phone2: json['phone2'] as String?,
+      pobox: json['pobox'] as int?,
       street: json['street'] as String?,
       street2: json['street2'] as String?,
       town: json['town'] as String?,
-      wazeLink: json['wazeLink'] as String?,
+      zip: json['zip'] as int?,
     );
 
-Map<String, dynamic> _$QuoteToJson(Quote instance) => <String, dynamic>{
+Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'id': instance.id,
-      'accountId': instance.accountId,
-      'contactId': instance.contactId,
-      'status': instance.status,
+      'phone': instance.phone,
+      'phone2': instance.phone2,
       'street': instance.street,
       'street2': instance.street2,
+      'pobox': instance.pobox,
+      'zip': instance.zip,
       'town': instance.town,
-      'wazeLink': instance.wazeLink,
-      'notes': instance.notes,
+      'email': instance.email,
+      'active': instance.active,
       'createdBy': instance.createdBy,
     };

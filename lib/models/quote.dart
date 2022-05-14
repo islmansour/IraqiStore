@@ -5,32 +5,32 @@ part 'quote.g.dart';
 
 @JsonSerializable()
 class Quote {
-  String id;
-  String quoteDate;
-  String accountId;
-  String contactId;
-  String status;
-  String street;
-  String street2;
-  String town;
-  String wazeLink;
-  String notes;
-  String createdBy;
-  String created;
+  int? id;
+  // String quoteDate;
+  int? accountId;
+  int? contactId;
+  String? status;
+  String? street;
+  String? street2;
+  String? town;
+  String? wazeLink;
+  String? notes;
+  int? createdBy;
+  //String created;
 
   Quote({
-    this.accountId = "",
-    this.contactId = "",
-    this.created = "",
-    this.createdBy = "",
-    this.id = "",
-    this.notes = "",
-    this.quoteDate = "",
-    this.status = "",
-    this.street = "",
-    this.street2 = "",
-    this.town = "",
-    this.wazeLink = "",
+    this.accountId,
+    this.contactId,
+    //  this.created ,
+    this.createdBy,
+    this.id,
+    this.notes,
+    // this.quoteDate ,
+    this.status,
+    this.street,
+    this.street2,
+    this.town,
+    this.wazeLink,
   });
   factory Quote.fromJson(Map<String, dynamic> json) => _$QuoteFromJson(json);
 

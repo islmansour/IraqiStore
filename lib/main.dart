@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/delivery.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/components/quote.dart';
@@ -28,6 +29,9 @@ void main() {
       ),
       ListenableProvider<CurrentDeliverysUpdate>(
         create: (_) => CurrentDeliverysUpdate(),
+      ),
+      ListenableProvider<CurrentAccountsUpdate>(
+        create: (_) => CurrentAccountsUpdate(),
       ),
     ], child: const IraqiStoreApp()),
   );

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/models/orders.dart';
+import 'package:provider/provider.dart';
+import '../models/account.dart';
 
 class OrderMiniAdmin extends StatelessWidget {
   final Order item;
@@ -21,6 +24,14 @@ class OrderMiniAdmin extends StatelessWidget {
 
 
     */
+
+    Account? currentAccount;
+
+    currentAccount = Provider.of<CurrentAccountsUpdate>(context)
+        .accounts
+        ?.where((f) => f.id == item.accountId)
+        .first;
+
     return Container(
         padding: const EdgeInsets.all(15),
         height: 120,
@@ -43,7 +54,7 @@ class OrderMiniAdmin extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text('account name',
+                    Text(currentAccount?.name ?? "",
                         style: Theme.of(context).textTheme.headline3),
                   ],
                 ),
@@ -55,7 +66,7 @@ class OrderMiniAdmin extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(' phone',
+                    Text(currentAccount?.phone ?? "",
                         style: Theme.of(context).textTheme.headline3),
                   ],
                 )
