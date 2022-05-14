@@ -1,32 +1,33 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:convert';
 
 part 'orders.g.dart';
 
 @JsonSerializable()
 class Order {
-  String id;
+  int id;
   String orderDate;
-  String accountId;
-  String contactId;
+  int accountId;
+  int contactId;
   String status;
   String street;
   String street2;
   String town;
   String wazeLink;
   String notes;
-  String quoteId;
+  int quoteId;
   String createdBy;
-  String created;
+//  String created;
 
   Order(
-      {this.accountId = "",
-      this.contactId = "",
-      this.created = "",
+      {this.accountId = 0,
+      this.contactId = 0,
+      //     this.created = "",
       this.createdBy = "",
-      this.id = "",
+      this.id = 0,
       this.notes = "",
       this.orderDate = "",
-      this.quoteId = "",
+      this.quoteId = 0,
       this.status = "",
       this.street = "",
       this.street2 = "",
@@ -38,3 +39,10 @@ class Order {
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 }
+
+List<Order> orderFromJson(String str) {
+  return List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
+}
+
+String orderToJson(List<Order> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

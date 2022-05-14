@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           onPressed: (() => {
                 Provider.of<CurrentOrdersUpdate>(context, listen: false)
-                    .updateOrder(Order(accountId: '123', contactId: '345,'))
+                    .updateOrder(Order(accountId: 123, contactId: 345))
 /*                 Provider.of<CurrentNewsUpdates>(context, listen: false)
                     .changeNews(
                         News('2', 'added new news', true, DateTime.now())) */

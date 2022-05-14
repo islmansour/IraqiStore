@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/orders.dart';
 
 class OrderMiniAdmin extends StatelessWidget {
-  const OrderMiniAdmin({Key? key}) : super(key: key);
+  final Order item;
+
+  const OrderMiniAdmin({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class OrderMiniAdmin extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'order number',
+                    item.id.toString(),
                     style: Theme.of(context).textTheme.headline2,
                   ),
                   Text('date', style: Theme.of(context).textTheme.subtitle1),
@@ -62,7 +65,7 @@ class OrderMiniAdmin extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text('order status'),
+                    Text(item.status),
                   ],
                 ),
                 Column(

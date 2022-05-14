@@ -7,14 +7,13 @@ part of 'orders.dart';
 // **************************************************************************
 
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
-      accountId: json['accountId'] as String? ?? "",
-      contactId: json['contactId'] as String? ?? "",
-      created: json['created'] as String? ?? "",
+      accountId: json['accountId'] as int? ?? 0,
+      contactId: json['contactId'] as int? ?? 0,
       createdBy: json['createdBy'] as String? ?? "",
-      id: json['id'] as String? ?? "",
+      id: json['id'] as int? ?? 0,
       notes: json['notes'] as String? ?? "",
       orderDate: json['orderDate'] as String? ?? "",
-      quoteId: json['quoteId'] as String? ?? "",
+      quoteId: json['quoteId'] as int? ?? 0,
       status: json['status'] as String? ?? "",
       street: json['street'] as String? ?? "",
       street2: json['street2'] as String? ?? "",
@@ -35,5 +34,4 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'notes': instance.notes,
       'quoteId': instance.quoteId,
       'createdBy': instance.createdBy,
-      'created': instance.created,
     };

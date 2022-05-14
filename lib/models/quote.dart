@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:convert';
 
 part 'quote.g.dart';
 
@@ -36,3 +37,10 @@ class Quote {
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$QuoteToJson(this);
 }
+
+List<Quote> quoteFromJson(String str) {
+  return List<Quote>.from(json.decode(str).map((x) => Quote.fromJson(x)));
+}
+
+String quoteToJson(List<Quote> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'products.g.dart';
@@ -37,3 +39,10 @@ class Product {
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
+
+List<Product> productFromJson(String str) {
+  return List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+}
+
+String productToJson(List<Product> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

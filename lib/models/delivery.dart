@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'delivery.g.dart';
@@ -28,3 +30,10 @@ class Delivery {
 
   Map<String, dynamic> toJson() => _$DeliveryToJson(this);
 }
+
+List<Delivery> productFromJson(String str) {
+  return List<Delivery>.from(json.decode(str).map((x) => Delivery.fromJson(x)));
+}
+
+String productToJson(List<Delivery> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

@@ -13,9 +13,14 @@ import '../components/order.dart';
 import '../models/news.dart';
 import '../models/orders.dart';
 
-class HomeAdmin extends StatelessWidget {
+class HomeAdmin extends StatefulWidget {
   const HomeAdmin({Key? key}) : super(key: key);
 
+  @override
+  State<HomeAdmin> createState() => _HomeAdminState();
+}
+
+class _HomeAdminState extends State<HomeAdmin> {
   @override
   Widget build(BuildContext context) {
     Random random = new Random();
@@ -30,8 +35,8 @@ class HomeAdmin extends StatelessWidget {
                         .length)
                   Provider.of<CurrentOrdersUpdate>(context, listen: false)
                       .updateOrder(Order(
-                          accountId: random.nextInt(100).toString(),
-                          contactId: random.nextInt(100).toString()))
+                          accountId: random.nextInt(100),
+                          contactId: random.nextInt(100)))
                 else
                   {
                     Provider.of<CurrentQuotesUpdate>(context, listen: false)
