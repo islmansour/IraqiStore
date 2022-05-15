@@ -2,41 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/navigation.dart';
 
-class BottomNav extends StatelessWidget {
+class AdminBottomNav extends StatelessWidget {
   final int activeButtonIndex;
 
-  const BottomNav(this.activeButtonIndex);
+  const AdminBottomNav(this.activeButtonIndex);
 
   @override
   Widget build(BuildContext context) {
     NavigationController navigation =
         Provider.of<NavigationController>(context, listen: false);
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       currentIndex: activeButtonIndex,
       onTap: (buttonIndex) {
         switch (buttonIndex) {
           case 0:
             navigation.changeScreen('/');
             break;
-          case 2:
-            navigation.changeScreen('/orders');
-            break;
           case 1:
-            navigation.changeScreen('/products');
+            navigation.changeScreen('/product-admin');
             break;
-          case 3:
+
+          case 2:
             navigation.changeScreen('/manage');
             break;
-          case 4:
+          case 3:
             navigation.changeScreen('/chat');
             break;
         }
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.help_center), label: 'Products'),
-        BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Orders'),
+        BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Products'),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Manage'),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
       ],

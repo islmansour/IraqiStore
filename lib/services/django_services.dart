@@ -7,7 +7,7 @@ import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import '../models/orders.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:convert' show utf8;
 import '../models/products.dart';
 import '../models/quote.dart';
 import '../models/quote_item.dart';
@@ -20,6 +20,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return orderFromJson(json);
     }
     return null;
@@ -33,6 +34,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return orderItemFromJson(json);
     }
     return null;
@@ -45,6 +47,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return quoteFromJson(json);
     }
     return null;
@@ -58,6 +61,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return quoteItemFromJson(json);
     }
     return null;
@@ -70,6 +74,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return productFromJson(json);
     }
     return null;
@@ -82,6 +87,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return newsFromJson(json);
     }
     return null;
@@ -89,11 +95,12 @@ class DjangoServices {
 
   Future<List<Delivery>?> getDeliverys() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/delivery_list');
+    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/news_delivery');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return deliveryFromJson(json);
     }
     return null;
@@ -106,6 +113,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return accountFromJson(json);
     }
     return null;
@@ -118,6 +126,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return contactFromJson(json);
     }
     return null;
@@ -130,6 +139,7 @@ class DjangoServices {
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       String json = response.body;
+      json = utf8.decode(json.runes.toList());
       return lovFromJson(json);
     }
     return null;

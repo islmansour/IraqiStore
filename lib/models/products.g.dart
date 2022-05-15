@@ -7,18 +7,17 @@ part of 'products.dart';
 // **************************************************************************
 
 Product _$ProductFromJson(Map<String, dynamic> json) => Product(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      desc: json['desc'] as String,
-      alias: json['alias'] as String,
-      category: json['category'] as String,
-      subCategory: json['subCategory'] as String,
-      img: json['img'] as String,
-      createdBy: json['createdBy'] as String,
-      active: json['active'] as bool,
-      price: (json['price'] as num).toDouble(),
-      discount: (json['discount'] as num).toDouble(),
-      created: DateTime.parse(json['created'] as String),
+      active: json['active'] as bool?,
+      alias: json['alias'] as String?,
+      category: json['category'] as String?,
+      createdBy: json['createdBy'] as int?,
+      desc: json['desc'] as String?,
+      discount: (json['discount'] as num?)?.toDouble(),
+      id: json['id'] as int?,
+      img: json['img'] as String?,
+      name: json['name'] as String?,
+      price: (json['price'] as num?)?.toDouble(),
+      subCategory: json['subCategory'] as String?,
     );
 
 Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
@@ -32,6 +31,5 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'subCategory': instance.subCategory,
       'price': instance.price,
       'discount': instance.discount,
-      'created': instance.created.toIso8601String(),
       'active': instance.active,
     };

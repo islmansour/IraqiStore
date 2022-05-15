@@ -16,9 +16,6 @@ class Home extends StatelessWidget {
           onPressed: (() => {
                 Provider.of<CurrentOrdersUpdate>(context, listen: false)
                     .updateOrder(Order(accountId: 123, contactId: 345))
-/*                 Provider.of<CurrentNewsUpdates>(context, listen: false)
-                    .changeNews(
-                        News('2', 'added new news', true, DateTime.now())) */
               })),
       body: OrdersList(), //NewsList(),
       appBar: AppBar(

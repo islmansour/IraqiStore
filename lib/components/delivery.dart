@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/delivery.dart';
 import 'package:provider/provider.dart';
 
+import '../services/django_services.dart';
 import '../widgets/delivery_min_admin.dart';
 
 class DeliverysList extends StatefulWidget {
@@ -14,41 +15,42 @@ class DeliverysList extends StatefulWidget {
 class _DeliverysListState extends State<DeliverysList> {
   @override
   Widget build(BuildContext context) {
-    return Provider.of<CurrentDeliverysUpdate>(context).deliverys.isNotEmpty
-        ? ExpansionTile(
-            title: Text(
-                'הובלות ' +
-                    Provider.of<CurrentDeliverysUpdate>(context)
-                        .deliverys
-                        .length
-                        .toString(),
-                style: Theme.of(context).textTheme.headline1),
-            children: [
+    return FutureBuilder<List<Delivery>?>(
+        future: DjangoServices().getDeliverys(),
+        builder: (context, AsyncSnapshot<List<Delivery>?> deliverySnap) {
+          if (deliverySnap.connectionState == ConnectionState.none &&
+              deliverySnap.hasData == null) {
+            return Container();
+          }
+          int len = deliverySnap.data?.length ?? 0;
+
+          return ExpansionTile(
+              title: Text('הובלות ' + len.toString(),
+                  style: Theme.of(context).textTheme.headline1),
+              children: [
                 ListTile(
                     title: SizedBox(
                         height: MediaQuery.of(context).size.height / 2,
                         child: Scrollbar(
                             child: ListView.builder(
+                                scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount:
-                                    Provider.of<CurrentDeliverysUpdate>(context)
-                                        .deliverys
-                                        .length,
+                                itemCount: deliverySnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
+                                  Provider.of<CurrentDeliverysUpdate>(context)
+                                      .deliverys = deliverySnap.data;
                                   return DeliveryMiniAdmin(
-                                      item: Provider.of<CurrentDeliverysUpdate>(
-                                              context)
-                                          .deliverys[index]);
+                                      item: deliverySnap.data![index]);
                                 }))))
-              ])
-        : const Text('אין הוברלות');
+              ]);
+        });
   }
 }
 
 class CurrentDeliverysUpdate extends ChangeNotifier {
-  List<Delivery> deliverys = [];
+  List<Delivery>? deliverys = [];
   void updateDelivery(Delivery delivery) {
-    deliverys.add((delivery));
+    deliverys?.add((delivery));
     notifyListeners();
   }
 }

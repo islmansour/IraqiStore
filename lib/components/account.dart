@@ -33,7 +33,7 @@ class _AccountsListState extends State<AccountsList> {
           int len = accountSnap.data?.length ?? 0;
 
           return ExpansionTile(
-              title: Text('הזמנות ' + len.toString(),
+              title: Text('לקוחות ' + len.toString(),
                   style: Theme.of(context).textTheme.headline1),
               children: [
                 ListTile(
@@ -47,7 +47,6 @@ class _AccountsListState extends State<AccountsList> {
                                 itemBuilder: (context, index) {
                                   Provider.of<CurrentAccountsUpdate>(context)
                                       .accounts = accountSnap.data;
-                                  print(accountSnap.data.toString());
                                   return AccountMiniAdmin(
                                       item: accountSnap.data![index]);
                                 }))))

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
+import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/delivery.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/components/quote.dart';
-import 'package:hardwarestore/models/news.dart';
+import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
+import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
 import 'components/news.dart';
-import 'models/news.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -32,6 +34,12 @@ void main() {
       ),
       ListenableProvider<CurrentAccountsUpdate>(
         create: (_) => CurrentAccountsUpdate(),
+      ),
+      ListenableProvider<CurrentContactsUpdate>(
+        create: (_) => CurrentContactsUpdate(),
+      ),
+      ListenableProvider<CurrentProductsUpdate>(
+        create: (_) => CurrentProductsUpdate(),
       ),
     ], child: const IraqiStoreApp()),
   );
@@ -85,6 +93,12 @@ class IraqiStoreApp extends StatelessWidget {
               const MaterialPage(child: Orders()),
             if (navigation.screenName == '/products')
               const MaterialPage(child: Products()),
+            if (navigation.screenName == '/manage')
+              const MaterialPage(child: ManageAdminScreen()),
+            if (navigation.screenName == '/chat')
+              const MaterialPage(child: Chat()),
+            if (navigation.screenName == '/product-admin')
+              const MaterialPage(child: ProductsAdminScreen()),
           ],
           onPopPage: (route, result) {
             bool popStatus = (route.didPop(result));

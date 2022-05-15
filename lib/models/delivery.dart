@@ -6,24 +6,24 @@ part 'delivery.g.dart';
 
 @JsonSerializable()
 class Delivery {
-  String id;
-  String accountId;
-  String contactId;
-  String status;
-  String wazeLink;
-  String approvalLink;
-  String date;
-  String orderId;
+  int? id;
+  int? accountId;
+  int? contactId;
+  String? status;
+  String? wazeLink;
+  String? approvalLink;
+  String? date;
+  int? orderId;
 
   Delivery(
-      {this.id = "",
-      this.orderId = "",
-      this.accountId = "",
-      this.contactId = "",
-      this.approvalLink = "",
-      this.date = "",
-      this.status = "",
-      this.wazeLink = ""});
+      {this.id,
+      this.orderId,
+      this.accountId,
+      this.contactId,
+      this.approvalLink,
+      this.date,
+      this.status,
+      this.wazeLink});
 
   factory Delivery.fromJson(Map<String, dynamic> json) =>
       _$DeliveryFromJson(json);
