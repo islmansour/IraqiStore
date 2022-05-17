@@ -3,6 +3,7 @@ import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:provider/provider.dart';
 import '../models/account.dart';
+import '../screens/admin/order_details_admin.dart';
 
 class OrderMiniAdmin extends StatelessWidget {
   final Order item;
@@ -32,61 +33,73 @@ class OrderMiniAdmin extends StatelessWidget {
         ?.where((f) => f.id == item.accountId)
         .first;
 
-    return Container(
-        padding: const EdgeInsets.all(15),
-        height: 120,
-        width: double.infinity,
-        child: Column(
-          children: [
-            Row(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OrderDetailAdmin(
+                    item: item,
+                  )),
+        );
+        // Goto a single order screen with we display order details and bellow that the Order Items.
+      },
+      child: Container(
+          padding: const EdgeInsets.all(15),
+          height: 120,
+          width: double.infinity,
+          child: Column(
+            children: [
+              Row(children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.id.toString(),
+                      style: Theme.of(context).textTheme.headline2,
+                    ),
+                    Text('date', style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
+              ]),
+              Row(
                 children: [
-                  Text(
-                    item.id.toString(),
-                    style: Theme.of(context).textTheme.headline2,
+                  Column(
+                    children: [
+                      Text(currentAccount?.name ?? "",
+                          style: Theme.of(context).textTheme.headline3),
+                    ],
                   ),
-                  Text('date', style: Theme.of(context).textTheme.subtitle1),
+                  Column(
+                    children: [
+                      Text('contact name',
+                          style: Theme.of(context).textTheme.headline3),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(currentAccount?.phone ?? "",
+                          style: Theme.of(context).textTheme.headline3),
+                    ],
+                  )
                 ],
               ),
-            ]),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Text(currentAccount?.name ?? "",
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('contact name',
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(currentAccount?.phone ?? "",
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Text(item.status),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('delivery status'),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ));
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      Text(item.status),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('delivery status'),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          )),
+    );
   }
 }

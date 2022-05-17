@@ -5,11 +5,13 @@ import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import '../components/delivery.dart';
 import 'package:provider/provider.dart';
-
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import '../components/navbaradmin.dart';
 import '../components/order.dart';
 import '../models/account.dart';
 import '../models/contact.dart';
+import '../services/imgbb.dart';
+import '../widgets/admin_bubble_button.dart';
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class _HomeAdminState extends State<HomeAdmin> {
     _loadAccounts(context);
     _loadContacts(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (() => {})),
+      floatingActionButton: AdminBubbleButtons(),
       body: SingleChildScrollView(
           child: Column(
               mainAxisSize: MainAxisSize.max,

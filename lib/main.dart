@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
+import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
 import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/delivery.dart';
 import 'package:hardwarestore/components/order.dart';
@@ -12,7 +14,7 @@ import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
 import 'components/news.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(
@@ -41,6 +43,12 @@ void main() {
       ListenableProvider<CurrentProductsUpdate>(
         create: (_) => CurrentProductsUpdate(),
       ),
+      ListenableProvider<CurrentOrderItemUpdate>(
+        create: (_) => CurrentOrderItemUpdate(),
+      ),
+      ListenableProvider<CurrentQuoteItemUpdate>(
+        create: (_) => CurrentQuoteItemUpdate(),
+      ),
     ], child: const IraqiStoreApp()),
   );
 }
@@ -54,6 +62,9 @@ class IraqiStoreApp extends StatelessWidget {
     NavigationController navigation =
         Provider.of<NavigationController>(context);
     return MaterialApp(
+        localizationsDelegates:
+            AppLocalizations.localizationsDelegates, // <- here
+        // supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
           // Define the default brightness and colors.
           //brightness: Brightness.dark,
@@ -77,11 +88,11 @@ class IraqiStoreApp extends StatelessWidget {
             subtitle1: TextStyle(fontSize: 12.0, color: Colors.grey),
           ),
         ),
-        localizationsDelegates: const [
-          GlobalCupertinoLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
+        // localizationsDelegates: const [
+        //   GlobalCupertinoLocalizations.delegate,
+        //   GlobalMaterialLocalizations.delegate,
+        //   GlobalWidgetsLocalizations.delegate,
+        // ],
         supportedLocales: const [
           Locale("he", "HE"), // OR Locale('ar', 'AE') OR Other RTL locales
         ],

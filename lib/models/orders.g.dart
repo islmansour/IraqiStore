@@ -12,7 +12,6 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       createdBy: json['createdBy'] as String? ?? "",
       id: json['id'] as int? ?? 0,
       notes: json['notes'] as String? ?? "",
-      orderDate: json['orderDate'] as String? ?? "",
       quoteId: json['quoteId'] as int? ?? 0,
       status: json['status'] as String? ?? "",
       street: json['street'] as String? ?? "",
@@ -23,7 +22,6 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'id': instance.id,
-      'orderDate': instance.orderDate,
       'accountId': instance.accountId,
       'contactId': instance.contactId,
       'status': instance.status,

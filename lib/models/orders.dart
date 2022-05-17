@@ -6,7 +6,7 @@ part 'orders.g.dart';
 @JsonSerializable()
 class Order {
   int id;
-  String orderDate;
+  // String orderDate;
   int accountId;
   int contactId;
   String status;
@@ -26,7 +26,7 @@ class Order {
       this.createdBy = "",
       this.id = 0,
       this.notes = "",
-      this.orderDate = "",
+      //this.orderDate = "",
       this.quoteId = 0,
       this.status = "",
       this.street = "",

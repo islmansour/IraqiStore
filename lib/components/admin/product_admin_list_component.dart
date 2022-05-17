@@ -39,8 +39,12 @@ class _ProductsListState extends State<ProductsList> {
                       shrinkWrap: true,
                       itemCount: productSnap.data?.length ?? 0,
                       itemBuilder: (context, index) {
-                        Provider.of<CurrentProductsUpdate>(context).products =
-                            productSnap.data;
+                        if (Provider.of<CurrentProductsUpdate>(context)
+                                .products
+                                ?.length !=
+                            productSnap.data?.length)
+                          Provider.of<CurrentProductsUpdate>(context).products =
+                              productSnap.data;
                         return ProductMiniAdmin(item: productSnap.data![index]);
                       })));
         });

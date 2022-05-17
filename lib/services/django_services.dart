@@ -7,12 +7,16 @@ import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import '../models/orders.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show utf8;
+import 'dart:convert' show jsonEncode, utf8;
 import '../models/products.dart';
 import '../models/quote.dart';
 import '../models/quote_item.dart';
 
 class DjangoServices {
+  static const headers = {
+    'content-type': 'application/json',
+  };
+
   Future<List<Order>?> getOrders() async {
     var client = http.Client();
     var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/order_list');
@@ -26,10 +30,29 @@ class DjangoServices {
     return null;
   }
 
-  Future<List<OrderItem>?> getOrderItems() async {
+  Future<bool>? upsertOrder(Order order) async {
     var client = http.Client();
-    var uri =
-        Uri.parse('http://139.162.139.161:8000/IraqiStore/order_item_list');
+    var uri = Uri.parse(
+        'http://127.0.0.1:8000/IraqiStore/upsert_order/' + order.id.toString());
+
+    var response = await client
+        .post(uri, headers: headers, body: jsonEncode(order.toJson()))
+        .then((value) {
+      if (value.statusCode == 201) {
+        return true;
+      } else {
+        print('Error occured: ' + value.statusCode.toString());
+      }
+    });
+
+    return true;
+  }
+
+  Future<List<OrderItem>?> getOrderItems(String orderId) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'http://139.162.139.161:8000/IraqiStore/order_item_list/' +
+            orderId.toString());
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -53,10 +76,29 @@ class DjangoServices {
     return null;
   }
 
-  Future<List<QuoteItem>?> getQuoteItems() async {
+  Future<bool>? upsertQuote(Quote quote) async {
     var client = http.Client();
-    var uri =
-        Uri.parse('http://139.162.139.161:8000/IraqiStore/quote_item_list');
+    var uri = Uri.parse(
+        'http://127.0.0.1:8000/IraqiStore/upsert_quote/' + quote.id.toString());
+
+    var response = await client
+        .post(uri, headers: headers, body: jsonEncode(quote.toJson()))
+        .then((value) {
+      if (value.statusCode == 201) {
+        return true;
+      } else {
+        print('Error occured: ' + value.statusCode.toString());
+      }
+    });
+
+    return true;
+  }
+
+  Future<List<QuoteItem>?> getQuoteItems(String quoteId) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'http://139.162.139.161:8000/IraqiStore/quote_item_list_by_quote/' +
+            quoteId);
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -78,6 +120,25 @@ class DjangoServices {
       return productFromJson(json);
     }
     return null;
+  }
+
+  Future<bool>? upsertProduct(Product product) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/upsert_product/' +
+        product.id.toString());
+
+    var response = await client
+        .post(uri, headers: headers, body: jsonEncode(product.toJson()))
+        .then((value) {
+      if (value.statusCode == 201) {
+        print('success 201');
+        return true;
+      } else {
+        print('Error occured:L ' + value.statusCode.toString());
+      }
+    });
+
+    return true;
   }
 
   Future<List<News>?> getNews() async {
@@ -117,6 +178,25 @@ class DjangoServices {
       return accountFromJson(json);
     }
     return null;
+  }
+
+  Future<bool>? upsertAccount(Account account) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/upsert_account/' +
+        account.id.toString());
+
+    var response = await client
+        .post(uri, headers: headers, body: jsonEncode(account.toJson()))
+        .then((value) {
+      if (value.statusCode == 201) {
+        print('success 201');
+        return true;
+      } else {
+        print('Error occured:L ' + value.statusCode.toString());
+      }
+    });
+
+    return true;
   }
 
   Future<List<Contact>?> getContacts() async {
