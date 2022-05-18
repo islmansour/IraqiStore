@@ -7,8 +7,8 @@ part 'contact.g.dart';
 @JsonSerializable()
 class Contact {
   int? id;
-  // String? first_name;
-  // String? last_name;
+  String? first_name;
+  String? last_name;
   String? phone;
   String? phone2;
   String? street;

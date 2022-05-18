@@ -18,10 +18,14 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
       street2: json['street2'] as String?,
       town: json['town'] as String?,
       zip: json['zip'] as int?,
-    );
+    )
+      ..first_name = json['first_name'] as String?
+      ..last_name = json['last_name'] as String?;
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'id': instance.id,
+      'first_name': instance.first_name,
+      'last_name': instance.last_name,
       'phone': instance.phone,
       'phone2': instance.phone2,
       'street': instance.street,

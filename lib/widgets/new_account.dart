@@ -3,10 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:flutter_otp/flutter_otp.dart';
+
+FlutterOtp otp = FlutterOtp();
 
 class CreateNewAccountForm extends StatefulWidget {
   CreateNewAccountForm({Key? key}) : super(key: key);
-
+  String phoneNumber = "548004990"; //enter your 10 digit number
+  int minNumber = 1000;
+  int maxNumber = 6000;
+  String countryCode = "+972";
   @override
   State<CreateNewAccountForm> createState() => _CreateNewAccountFormState();
 }
@@ -47,6 +53,22 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
             key: _formKey,
             child: ListView(
               children: <Widget>[
+                TextButton(
+                  child: Text(
+                    "Send",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onPressed: () {
+                    // call sentOtp function and pass the parameters
+
+                    otp.sendOtp(
+                        '548004990',
+                        'OTP is : pass the generated otp here ',
+                        1000,
+                        9999,
+                        '+972');
+                  },
+                ),
                 TextFormField(
                   onSaved: (String? value) {
                     _data.name = value;
