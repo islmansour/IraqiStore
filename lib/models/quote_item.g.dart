@@ -7,7 +7,7 @@ part of 'quote_item.dart';
 // **************************************************************************
 
 QuoteItem _$QuoteItemFromJson(Map<String, dynamic> json) => QuoteItem(
-      createdBy: json['createdBy'] as int?,
+      created_by: json['created_by'] as int?,
       id: json['id'] as int?,
       notes: json['notes'] as String?,
       price: (json['price'] as num?)?.toDouble(),
@@ -20,6 +20,6 @@ Map<String, dynamic> _$QuoteItemToJson(QuoteItem instance) => <String, dynamic>{
       'productId': instance.productId,
       'price': instance.price,
       'quantity': instance.quantity,
-      'createdBy': instance.createdBy,
+      'created_by': instance.created_by,
       'notes': instance.notes,
     };

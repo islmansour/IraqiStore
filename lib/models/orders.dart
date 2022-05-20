@@ -16,14 +16,14 @@ class Order {
   String wazeLink;
   String notes;
   int quoteId;
-  String createdBy;
+  int? created_by;
 //  String created;
 
   Order(
       {this.accountId = 0,
       this.contactId = 0,
       //     this.created = "",
-      this.createdBy = "",
+      this.created_by,
       this.id = 0,
       this.notes = "",
       //this.orderDate = "",

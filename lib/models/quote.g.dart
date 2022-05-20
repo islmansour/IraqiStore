@@ -9,7 +9,7 @@ part of 'quote.dart';
 Quote _$QuoteFromJson(Map<String, dynamic> json) => Quote(
       accountId: json['accountId'] as int?,
       contactId: json['contactId'] as int?,
-      createdBy: json['createdBy'] as int?,
+      created_by: json['created_by'] as int?,
       id: json['id'] as int?,
       notes: json['notes'] as String?,
       status: json['status'] as String?,
@@ -29,5 +29,5 @@ Map<String, dynamic> _$QuoteToJson(Quote instance) => <String, dynamic>{
       'town': instance.town,
       'wazeLink': instance.wazeLink,
       'notes': instance.notes,
-      'createdBy': instance.createdBy,
+      'created_by': instance.created_by,
     };

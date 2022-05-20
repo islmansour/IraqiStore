@@ -9,7 +9,7 @@ part of 'orders.dart';
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       accountId: json['accountId'] as int? ?? 0,
       contactId: json['contactId'] as int? ?? 0,
-      createdBy: json['createdBy'] as String? ?? "",
+      created_by: json['created_by'] as int? ?? 0,
       id: json['id'] as int? ?? 0,
       notes: json['notes'] as String? ?? "",
       quoteId: json['quoteId'] as int? ?? 0,
@@ -31,5 +31,5 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'wazeLink': instance.wazeLink,
       'notes': instance.notes,
       'quoteId': instance.quoteId,
-      'createdBy': instance.createdBy,
+      'created_by': instance.created_by,
     };

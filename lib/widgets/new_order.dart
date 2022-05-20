@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:provider/provider.dart';
 
+import '../components/user.dart';
 import '../models/orders.dart';
 
 class CreateNewOrderForm extends StatefulWidget {
@@ -51,6 +53,10 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                     if (value != "") _data.accountId = int.parse(value!);
                     _data.id = 0;
                     _data.quoteId = 1;
+                    _data.created_by =
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser
+                            ?.id;
                   },
                   decoration: const InputDecoration(
                       hintText: 'account', labelText: 'Account'),

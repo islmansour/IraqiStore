@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/services/django_services.dart';
-import 'package:flutter_otp/flutter_otp.dart';
-
-FlutterOtp otp = FlutterOtp();
+import 'package:provider/provider.dart';
+import '../components/user.dart';
+import '../screens/opt_login.dart';
 
 class CreateNewAccountForm extends StatefulWidget {
   CreateNewAccountForm({Key? key}) : super(key: key);
@@ -54,26 +54,23 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
             child: ListView(
               children: <Widget>[
                 TextButton(
-                  child: Text(
-                    "Send",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    // call sentOtp function and pass the parameters
-
-                    otp.sendOtp(
-                        '548004990',
-                        'OTP is : pass the generated otp here ',
-                        1000,
-                        9999,
-                        '+972');
-                  },
-                ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => OTPLogin()));
+                    },
+                    child: Text('Login')),
                 TextFormField(
                   onSaved: (String? value) {
                     _data.name = value;
                     _data.id = 0;
                     _data.active = true;
+
+                    _data.created_by =
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser
+                            ?.id;
                   },
                   decoration: const InputDecoration(
                       hintText: 'name', labelText: 'Name'),

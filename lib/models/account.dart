@@ -17,12 +17,12 @@ class Account {
   String? email;
   String? phone;
   bool? active;
-  int? createdBy;
+  int? created_by;
 
   Account(
       {this.active,
       this.contactId,
-      this.createdBy,
+      this.created_by,
       this.email,
       this.id,
       this.name,

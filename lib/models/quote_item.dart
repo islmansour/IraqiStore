@@ -10,11 +10,11 @@ class QuoteItem {
   int? productId;
   double? price;
   double? quantity;
-  int? createdBy;
+  int? created_by;
   String? notes;
 
   QuoteItem({
-    this.createdBy,
+    this.created_by,
     this.id,
     this.notes,
     this.price,

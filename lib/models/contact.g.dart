@@ -8,7 +8,7 @@ part of 'contact.dart';
 
 Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
       active: json['active'] as bool?,
-      createdBy: json['createdBy'] as int?,
+      created_by: json['created_by'] as int?,
       email: json['email'] as String?,
       id: json['id'] as int?,
       phone: json['phone'] as String?,
@@ -35,5 +35,5 @@ Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'town': instance.town,
       'email': instance.email,
       'active': instance.active,
-      'createdBy': instance.createdBy,
+      'created_by': instance.created_by,
     };

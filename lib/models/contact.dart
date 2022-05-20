@@ -18,11 +18,11 @@ class Contact {
   String? town;
   String? email;
   bool? active;
-  int? createdBy;
+  int? created_by;
 
   Contact(
       {this.active,
-      this.createdBy,
+      this.created_by,
       this.email,
       //this.first_name,
       this.id,

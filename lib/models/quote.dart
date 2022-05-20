@@ -15,14 +15,14 @@ class Quote {
   String? town;
   String? wazeLink;
   String? notes;
-  int? createdBy;
+  int? created_by;
   //String created;
 
   Quote({
     this.accountId,
     this.contactId,
     //  this.created ,
-    this.createdBy,
+    this.created_by,
     this.id,
     this.notes,
     // this.quoteDate ,

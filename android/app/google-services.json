@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "509978242235",
+    "project_id": "iraqi-hardware-store",
+    "storage_bucket": "iraqi-hardware-store.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509978242235:android:56e58a3dbe146e52b6cd9e",
+        "android_client_info": {
+          "package_name": "com.iraqi.hardwarestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509978242235-20se4udbfprh4ukq1m49nesmeur5s04q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsLC95LcoNTOwEwEk3a6z4fPMEyD_GHcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509978242235-20se4udbfprh4ukq1m49nesmeur5s04q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "509978242235-mneppohi99fsdip7bnutt1nfbfmbe76o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.iraqi.hardwarestore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

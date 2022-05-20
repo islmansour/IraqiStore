@@ -11,6 +11,7 @@ import 'dart:convert' show jsonEncode, utf8;
 import '../models/products.dart';
 import '../models/quote.dart';
 import '../models/quote_item.dart';
+import '../models/user.dart';
 
 class DjangoServices {
   static const headers = {
@@ -208,6 +209,20 @@ class DjangoServices {
       String json = response.body;
       json = utf8.decode(json.runes.toList());
       return contactFromJson(json);
+    }
+    return null;
+  }
+
+  Future<List<User>?> getUser(String id) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/get_user/' + id);
+
+    var response = await client.get(uri);
+    if (response.statusCode == 200) {
+      String json = response.body;
+      print(json.toString());
+      json = utf8.decode(json.runes.toList());
+      return userFromJson(json);
     }
     return null;
   }

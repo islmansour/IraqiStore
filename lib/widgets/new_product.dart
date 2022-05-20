@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:provider/provider.dart';
 
+import '../components/user.dart';
 import '../models/products.dart';
 
 class CreateNewProductForm extends StatefulWidget {
@@ -53,6 +55,10 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                     _data.name = value;
                     _data.id = 0;
                     _data.active = true;
+                    _data.created_by =
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser
+                            ?.id;
                   },
                   decoration: const InputDecoration(
                       hintText: 'name', labelText: 'Name'),

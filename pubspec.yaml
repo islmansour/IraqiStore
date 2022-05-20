@@ -41,7 +41,9 @@ dependencies:
   floating_action_bubble: ^1.1.4
   flutter_localizations:
     sdk: flutter
-  flutter_otp: ^0.3.2
+  firebase_core: ^1.17.0
+  firebase_auth: ^3.3.18
+  pin_code_fields: ^7.3.0
 
 dev_dependencies:
   flutter_test:

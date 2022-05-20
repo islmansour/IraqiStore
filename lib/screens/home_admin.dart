@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/quote.dart';
+import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import '../components/delivery.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class _HomeAdminState extends State<HomeAdmin> {
               mainAxisSize: MainAxisSize.max,
               children: [OrdersList(), QuotesList(), DeliverysList()])),
       appBar: AppBar(
-        title: const Text('עיראקי'),
+        title: Text('עיראקי'),
       ),
       bottomNavigationBar: const AdminBottomNav(0),
     );

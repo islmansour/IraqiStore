@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
 import 'package:hardwarestore/widgets/quote_mini_admin.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/quote.dart';
 
 class QuoteDetailAdmin extends StatelessWidget {

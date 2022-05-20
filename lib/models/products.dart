@@ -10,7 +10,7 @@ class Product {
   String? name;
   String? desc;
   String? alias;
-  int? createdBy;
+  int? created_by;
   String? img;
   String? category;
   String? subCategory;
@@ -23,7 +23,7 @@ class Product {
       {this.active,
       this.alias,
       this.category,
-      this.createdBy,
+      this.created_by,
       this.desc,
       this.discount,
       this.id,

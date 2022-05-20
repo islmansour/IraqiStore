@@ -12,11 +12,11 @@ class User {
   String? first_name;
   String? last_name;
   bool? active;
-  int? createdBy;
+  int? created_by;
 
   User({
     this.active,
-    this.createdBy,
+    this.created_by,
     //this.first_name,
     this.id,
     // this.last_name,

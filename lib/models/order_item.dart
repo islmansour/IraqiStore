@@ -11,12 +11,12 @@ class OrderItem {
   int? orderId;
   double? price;
   double? quantity;
-  int? createdBy;
+  int? created_by;
   String? notes;
   int? quoteId;
 
   OrderItem(
-      {this.createdBy,
+      {this.created_by,
       this.id,
       this.notes,
       this.orderId,
