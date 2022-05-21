@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../components/user.dart';
@@ -53,6 +54,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                     if (value != "") _data.accountId = int.parse(value!);
                     _data.id = 0;
                     _data.quoteId = 1;
+                    _data.order_number = Tools().GetUniqueId();
+
                     _data.created_by =
                         Provider.of<GetCurrentUser>(context, listen: false)
                             .currentUser

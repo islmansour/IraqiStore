@@ -15,6 +15,9 @@ class Quote {
   String? town;
   String? wazeLink;
   String? notes;
+  // ignore: non_constant_identifier_names
+  String? quote_number;
+  // ignore: non_constant_identifier_names
   int? created_by;
   //String created;
 
@@ -22,9 +25,12 @@ class Quote {
     this.accountId,
     this.contactId,
     //  this.created ,
+    // ignore: non_constant_identifier_names
     this.created_by,
     this.id,
     this.notes,
+    // ignore: non_constant_identifier_names
+    this.quote_number,
     // this.quoteDate ,
     this.status,
     this.street,

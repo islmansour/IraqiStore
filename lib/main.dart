@@ -11,6 +11,7 @@ import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
+import 'package:hardwarestore/services/search.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
@@ -50,6 +51,9 @@ void main() {
       ),
       ListenableProvider<CurrentQuoteItemUpdate>(
         create: (_) => CurrentQuoteItemUpdate(),
+      ),
+      ListenableProvider<ApplySearch>(
+        create: (_) => ApplySearch(),
       ),
       ListenableProvider<GetCurrentUser>(create: (_) => GetCurrentUser())
     ], child: const IraqiStoreApp()),

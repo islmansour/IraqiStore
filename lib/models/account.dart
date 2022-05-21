@@ -17,12 +17,19 @@ class Account {
   String? email;
   String? phone;
   bool? active;
+
+  // ignore: non_constant_identifier_names
+  String? account_number;
+  // ignore: non_constant_identifier_names
   int? created_by;
 
   Account(
       {this.active,
       this.contactId,
+      // ignore: non_constant_identifier_names
       this.created_by,
+      // ignore: non_constant_identifier_names
+      this.account_number,
       this.email,
       this.id,
       this.name,

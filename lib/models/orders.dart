@@ -12,6 +12,7 @@ class Order {
   String status;
   String street;
   String street2;
+  String? order_number;
   String town;
   String wazeLink;
   String notes;
@@ -21,6 +22,7 @@ class Order {
 
   Order(
       {this.accountId = 0,
+      this.order_number,
       this.contactId = 0,
       //     this.created = "",
       this.created_by,

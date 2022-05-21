@@ -12,6 +12,7 @@ Quote _$QuoteFromJson(Map<String, dynamic> json) => Quote(
       created_by: json['created_by'] as int?,
       id: json['id'] as int?,
       notes: json['notes'] as String?,
+      quote_number: json['quote_number'] as String?,
       status: json['status'] as String?,
       street: json['street'] as String?,
       street2: json['street2'] as String?,
@@ -29,5 +30,6 @@ Map<String, dynamic> _$QuoteToJson(Quote instance) => <String, dynamic>{
       'town': instance.town,
       'wazeLink': instance.wazeLink,
       'notes': instance.notes,
+      'quote_number': instance.quote_number,
       'created_by': instance.created_by,
     };

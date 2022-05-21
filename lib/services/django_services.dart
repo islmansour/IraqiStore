@@ -20,7 +20,7 @@ class DjangoServices {
 
   Future<List<Order>?> getOrders() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/order_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/order_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -51,9 +51,8 @@ class DjangoServices {
 
   Future<List<OrderItem>?> getOrderItems(String orderId) async {
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://139.162.139.161:8000/IraqiStore/order_item_list/' +
-            orderId.toString());
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/order_item_list/' +
+        orderId.toString());
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -66,7 +65,7 @@ class DjangoServices {
 
   Future<List<Quote>?> getQuotes() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/quote_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/quote_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -98,8 +97,7 @@ class DjangoServices {
   Future<List<QuoteItem>?> getQuoteItems(String quoteId) async {
     var client = http.Client();
     var uri = Uri.parse(
-        'http://139.162.139.161:8000/IraqiStore/quote_item_list_by_quote/' +
-            quoteId);
+        'http://127.0.0.1:8000/IraqiStore/quote_item_list_by_quote/' + quoteId);
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -112,7 +110,7 @@ class DjangoServices {
 
   Future<List<Product>?> getProducts() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/product_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/product_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -144,7 +142,7 @@ class DjangoServices {
 
   Future<List<News>?> getNews() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/news_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/news_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -157,7 +155,7 @@ class DjangoServices {
 
   Future<List<Delivery>?> getDeliverys() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/news_delivery');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/news_delivery');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -170,7 +168,7 @@ class DjangoServices {
 
   Future<List<Account>?> getAccounts() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/account_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/account_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -202,7 +200,7 @@ class DjangoServices {
 
   Future<List<Contact>?> getContacts() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/contact_list');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/contact_list');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {
@@ -229,7 +227,7 @@ class DjangoServices {
 
   Future<List<ListOfValues>?> getLOVs() async {
     var client = http.Client();
-    var uri = Uri.parse('http://139.162.139.161:8000/IraqiStore/lov');
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/lov');
 
     var response = await client.get(uri);
     if (response.statusCode == 200) {

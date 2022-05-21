@@ -10,6 +10,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       active: json['active'] as bool?,
       contactId: json['contactId'] as int?,
       created_by: json['created_by'] as int?,
+      account_number: json['account_number'] as String?,
       email: json['email'] as String?,
       id: json['id'] as int?,
       name: json['name'] as String?,
@@ -33,5 +34,6 @@ Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
       'email': instance.email,
       'phone': instance.phone,
       'active': instance.active,
+      'account_number': instance.account_number,
       'created_by': instance.created_by,
     };
