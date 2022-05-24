@@ -4,6 +4,7 @@ import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+import '../models/order_item.dart';
 import '../widgets/order_mini_admin.dart';
 
 class OrdersList extends StatefulWidget {
@@ -31,10 +32,12 @@ class _OrdersListState extends State<OrdersList> {
             return Container();
           }
           int len = orderSnap.data?.length ?? 0;
+          Provider.of<CurrentOrdersUpdate>(context).orders = orderSnap.data;
 
           return ExpansionTile(
+              initiallyExpanded: true,
               title: Text('הזמנות ' + len.toString(),
-                  style: Theme.of(context).textTheme.headline1),
+                  style: Theme.of(context).textTheme.headlineSmall),
               children: [
                 ListTile(
                     title: SizedBox(
@@ -45,10 +48,12 @@ class _OrdersListState extends State<OrdersList> {
                                 shrinkWrap: true,
                                 itemCount: orderSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  Provider.of<CurrentOrdersUpdate>(context)
-                                      .orders = orderSnap.data;
-                                  return OrderMiniAdmin(
-                                      item: orderSnap.data![index]);
+                                  return Column(
+                                    children: [
+                                      OrderMiniAdmin(
+                                          item: orderSnap.data![index]),
+                                    ],
+                                  );
                                 }))))
               ]);
         });

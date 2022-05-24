@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 import '../models/account.dart';
 import '../widgets/account_min_admin.dart';
@@ -33,8 +32,9 @@ class _AccountsListState extends State<AccountsList> {
           int len = accountSnap.data?.length ?? 0;
 
           return ExpansionTile(
+              initiallyExpanded: true,
               title: Text('לקוחות ' + len.toString(),
-                  style: Theme.of(context).textTheme.headline1),
+                  style: Theme.of(context).textTheme.displayMedium),
               children: [
                 ListTile(
                     title: SizedBox(

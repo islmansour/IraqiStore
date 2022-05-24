@@ -19,6 +19,8 @@ import 'components/news.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'models/orders.dart';
+
 void main() {
   runApp(
     MultiProvider(providers: [
@@ -94,17 +96,30 @@ class IraqiStoreApp extends StatelessWidget {
                 // Define the default `TextTheme`. Use this to specify the default
                 // text styling for headlines, titles, bodies of text, and more.
                 textTheme: const TextTheme(
-                  headline1: TextStyle(
-                    fontSize: 16.0,
+                  headlineSmall: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amber),
+                  displayMedium: TextStyle(
+                      fontSize: 14.0,
+                      //  fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  displaySmall: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
-                  headline2: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
-                  headline3:
+                  titleMedium: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.lightBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  bodyLarge:
                       TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-                  subtitle1: TextStyle(fontSize: 12.0, color: Colors.grey),
+                  labelSmall: TextStyle(fontSize: 12.0, color: Colors.grey),
+                  labelMedium: TextStyle(
+                    fontSize: 12.0,
+                  ),
                 ),
               ),
               supportedLocales: const [

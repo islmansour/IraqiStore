@@ -25,7 +25,7 @@ class _QuotesListState extends State<QuotesList> {
 
           return ExpansionTile(
               title: Text('הצעות ' + len.toString(),
-                  style: Theme.of(context).textTheme.headline1),
+                  style: Theme.of(context).textTheme.displayMedium),
               children: [
                 ListTile(
                     title: SizedBox(

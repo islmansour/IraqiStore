@@ -1,37 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
-import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
-import '../components/user.dart';
-import '../models/orders.dart';
+import '../../components/user.dart';
+import '../../models/quote.dart';
 
-class CreateNewOrderForm extends StatefulWidget {
-  CreateNewOrderForm({Key? key}) : super(key: key);
+class CreateNewQuoteForm extends StatefulWidget {
+  const CreateNewQuoteForm({Key? key}) : super(key: key);
 
   @override
-  State<CreateNewOrderForm> createState() => _CreateNewOrderFormState();
+  State<CreateNewQuoteForm> createState() => _CreateNewQuoteFormState();
 }
 
-class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Order _data = new Order();
-
-  String? _validateEmail(String? value) {
-    // If empty value, the isEmail function throw a error.
-    // So I changed this function with try and catch.
-    try {} catch (e) {
-      return 'The E-mail Address must be a valid email address.';
-    }
-
-    return "";
-  }
+class _CreateNewQuoteFormState extends State<CreateNewQuoteForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Quote _data = Quote();
 
   void submit() {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      DjangoServices().upsertOrder(_data); // Save our form now.
+      DjangoServices().upsertQuote(_data); // Save our form now.
     }
   }
 
@@ -41,7 +30,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Order'),
+        title: const Text('New Quote'),
       ),
       body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -53,9 +42,6 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                   onSaved: (String? value) {
                     if (value != "") _data.accountId = int.parse(value!);
                     _data.id = 0;
-                    _data.quoteId = 1;
-                    _data.order_number = Tools().GetUniqueId();
-
                     _data.created_by =
                         Provider.of<GetCurrentUser>(context, listen: false)
                             .currentUser
@@ -80,7 +66,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                 ),
                 TextFormField(
                   onSaved: (String? value) {
-                    //   _data.orderDate = value!;
+                    //   _data.quoteDate = value!;
                   },
                   decoration: const InputDecoration(
                       hintText: 'date', labelText: 'Date'),

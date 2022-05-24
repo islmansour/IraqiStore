@@ -29,7 +29,7 @@ class OrderItemAdmin extends StatelessWidget {
                 children: [
                   Text(
                     item.id.toString(),
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   Text('date', style: Theme.of(context).textTheme.subtitle1),
                 ],
@@ -40,19 +40,19 @@ class OrderItemAdmin extends StatelessWidget {
                 Column(
                   children: [
                     Text(itemProduct?.name ?? "",
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text(item.quantity.toString(),
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text(item.price.toString(),
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 )
               ],

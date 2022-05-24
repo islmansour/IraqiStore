@@ -35,6 +35,7 @@ class _ProductsListState extends State<ProductsList> {
               height: MediaQuery.of(context).size.height * 0.75,
               child: Scrollbar(
                   child: ListView.builder(
+                      physics: ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: productSnap.data?.length ?? 0,

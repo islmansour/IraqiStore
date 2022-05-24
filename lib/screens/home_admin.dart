@@ -37,37 +37,48 @@ class _HomeAdminState extends State<HomeAdmin> {
       floatingActionButton: AdminBubbleButtons(),
       body: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.max, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 100,
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    if (value.isEmpty) {
-                      _searching = false;
-                    } else {
-                      _searching = true;
-                    }
-                    _newSearch = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: "חפש...",
-                  hintStyle: TextStyle(
-                    color: Color.fromARGB(255, 191, 190, 190),
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
+        Padding(
+          padding: const EdgeInsets.only(left: 30.0, right: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 300,
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isEmpty) {
+                        _searching = false;
+                      } else {
+                        _searching = true;
+                      }
+                      _newSearch = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 200, 200, 200)),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 200, 200, 200)),
+                    ),
+                    hintText: "חפש...",
+                    hintStyle: TextStyle(
+                      color: Color.fromARGB(255, 191, 190, 190),
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    border: InputBorder.none,
                   ),
-                  border: InputBorder.none,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
                 ),
-                style: const TextStyle(
-                  color: Colors.blue,
-                ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
         if (_searching == false) OrdersList(),
         if (_searching == false) QuotesList(),
@@ -83,43 +94,47 @@ class _HomeAdminState extends State<HomeAdmin> {
 
                 return SizedBox(
                     height: MediaQuery.of(context).size.height / 2,
-                    child: Scrollbar(
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: searchSnap.data?.length,
-                            itemBuilder: (context, index) {
-                              String type = "";
-                              Widget output = Text('');
-                              if (searchSnap.data != null) {
-                                type = searchSnap.data![index].type.toString();
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0, left: 8),
+                      child: Scrollbar(
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: searchSnap.data?.length,
+                              itemBuilder: (context, index) {
+                                String type = "";
+                                Widget output = Text('');
+                                if (searchSnap.data != null) {
+                                  type =
+                                      searchSnap.data![index].type.toString();
 
-                                switch (type) {
-                                  case "Account":
-                                    output = AccountMiniAdmin(
-                                        item: searchSnap.data![index].item
-                                            as Account);
-                                    break;
-                                  case "Contact":
-                                    output = ContactMiniAdmin(
-                                        item: searchSnap.data![index].item
-                                            as Contact);
-                                    break;
+                                  switch (type) {
+                                    case "Account":
+                                      output = AccountMiniAdmin(
+                                          item: searchSnap.data![index].item
+                                              as Account);
+                                      break;
+                                    case "Contact":
+                                      output = ContactMiniAdmin(
+                                          item: searchSnap.data![index].item
+                                              as Contact);
+                                      break;
 
-                                  case "Order":
-                                    output = OrderMiniAdmin(
-                                        item: searchSnap.data![index].item
-                                            as Order);
-                                    break;
-                                  case "Quote":
-                                    output = QuoteMiniAdmin(
-                                        item: searchSnap.data![index].item
-                                            as Quote);
-                                    break;
+                                    case "Order":
+                                      output = OrderMiniAdmin(
+                                          item: searchSnap.data![index].item
+                                              as Order);
+                                      break;
+                                    case "Quote":
+                                      output = QuoteMiniAdmin(
+                                          item: searchSnap.data![index].item
+                                              as Quote);
+                                      break;
+                                  }
                                 }
-                              }
-                              return output;
-                            })));
+                                return output;
+                              })),
+                    ));
               }),
       ])),
       appBar: AppBar(

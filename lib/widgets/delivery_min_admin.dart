@@ -33,7 +33,7 @@ class DeliveryMiniAdmin extends StatelessWidget {
                 children: [
                   Text(
                     item.orderId.toString(),
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                 ],
               ),
@@ -43,19 +43,19 @@ class DeliveryMiniAdmin extends StatelessWidget {
                 Column(
                   children: [
                     Text(item.accountId.toString(),
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text(item.contactId.toString(),
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text(item.status as String? ?? "",
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 )
               ],

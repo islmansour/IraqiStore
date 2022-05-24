@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
+import 'package:hardwarestore/screens/admin/new_account.dart';
 
-class AccountMiniAdmin extends StatelessWidget {
+class AccountMiniAdmin extends StatefulWidget {
   final Account item;
 
   const AccountMiniAdmin({Key? key, required this.item}) : super(key: key);
 
+  @override
+  State<AccountMiniAdmin> createState() => _AccountMiniAdminState();
+}
+
+class _AccountMiniAdminState extends State<AccountMiniAdmin> {
   @override
   Widget build(BuildContext context) {
     /*
@@ -21,61 +27,123 @@ class AccountMiniAdmin extends StatelessWidget {
 
 
     */
-    return Container(
-        padding: const EdgeInsets.all(15),
-        height: 120,
-        width: double.infinity,
-        child: Column(
-          children: [
-            Row(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.id.toString(),
-                    style: Theme.of(context).textTheme.headline2,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreateNewAccountForm(
+                    item: widget.item,
+                  )),
+        );
+      },
+      child: SizedBox(
+          // padding: const EdgeInsets.all(5),
+          height: 60,
+          width: double.infinity,
+          child: Column(
+            children: [
+              Row(children: [
+                Flexible(
+                    flex: 30, // 15%
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue.shade400,
+                          borderRadius: const BorderRadius.only(
+                              //      bottomRight: Radius.circular(10),
+                              topRight: Radius.circular(10))),
+                      height: 48,
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              widget.item.account_number.toString(),
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                Flexible(
+                    flex: 70, // 60%
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade400,
+                      ),
+                      height: 48,
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0, top: 8),
+                            child: Text(widget.item.name.toString(),
+                                style:
+                                    Theme.of(context).textTheme.displayMedium),
+                          ),
+                        ],
+                      ),
+                    )),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade400,
                   ),
-                  Text('date', style: Theme.of(context).textTheme.subtitle1),
-                ],
-              ),
-            ]),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Text('account name',
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 0.0),
+                          child: IconButton(
+                            color: Colors.lightGreenAccent,
+                            icon: const Icon(Icons.email),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          )),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Text('contact name',
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
+                Container(
+                  color: Colors.blue.shade400,
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 0.0),
+                          child: IconButton(
+                            color: Colors.brown,
+                            icon: const Icon(Icons.phone),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          )),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Text(' phone',
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue.shade400,
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(10))),
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 0.0),
+                          child: IconButton(
+                            color: Colors.yellow,
+                            icon: const Icon(Icons.message),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          )),
+                    ],
+                  ),
                 )
-              ],
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Text(item.active.toString()),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('delivery status'),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ));
+              ]),
+            ],
+          )),
+    );
   }
 }

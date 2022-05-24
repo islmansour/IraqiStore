@@ -1,15 +1,13 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/screens/home_admin.dart';
-import 'package:hardwarestore/services/search.dart';
-import 'package:hardwarestore/widgets/new_order.dart';
-import 'package:hardwarestore/widgets/new_product.dart';
-import 'package:hardwarestore/widgets/new_quote.dart';
 
-import 'new_account.dart';
+import '../screens/admin/new_account.dart';
+import '../screens/admin/new_order.dart';
+import '../screens/admin/new_product.dart';
+import '../screens/admin/new_quote.dart';
 
 class AdminBubbleButtons extends StatefulWidget {
-  AdminBubbleButtons({Key? key}) : super(key: key);
+  const AdminBubbleButtons({Key? key}) : super(key: key);
 
   @override
   State<AdminBubbleButtons> createState() => _AdminBubbleButtonsState();
@@ -24,7 +22,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 260),
+      duration: const Duration(milliseconds: 260),
     );
 
     final curvedAnimation =
@@ -89,7 +87,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.home,
-          titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
             Navigator.push(
                 context,

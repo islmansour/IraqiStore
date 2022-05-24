@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../models/imgbb_model.dart';
+import '../screens/admin/new_product.dart';
 
 final imgBBkey = '77620f6bc5c71d69dc61e7460ff94a0f';
 final imageString = 'https://imgur.com/4NH3806.png';
@@ -28,85 +29,15 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
   bool delay = true;
   bool loading = false;
   String txt = 'Choose Image';
-  Dio dio = new Dio();
+  Dio dio = Dio();
   late ImgbbResponseModel imgbbResponse;
 
-  File? _image;
-  final picker = ImagePicker();
-
   Future getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     setState(() {
-      try {
-        _image = File(pickedFile!.path);
-      } catch (e) {
+      try {} catch (e) {
         print(e.toString());
       }
     });
-  }
-
-  void uploadingImageViaImageUrl() async {
-    setState(() {
-      loading = true;
-    });
-    FormData formData =
-        FormData.fromMap({"key": imgBBkey, "image": imageString});
-
-    Response response =
-        await dio.post("https://api.imgbb.com/1/upload", data: formData);
-    if (response.statusCode != 400) {
-      imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      setState(() {
-        delay = false;
-        loading = false;
-      });
-    } else {
-      txt = 'Error Upload';
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  void uploadImageFile(File _image, Product product) async {
-    setState(() {
-      loading = true;
-    });
-
-    ByteData bytes = await rootBundle.load(_image.path);
-    var buffer = bytes.buffer;
-    var m = base64.encode(Uint8List.view(buffer));
-
-    FormData formData = FormData.fromMap({"key": imgBBkey, "image": m});
-
-    Response response = await dio.post(
-      "https://api.imgbb.com/1/upload",
-      data: formData,
-    );
-    if (response.statusCode != 400) {
-      imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      Provider.of<CurrentProductsUpdate>(context, listen: false)
-          .products
-          ?.where((element) => element.id == widget.item.id)
-          .first
-          .img = imgbbResponse.data?.displayUrl;
-      Product? _p = Provider.of<CurrentProductsUpdate>(context, listen: false)
-          .products
-          ?.where((element) => element.id == widget.item.id)
-          .first;
-
-      DjangoServices().upsertProduct(_p!);
-      setState(() {
-        delay = false;
-        loading = false;
-      });
-    } else {
-      txt = 'Error Upload';
-      setState(() {
-        loading = false;
-      });
-    }
   }
 
   @override
@@ -131,71 +62,219 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
             .first
             .img;
 
-    print(currentImg);
-    return Container(
-        padding: const EdgeInsets.all(5),
-        height: 120,
-        width: double.infinity,
-        child: Column(
-          children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      await getImage();
-                      if (_image != null) uploadImageFile(_image!, widget.item);
-                    },
-                    child: currentImg == 'http://localhost.com'
-                        ? Text(txt)
-                        : SizedBox(
-                            height: 75,
-                            width: 75,
-                            child: Image.network(currentImg!)),
-                  )
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.item.name.toString(),
-                    style: Theme.of(context).textTheme.headline2,
-                  ),
-                ],
-              ),
-            ]),
-            Row(
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreateNewProductForm(
+                    item: widget.item,
+                  )),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+            decoration: BoxDecoration(
+                border:
+                    Border.all(width: 0.5, color: Colors.lightGreen.shade400),
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20))),
+            height: 76,
+            width: double.infinity,
+            child: Column(
               children: [
-                Column(
-                  children: [
-                    Text(widget.item.price.toString(),
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(widget.item.desc.toString(),
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(widget.item.active.toString(),
-                        style: Theme.of(context).textTheme.headline3),
-                  ],
-                )
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Flexible(
+                      flex: 30, // 15%
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.lightGreen.shade400,
+                            borderRadius: const BorderRadius.only(
+                                //      bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        height: 75,
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            if (currentImg == 'http://localhost.com' ||
+                                currentImg == "" ||
+                                currentImg == null)
+                              const Padding(
+                                padding: EdgeInsets.only(top: 6.0),
+                                child: Icon(Icons.image_not_supported,
+                                    size: 65, color: Colors.white),
+                              )
+                            else
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: SizedBox(
+                                  height: 65,
+                                  width: 65,
+                                  child: Image.network(
+                                    currentImg,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )),
+                  Flexible(
+                      flex: 70, // 60%
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.lightGreen.shade400,
+                                      borderRadius: const BorderRadius.only(
+                                          // bottomLeft: Radius.circular(10),
+                                          topLeft: Radius.circular(10))),
+                                  height: 30,
+                                  alignment: Alignment.centerRight,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 4.0, top: 8),
+                                        child: Text(
+                                            widget.item.product_number
+                                                    .toString() +
+                                                ": " +
+                                                widget.item.name.toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 70,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      //    height: 30,
+                                      alignment: Alignment.topRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 4.0, top: 2),
+                                            child: Text(
+                                                "מחיר (ש״ח):" +
+                                                    widget.item.price
+                                                        .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 4.0, top: 4),
+                                            child: Text(
+                                                "הנחה (%):" +
+                                                    widget.item.discount
+                                                        .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                flex: 30,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        children: [
+                                          if (widget.item.active != null &&
+                                              widget.item.active == true)
+                                            Text('פעיל')
+                                          else
+                                            Text('לא פעיל')
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      )),
+                ])
+                //   Column(
+
+                //     children: [
+                //       TextButton(
+                //         onPressed: () async {
+                //           await getImage();
+                //           if (_image != null) uploadImageFile(_image!, widget.item);
+                //         },
+                //         child:
+                //             currentImg == 'http://localhost.com' || currentImg == ""
+                //                 ? Icon(Icons.image_not_supported,
+                //                     size: 75, color: Colors.grey.shade400)
+                //                 : SizedBox(
+                //                     height: 75,
+                //                     width: 75,
+                //                     child: Image.network(currentImg!)),
+                //       )
+                //     ],
+                //   ),
+                //   Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         widget.item.name.toString(),
+                //         style: Theme.of(context).textTheme.displayMedium,
+                //       ),
+                //     ],
+                //   ),
+                // ]),
+                // Row(
+                //   children: [
+                //     Column(
+                //       children: [
+                //         Text(widget.item.price.toString(),
+                //             style: Theme.of(context).textTheme.displayMedium),
+                //       ],
+                //     ),
+                //     Column(
+                //       children: [
+                //         Text(widget.item.desc.toString(),
+                //             style: Theme.of(context).textTheme.displayMedium),
+                //       ],
+                //     ),
+                //     Column(
+                //       children: [
+                //         Text(widget.item.active.toString(),
+                //             style: Theme.of(context).textTheme.displayMedium),
+                //       ],
+                //     )
+                //   ],
+                // ),
               ],
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [],
-                )
-              ],
-            ),
-          ],
-        ));
+            )),
+      ),
+    );
   }
 }

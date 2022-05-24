@@ -33,7 +33,7 @@ class _ContactsListState extends State<ContactsList> {
 
           return ExpansionTile(
               title: Text('אנשי קשר ' + len.toString(),
-                  style: Theme.of(context).textTheme.headline1),
+                  style: Theme.of(context).textTheme.displayMedium),
               children: [
                 ListTile(
                     title: SizedBox(

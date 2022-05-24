@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
-import '../components/user.dart';
-import '../screens/opt_login.dart';
+
+import '../../components/user.dart';
+import '../opt_login.dart';
 
 class CreateNewAccountForm extends StatefulWidget {
-  CreateNewAccountForm({Key? key}) : super(key: key);
+  final Account? item;
+  CreateNewAccountForm({Key? key, this.item}) : super(key: key);
   String phoneNumber = "548004990"; //enter your 10 digit number
   int minNumber = 1000;
   int maxNumber = 6000;
@@ -18,8 +20,9 @@ class CreateNewAccountForm extends StatefulWidget {
 }
 
 class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
+  // ignore: unnecessary_new
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Account _data = new Account();
+  Account _data = Account();
 
   String? _validateEmail(String? value) {
     // If empty value, the isEmail function throw a error.
@@ -35,8 +38,20 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      DjangoServices().upsertAccount(_data); // Save our form now.
+      DjangoServices().upsertAccount(_data);
+      Navigator.pop(context); // Save our form now.
+// Save our form now.
     }
+  }
+
+  @override
+  void initState() {
+    try {
+      if (widget.item != null) _data = widget.item!;
+    }
+    // ignore: empty_catches
+    catch (e) {}
+    super.initState();
   }
 
   @override
@@ -45,7 +60,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Account'),
+        title: const Text('Account'),
       ),
       body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -62,20 +77,26 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                     },
                     child: Text('Login')),
                 TextFormField(
+                  initialValue: _data.name != null ? _data.name : "",
                   onSaved: (String? value) {
-                    _data.name = value;
-                    _data.id = 0;
-                    _data.active = true;
+                    setState(() {
+                      if (_data == null || _data.id == null || _data.id == 0) {
+                        _data.id = 0;
+                        _data.active = true;
 
-                    _data.created_by =
-                        Provider.of<GetCurrentUser>(context, listen: false)
-                            .currentUser
-                            ?.id;
+                        _data.created_by =
+                            Provider.of<GetCurrentUser>(context, listen: false)
+                                .currentUser
+                                ?.id;
+                      }
+                      _data.name = value;
+                    });
                   },
                   decoration: const InputDecoration(
                       hintText: 'name', labelText: 'Name'),
                 ),
                 TextFormField(
+                  initialValue: _data.phone != null ? _data.phone : "",
                   onSaved: (String? value) {
                     _data.phone = value;
                   },
@@ -83,6 +104,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       hintText: 'phone', labelText: 'Phone'),
                 ),
                 TextFormField(
+                  initialValue: _data.street != null ? _data.street : "",
                   onSaved: (String? value) {
                     _data.street = value;
                   },
@@ -90,6 +112,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       hintText: 'street', labelText: 'Street'),
                 ),
                 TextFormField(
+                  initialValue: _data.town != null ? _data.town : "",
                   onSaved: (String? value) {
                     _data.town = value;
                   },
@@ -97,6 +120,8 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       hintText: 'town', labelText: 'Town'),
                 ),
                 TextFormField(
+                  initialValue:
+                      _data.pobox != null ? _data.pobox.toString() : "",
                   onSaved: (String? value) {
                     if (value != "") _data.pobox = int.parse(value!);
                   },
@@ -104,6 +129,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       hintText: 'pobox', labelText: 'POBox'),
                 ),
                 TextFormField(
+                  initialValue: _data.zip != null ? _data.zip.toString() : "",
                   onSaved: (String? value) {
                     if (value != "") _data.zip = int.parse(value!);
                   },
@@ -111,6 +137,8 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       const InputDecoration(hintText: 'zip', labelText: 'ZIP'),
                 ),
                 TextFormField(
+                    initialValue:
+                        _data.email != null ? _data.email.toString() : "",
                     keyboardType: TextInputType
                         .emailAddress, // Use email input type for emails.
                     decoration: const InputDecoration(

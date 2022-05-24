@@ -26,6 +26,7 @@ class DjangoServices {
     if (response.statusCode == 200) {
       String json = response.body;
       json = utf8.decode(json.runes.toList());
+
       return orderFromJson(json);
     }
     return null;

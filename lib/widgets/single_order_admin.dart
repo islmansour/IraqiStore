@@ -29,7 +29,7 @@ class SingleOrderAdmin extends StatelessWidget {
                 children: [
                   Text(
                     item.id.toString(),
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   Text('date', style: Theme.of(context).textTheme.subtitle1),
                 ],
@@ -40,19 +40,19 @@ class SingleOrderAdmin extends StatelessWidget {
                 Column(
                   children: [
                     Text(currentAccount?.name ?? "",
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text('contact name',
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
                 Column(
                   children: [
                     Text(currentAccount?.phone ?? "",
-                        style: Theme.of(context).textTheme.headline3),
+                        style: Theme.of(context).textTheme.displayMedium),
                   ],
                 )
               ],

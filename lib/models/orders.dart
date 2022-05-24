@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/order_item.dart';
+import 'package:hardwarestore/services/django_services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
@@ -6,35 +9,40 @@ part 'orders.g.dart';
 @JsonSerializable()
 class Order {
   int id;
-  // String orderDate;
+  DateTime? orderDate;
   int accountId;
   int contactId;
   String status;
   String street;
   String street2;
+  // ignore: non_constant_identifier_names
   String? order_number;
   String town;
   String wazeLink;
   String notes;
   int quoteId;
+  // ignore: non_constant_identifier_names
   int? created_by;
-//  String created;
+  DateTime? created;
+
+  List<OrderItem>? orderItems;
 
   Order(
       {this.accountId = 0,
+      this.orderItems,
       this.order_number,
       this.contactId = 0,
-      //     this.created = "",
+      this.created,
       this.created_by,
       this.id = 0,
       this.notes = "",
-      //this.orderDate = "",
+      this.orderDate,
       this.quoteId = 0,
       this.status = "",
       this.street = "",
       this.street2 = "",
       this.town = "",
-      this.wazeLink = ""});
+      this.wazeLink = ""}) {}
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 

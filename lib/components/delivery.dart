@@ -26,7 +26,7 @@ class _DeliverysListState extends State<DeliverysList> {
 
           return ExpansionTile(
               title: Text('הובלות ' + len.toString(),
-                  style: Theme.of(context).textTheme.headline1),
+                  style: Theme.of(context).textTheme.displayMedium),
               children: [
                 ListTile(
                     title: SizedBox(
