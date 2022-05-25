@@ -1,20 +1,13 @@
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
+import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/services/django_services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'dart:io';
+
 import '../models/imgbb_model.dart';
 import '../screens/admin/new_product.dart';
-
-final imgBBkey = '77620f6bc5c71d69dc61e7460ff94a0f';
-final imageString = 'https://imgur.com/4NH3806.png';
 
 class ProductMiniAdmin extends StatefulWidget {
   final Product item;
@@ -42,19 +35,8 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    /*
-    1 columns that has
-    3 rows
-      1st row: has one ListTile with one text: Product Number + Product Date
-      2nd row: has 3 columns each as a container with a text.
-        first column is the account name
-        second column is the contact name
-        third column : if contact exists, displays contact phone. otherwise display account phone
-      3rd row: has 2 columns: First colum is Product Status , second is dlivery status
+    var format = NumberFormat.simpleCurrency(locale: 'he');
 
-
-
-    */
     String? currentImg =
         Provider.of<CurrentProductsUpdate>(context, listen: false)
             .products
@@ -89,32 +71,27 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                   Flexible(
                       flex: 30, // 15%
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.lightGreen.shade400,
-                            borderRadius: const BorderRadius.only(
-                                //      bottomRight: Radius.circular(10),
+                        decoration: const BoxDecoration(
+                            color: Colors.lightBlue,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10))),
                         height: 75,
                         alignment: Alignment.center,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             if (currentImg == 'http://localhost.com' ||
                                 currentImg == "" ||
                                 currentImg == null)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 6.0),
-                                child: Icon(Icons.image_not_supported,
-                                    size: 65, color: Colors.white),
-                              )
+                              const Icon(Icons.image_not_supported,
+                                  size: 65, color: Colors.white)
                             else
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: SizedBox(
-                                  height: 65,
-                                  width: 65,
-                                  child: Image.network(
-                                    currentImg,
-                                  ),
+                              Expanded(
+                                child: Image.network(
+                                  currentImg,
                                 ),
                               ),
                           ],
@@ -127,30 +104,50 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                           Row(
                             children: [
                               Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.lightGreen.shade400,
-                                      borderRadius: const BorderRadius.only(
-                                          // bottomLeft: Radius.circular(10),
-                                          topLeft: Radius.circular(10))),
-                                  height: 30,
-                                  alignment: Alignment.centerRight,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 4.0, top: 8),
-                                        child: Text(
-                                            widget.item.product_number
-                                                    .toString() +
-                                                ": " +
-                                                widget.item.name.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              // bottomLeft: Radius.circular(10),
+                                              topLeft: Radius.circular(10))),
+                                      height: 30,
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                    widget.item.product_number
+                                                            .toString() +
+                                                        ": ",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineMedium),
+                                                Text(
+                                                    widget.item.name.toString(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    Container(
+                                      decoration: DottedDecoration(
+                                        shape: Shape.line,
+                                        linePosition: LinePosition.bottom,
+                                        color: Colors.lightGreen.shade400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -171,22 +168,28 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                right: 4.0, top: 2),
+                                                right: 8.0, top: 2),
                                             child: Text(
-                                                "מחיר (ש״ח):" +
+                                                "מחיר:" +
+                                                    " " +
                                                     widget.item.price
-                                                        .toString(),
+                                                        .toString() +
+                                                    " " +
+                                                    format.currencySymbol +
+                                                    " ",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .displayMedium),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                right: 4.0, top: 4),
+                                                right: 8.0, top: 4),
                                             child: Text(
-                                                "הנחה (%):" +
+                                                "הנחה:" +
+                                                    ' ' +
                                                     widget.item.discount
-                                                        .toString(),
+                                                        .toString() +
+                                                    ' %',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .displayMedium),
@@ -221,57 +224,6 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                         ],
                       )),
                 ])
-                //   Column(
-
-                //     children: [
-                //       TextButton(
-                //         onPressed: () async {
-                //           await getImage();
-                //           if (_image != null) uploadImageFile(_image!, widget.item);
-                //         },
-                //         child:
-                //             currentImg == 'http://localhost.com' || currentImg == ""
-                //                 ? Icon(Icons.image_not_supported,
-                //                     size: 75, color: Colors.grey.shade400)
-                //                 : SizedBox(
-                //                     height: 75,
-                //                     width: 75,
-                //                     child: Image.network(currentImg!)),
-                //       )
-                //     ],
-                //   ),
-                //   Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text(
-                //         widget.item.name.toString(),
-                //         style: Theme.of(context).textTheme.displayMedium,
-                //       ),
-                //     ],
-                //   ),
-                // ]),
-                // Row(
-                //   children: [
-                //     Column(
-                //       children: [
-                //         Text(widget.item.price.toString(),
-                //             style: Theme.of(context).textTheme.displayMedium),
-                //       ],
-                //     ),
-                //     Column(
-                //       children: [
-                //         Text(widget.item.desc.toString(),
-                //             style: Theme.of(context).textTheme.displayMedium),
-                //       ],
-                //     ),
-                //     Column(
-                //       children: [
-                //         Text(widget.item.active.toString(),
-                //             style: Theme.of(context).textTheme.displayMedium),
-                //       ],
-                //     )
-                //   ],
-                // ),
               ],
             )),
       ),

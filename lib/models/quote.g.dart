@@ -20,16 +20,26 @@ Quote _$QuoteFromJson(Map<String, dynamic> json) => Quote(
       wazeLink: json['wazeLink'] as String?,
     );
 
-Map<String, dynamic> _$QuoteToJson(Quote instance) => <String, dynamic>{
-      'id': instance.id,
-      'accountId': instance.accountId,
-      'contactId': instance.contactId,
-      'status': instance.status,
-      'street': instance.street,
-      'street2': instance.street2,
-      'town': instance.town,
-      'wazeLink': instance.wazeLink,
-      'notes': instance.notes,
-      'quote_number': instance.quote_number,
-      'created_by': instance.created_by,
-    };
+Map<String, dynamic> _$QuoteToJson(Quote instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'accountId': instance.accountId,
+    'contactId': instance.contactId,
+    'status': instance.status,
+    'street': instance.street,
+    'street2': instance.street2,
+    'town': instance.town,
+    'wazeLink': instance.wazeLink,
+    'notes': instance.notes,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('quote_number', Quote.toNull(instance.quote_number));
+  val['created_by'] = instance.created_by;
+  return val;
+}

@@ -10,34 +10,36 @@ part 'orders.g.dart';
 class Order {
   int id;
   DateTime? orderDate;
-  int accountId;
-  int contactId;
+  int? accountId;
+  int? contactId;
   String status;
   String street;
   String street2;
   // ignore: non_constant_identifier_names
-  String? order_number;
   String town;
   String wazeLink;
   String notes;
-  int quoteId;
+  int? quoteId;
   // ignore: non_constant_identifier_names
   int? created_by;
   DateTime? created;
+  static toNull(_) => null;
+  @JsonKey(toJson: toNull, includeIfNull: false)
+  String? order_number;
 
   List<OrderItem>? orderItems;
 
   Order(
-      {this.accountId = 0,
+      {this.accountId,
       this.orderItems,
       this.order_number,
-      this.contactId = 0,
+      this.contactId,
       this.created,
       this.created_by,
       this.id = 0,
       this.notes = "",
       this.orderDate,
-      this.quoteId = 0,
+      this.quoteId,
       this.status = "",
       this.street = "",
       this.street2 = "",

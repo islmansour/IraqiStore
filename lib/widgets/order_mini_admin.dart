@@ -1,3 +1,4 @@
+import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/contact.dart';
@@ -153,10 +154,10 @@ class OrderMiniAdmin extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                          top: BorderSide(width: 2.0, color: Colors.lightBlue),
-                        )),
+                        decoration: DottedDecoration(
+                            shape: Shape.line,
+                            linePosition: LinePosition.bottom,
+                            color: Colors.black),
                         child: Text('')),
                   ),
                 ],

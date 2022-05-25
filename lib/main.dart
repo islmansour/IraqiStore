@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/lov.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
@@ -18,8 +19,6 @@ import './controllers/navigation.dart';
 import 'components/news.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'models/orders.dart';
 
 void main() {
   runApp(
@@ -54,6 +53,9 @@ void main() {
       ListenableProvider<CurrentQuoteItemUpdate>(
         create: (_) => CurrentQuoteItemUpdate(),
       ),
+      ListenableProvider<CurrentListOfValuesUpdates>(
+        create: (_) => CurrentListOfValuesUpdates(),
+      ),
       ListenableProvider<ApplySearch>(
         create: (_) => ApplySearch(),
       ),
@@ -68,6 +70,7 @@ class IraqiStoreApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Provider.of<CurrentListOfValuesUpdates>(context, listen: false).loadLovs();
     NavigationController navigation =
         Provider.of<NavigationController>(context);
     return FutureBuilder(
@@ -96,24 +99,48 @@ class IraqiStoreApp extends StatelessWidget {
                 // Define the default `TextTheme`. Use this to specify the default
                 // text styling for headlines, titles, bodies of text, and more.
                 textTheme: const TextTheme(
-                  headlineSmall: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.amber),
                   displayMedium: TextStyle(
                       fontSize: 14.0,
                       //  fontWeight: FontWeight.bold,
                       color: Colors.black),
                   displaySmall: TextStyle(
-                    fontSize: 12.0,
+                    fontSize: 14.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  headlineSmall: TextStyle(
+                    fontSize: 12,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
+                  headlineMedium: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  headlineLarge: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  bodyMedium: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                   titleMedium: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.lightBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  titleSmall: TextStyle(
                     fontSize: 12.0,
                     color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
                   ),
+                  titleLarge: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.lightBlue,
+                      fontWeight: FontWeight.bold),
                   bodyLarge:
                       TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                   labelSmall: TextStyle(fontSize: 12.0, color: Colors.grey),
@@ -153,8 +180,8 @@ class IraqiStoreApp extends StatelessWidget {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return new Directionality(
-            textDirection: TextDirection.rtl, child: new Text('Loading..'));
+        return const Directionality(
+            textDirection: TextDirection.rtl, child: Text('Loading..'));
       },
     );
   }

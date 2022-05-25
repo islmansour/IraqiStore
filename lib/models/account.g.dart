@@ -22,18 +22,28 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       zip: json['zip'] as int?,
     );
 
-Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'contactId': instance.contactId,
-      'street': instance.street,
-      'street2': instance.street2,
-      'pobox': instance.pobox,
-      'zip': instance.zip,
-      'town': instance.town,
-      'email': instance.email,
-      'phone': instance.phone,
-      'active': instance.active,
-      'account_number': instance.account_number,
-      'created_by': instance.created_by,
-    };
+Map<String, dynamic> _$AccountToJson(Account instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'name': instance.name,
+    'contactId': instance.contactId,
+    'street': instance.street,
+    'street2': instance.street2,
+    'pobox': instance.pobox,
+    'zip': instance.zip,
+    'town': instance.town,
+    'email': instance.email,
+    'phone': instance.phone,
+    'active': instance.active,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('account_number', Account.toNull(instance.account_number));
+  val['created_by'] = instance.created_by;
+  return val;
+}

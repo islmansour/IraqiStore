@@ -43,9 +43,10 @@ class _ProductsListState extends State<ProductsList> {
                         if (Provider.of<CurrentProductsUpdate>(context)
                                 .products
                                 ?.length !=
-                            productSnap.data?.length)
+                            productSnap.data?.length) {
                           Provider.of<CurrentProductsUpdate>(context).products =
                               productSnap.data;
+                        }
                         return ProductMiniAdmin(item: productSnap.data![index]);
                       })));
         });

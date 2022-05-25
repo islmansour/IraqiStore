@@ -18,7 +18,8 @@ class Account {
   String? phone;
   bool? active;
 
-  // ignore: non_constant_identifier_names
+  static toNull(_) => null;
+  @JsonKey(toJson: toNull, includeIfNull: false)
   String? account_number;
   // ignore: non_constant_identifier_names
   int? created_by;

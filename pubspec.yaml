@@ -45,6 +45,7 @@ dependencies:
   firebase_auth: ^3.3.18
   pin_code_fields: ^7.3.0
   currency_icons: ^0.3.0
+  dotted_decoration: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -55,6 +55,8 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
         await dio.post("https://api.imgbb.com/1/upload", data: formData);
     if (response.statusCode != 400) {
       imgbbResponse = ImgbbResponseModel.fromJson(response.data);
+      widget.item?.img = imgbbResponse.data?.displayUrl;
+
       setState(() {
         delay = false;
         loading = false;
@@ -132,12 +134,12 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    String? currentImg =
-        Provider.of<CurrentProductsUpdate>(context, listen: false)
-            .products
-            ?.where((element) => element.id == widget.item?.id)
-            .first
-            .img;
+    String? currentImg = widget.item?.img;
+    // Provider.of<CurrentProductsUpdate>(context, listen: false)
+    //     .products
+    //     ?.where((element) => element.id == widget.item?.id)
+    //     .first
+    //     .img;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product'),

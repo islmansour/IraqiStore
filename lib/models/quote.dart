@@ -16,7 +16,10 @@ class Quote {
   String? wazeLink;
   String? notes;
   // ignore: non_constant_identifier_names
+  static toNull(_) => null;
+  @JsonKey(toJson: toNull, includeIfNull: false)
   String? quote_number;
+
   // ignore: non_constant_identifier_names
   int? created_by;
   //String created;

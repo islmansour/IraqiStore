@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/lov.dart';
+import 'package:hardwarestore/models/account.dart';
+import 'package:hardwarestore/models/lov.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/user.dart';
@@ -15,17 +20,7 @@ class CreateNewOrderForm extends StatefulWidget {
 
 class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Order _data = new Order();
-
-  String? _validateEmail(String? value) {
-    // If empty value, the isEmail function throw a error.
-    // So I changed this function with try and catch.
-    try {} catch (e) {
-      return 'The E-mail Address must be a valid email address.';
-    }
-
-    return "";
-  }
+  Order _data = Order();
 
   void submit() {
     // First validate form.
@@ -37,6 +32,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
 
   @override
   Widget build(BuildContext context) {
+    var format = NumberFormat.simpleCurrency(locale: 'he');
+
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -49,20 +46,51 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
             key: _formKey,
             child: ListView(
               children: <Widget>[
-                TextFormField(
-                  onSaved: (String? value) {
-                    if (value != "") _data.accountId = int.parse(value!);
-                    _data.id = 0;
-                    _data.quoteId = 1;
+                // TextFormField(
+                //   onSaved: (String? value) {
+                //     if (value != "") _data.accountId = int.parse(value!);
+                //     _data.id = 0;
+                //     _data.quoteId = 1;
 
-                    _data.created_by =
-                        Provider.of<GetCurrentUser>(context, listen: false)
-                            .currentUser
-                            ?.id;
-                  },
-                  decoration: const InputDecoration(
-                      hintText: 'account', labelText: 'Account'),
-                ),
+                //     _data.created_by =
+                //         Provider.of<GetCurrentUser>(context, listen: false)
+                //             .currentUser
+                //             ?.id;
+                //   },
+                //   decoration: const InputDecoration(
+                //       hintText: 'account', labelText: 'Account'),
+                // ),
+                DropdownButtonFormField(
+                    items: Provider.of<CurrentAccountsUpdate>(context)
+                        .accounts
+                        ?.map((Account acc) {
+                      return DropdownMenuItem(
+                          value: acc.id,
+                          child: Row(
+                            children: <Widget>[
+                              const Icon(Icons.star),
+                              Text(acc.name!),
+                            ],
+                          ));
+                    }).toList(),
+                    onChanged: (newValue) {
+                      // do other stuff with _category
+                      setState(() {
+                        _data.accountId = int.parse(newValue.toString());
+                        _data.id = 0;
+                        _data.quoteId = 1;
+
+                        _data.created_by =
+                            Provider.of<GetCurrentUser>(context, listen: false)
+                                .currentUser
+                                ?.id;
+                      });
+                    },
+                    //value: _data.accountId == "" || _data.accountId == null
+                    //    ? ""
+                    //     : _data.accountId,
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(right: 8))),
                 TextFormField(
                   onSaved: (String? value) {
                     if (value != "") _data.contactId = int.parse(value!);
@@ -84,13 +112,42 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                   decoration: const InputDecoration(
                       hintText: 'date', labelText: 'Date'),
                 ),
-                TextFormField(
-                  onSaved: (String? value) {
-                    if (value != "") _data.status = "1";
-                  },
-                  decoration: const InputDecoration(
-                      hintText: 'status', labelText: 'Status'),
-                ),
+                // TextFormField(
+                //   onSaved: (String? value) {
+                //     if (value != "") _data.status = "1";
+                //   },
+                //   decoration: const InputDecoration(
+                //       hintText: 'status', labelText: 'Status'),
+                // ),
+                DropdownButtonFormField(
+                    items: Provider.of<CurrentListOfValuesUpdates>(context)
+                        .getListOfValue('ORDER_STATUS', format.locale)
+                        .map((ListOfValues status) {
+                      return DropdownMenuItem(
+                          value: status.value,
+                          child: Row(
+                            children: <Widget>[
+                              const Icon(Icons.star),
+                              Text(status.value!),
+                            ],
+                          ));
+                    }).toList(),
+                    onChanged: (newValue) {
+                      // do other stuff with _category
+                      setState(() => _data.status = newValue.toString());
+                    },
+                    value: _data.status == "" || _data.status == null
+                        ? Provider.of<CurrentListOfValuesUpdates>(context)
+                            .activeListOfValues
+                            .where((element) =>
+                                element.language == format.locale &&
+                                element.name == 'new' &&
+                                element.type == 'ORDER_STATUS')
+                            .first
+                            .value
+                        : _data.status,
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(right: 8))),
                 TextFormField(
                   onSaved: (String? value) {
                     if (value != "") _data.street = value!;

@@ -21,17 +21,27 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       subCategory: json['subCategory'] as String?,
     );
 
-Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'desc': instance.desc,
-      'alias': instance.alias,
-      'created_by': instance.created_by,
-      'product_number': instance.product_number,
-      'img': instance.img,
-      'category': instance.category,
-      'subCategory': instance.subCategory,
-      'price': instance.price,
-      'discount': instance.discount,
-      'active': instance.active,
-    };
+Map<String, dynamic> _$ProductToJson(Product instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'name': instance.name,
+    'desc': instance.desc,
+    'alias': instance.alias,
+    'created_by': instance.created_by,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('product_number', Product.toNull(instance.product_number));
+  val['img'] = instance.img;
+  val['category'] = instance.category;
+  val['subCategory'] = instance.subCategory;
+  val['price'] = instance.price;
+  val['discount'] = instance.discount;
+  val['active'] = instance.active;
+  return val;
+}

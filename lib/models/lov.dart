@@ -11,8 +11,10 @@ class ListOfValues {
   String? name;
   String? value;
   bool? active;
+  String? language;
 
-  ListOfValues({this.active, this.id, this.name, this.type, this.value});
+  ListOfValues(
+      {this.active, this.id, this.name, this.type, this.value, this.language});
 
   factory ListOfValues.fromJson(Map<String, dynamic> json) =>
       _$ListOfValuesFromJson(json);

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:provider/provider.dart';
+
+import '../models/account.dart';
 
 class SearchItem {
   String? type;
@@ -15,8 +19,16 @@ class ApplySearch extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Account>? SearchAccounts(BuildContext context, String search) {
+    return Provider.of<CurrentAccountsUpdate>(context)
+        .accounts
+        ?.where((element) =>
+            element.name.toString().contains(search) ||
+            element.account_number.toString().contains(search))
+        .toList();
+  }
+
   Future<List<SearchItem>> SearchAllObjects(String search) async {
-    print('1');
     await DjangoServices().getAccounts().then((value) {
       value
           ?.where((element) => element.name.toString().contains(search))
