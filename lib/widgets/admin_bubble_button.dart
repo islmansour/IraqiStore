@@ -39,10 +39,10 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
       items: <Bubble>[
         // Floating action menu item
         Bubble(
-          title: 'New Account',
+          title: 'לקוח',
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
-          icon: Icons.settings,
+          icon: Icons.person_add,
           titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
             Navigator.push(
@@ -54,10 +54,10 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
         ),
         // Floating action menu item
         Bubble(
-          title: "New Product",
+          title: "מוצר",
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
-          icon: Icons.people,
+          icon: Icons.category,
           titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
             Navigator.push(
@@ -69,10 +69,10 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
         ),
         //Floating action menu item
         Bubble(
-          title: "New Order",
+          title: "הזמנה",
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
-          icon: Icons.home,
+          icon: Icons.shopping_cart,
           titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
             Navigator.push(
@@ -83,10 +83,10 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
           },
         ),
         Bubble(
-          title: "New Quote",
+          title: "הצעת מחיר ",
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
-          icon: Icons.home,
+          icon: Icons.shopping_basket,
           titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
             Navigator.push(

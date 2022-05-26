@@ -12,6 +12,7 @@ class Product {
   String? alias;
   // ignore: non_constant_identifier_names
   int? created_by;
+
   static toNull(_) => null;
   @JsonKey(toJson: toNull, includeIfNull: false)
   String? product_number;

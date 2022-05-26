@@ -12,16 +12,6 @@ class QuoteMiniAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*
-    1 columns that has
-    3 rows
-      1st row: has one ListTile with one text: Quote Number + Quote Date
-      2nd row: has 3 columns each as a container with a text.
-        first column is the account name
-        second column is the contact name
-        third column : if contact exists, displays contact phone. otherwise display account phone
-      3rd row: has 2 columns: First colum is Quote Status , second is dlivery status
-    */
     Account? currentAccount;
 
     currentAccount = Provider.of<CurrentAccountsUpdate>(context, listen: false)
@@ -67,7 +57,7 @@ class QuoteMiniAdmin extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      Text('contact name',
+                      Text('contact 1111name',
                           style: Theme.of(context).textTheme.displayMedium),
                     ],
                   ),
