@@ -24,8 +24,14 @@ class _QuotesListState extends State<QuotesList> {
           int len = orderSnap.data?.length ?? 0;
 
           return ExpansionTile(
-              title: Text('הצעות ' + len.toString(),
-                  style: Theme.of(context).textTheme.displayMedium),
+              title: Text(
+                'הצעות ' + len.toString() + ' ' + 'פתוחות',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lightGreen,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               children: [
                 ListTile(
                     title: SizedBox(

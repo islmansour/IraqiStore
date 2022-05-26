@@ -1,3 +1,4 @@
+import 'package:hardwarestore/models/quote_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
@@ -22,12 +23,15 @@ class Quote {
 
   // ignore: non_constant_identifier_names
   int? created_by;
-  //String created;
+  DateTime? created;
+
+  List<QuoteItem>? quoteItems;
 
   Quote({
+    this.status,
     this.accountId,
     this.contactId,
-    //  this.created ,
+    this.created,
     // ignore: non_constant_identifier_names
     this.created_by,
     this.id,
@@ -35,7 +39,6 @@ class Quote {
     // ignore: non_constant_identifier_names
     this.quote_number,
     // this.quoteDate ,
-    this.status,
     this.street,
     this.street2,
     this.town,

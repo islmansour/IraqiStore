@@ -93,11 +93,6 @@ class IraqiStoreApp extends StatelessWidget {
                 //brightness: Brightness.dark,
                 primaryColor: Colors.lightBlue[800],
 
-                // Define the default font family.
-                //fontFamily: 'Georgia',
-
-                // Define the default `TextTheme`. Use this to specify the default
-                // text styling for headlines, titles, bodies of text, and more.
                 textTheme: const TextTheme(
                   displayMedium: TextStyle(
                       fontSize: 14.0,

@@ -35,8 +35,14 @@ class _OrdersListState extends State<OrdersList> {
           Provider.of<CurrentOrdersUpdate>(context).orders = orderSnap.data;
 
           return ExpansionTile(
-              title: Text('הזמנות ' + len.toString(),
-                  style: Theme.of(context).textTheme.headlineSmall),
+              title: Text(
+                'הזמנות ' + len.toString() + ' ' + 'פתוחות',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lightBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               children: [
                 ListTile(
                     title: SizedBox(
