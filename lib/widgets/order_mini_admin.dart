@@ -6,15 +6,20 @@ import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../components/order.dart';
 import '../models/account.dart';
 import '../screens/admin/order_details_admin.dart';
+import '../services/tools.dart';
 
-class OrderMiniAdmin extends StatelessWidget {
+class OrderMiniAdmin extends StatefulWidget {
   final Order item;
 
   const OrderMiniAdmin({Key? key, required this.item}) : super(key: key);
 
+  @override
+  State<OrderMiniAdmin> createState() => _OrderMiniAdminState();
+}
+
+class _OrderMiniAdminState extends State<OrderMiniAdmin> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
@@ -24,31 +29,30 @@ class OrderMiniAdmin extends StatelessWidget {
 
     orderAccount = Provider.of<CurrentAccountsUpdate>(context)
         .accounts
-        ?.where((f) => f.id == item.accountId)
+        ?.where((f) => f.id == widget.item.accountId)
         .first;
 
-    item.contactId != null && item.contactId != 0
+    widget.item.contactId != null && widget.item.contactId != 0
         ? orderContact = Provider.of<CurrentContactsUpdate>(context)
             .contacts
-            ?.where((f) => f.id == item.contactId)
+            ?.where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
     double sum = 0;
-    // print(' item.orderItems' + item.orderItems!.length.toString());
-    item.orderItems?.forEach(
+
+    widget.item.orderItems?.forEach(
       (element) {
-        sum = sum + element.price!;
+        if (element.price != null) sum = sum + element.price!;
       },
     );
-
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => OrderDetailAdmin(
-                    item: item,
+                    item: widget.item,
                   )),
         );
         // Goto a single order screen with we display order details and bellow that the Order Items.
@@ -69,14 +73,14 @@ class OrderMiniAdmin extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
-                        item.order_number.toString(),
+                        widget.item.order_number.toString(),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.2,
                       child: Text(
-                        item.status,
+                        widget.item.status,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
@@ -92,8 +96,12 @@ class OrderMiniAdmin extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
-                child: Text(DateFormat('dd/MM/yy hh:mm').format(item.created!),
-                    style: Theme.of(context).textTheme.labelSmall),
+                child: widget.item.created == null
+                    ? Text('Now', style: Theme.of(context).textTheme.labelSmall)
+                    : Text(
+                        DateFormat('dd/MM/yy hh:mm')
+                            .format(widget.item.created!),
+                        style: Theme.of(context).textTheme.labelSmall),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 4.0, top: 4),
@@ -138,11 +146,39 @@ class OrderMiniAdmin extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.25,
                       child: Column(
                         children: [
-                          Text(
-                              format.currencySymbol +
-                                  ' ' +
-                                  sum.toString(), //  .data.toString(),
-                              style: Theme.of(context).textTheme.displayMedium)
+                          Consumer<OrderModification>(
+                              builder: (context, repo, _) {
+                            if (repo.order
+                                    .where((element) =>
+                                        element.id == widget.item.id)
+                                    .isNotEmpty &&
+                                repo.order
+                                        .where((element) =>
+                                            element.id == widget.item.id)
+                                        .first !=
+                                    null) {
+                              return Text(
+                                  format.currencySymbol +
+                                      ' ' +
+                                      repo.order
+                                          .where((element) =>
+                                              element.id == widget.item.id)
+                                          .first
+                                          .totalAmount
+                                          .toStringAsFixed(2)
+                                          .toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium);
+                            } else {
+                              return Text(format.currencySymbol + '*' + '0.0',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium);
+                            }
+
+                            return Text('[0.0]');
+                          }),
                         ],
                       ),
                     ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/orders.dart';
 import '../../widgets/product_mini_admin.dart';
+import '../../widgets/product_pick.dart';
 
 class ProductsList extends StatefulWidget {
   ProductsList({Key? key}) : super(key: key);
@@ -47,6 +50,7 @@ class _ProductsListState extends State<ProductsList> {
                           Provider.of<CurrentProductsUpdate>(context).products =
                               productSnap.data;
                         }
+
                         return ProductMiniAdmin(item: productSnap.data![index]);
                       })));
         });

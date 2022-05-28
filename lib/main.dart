@@ -9,10 +9,12 @@ import 'package:hardwarestore/components/delivery.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/services/search.dart';
+import 'package:hardwarestore/services/tools.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
@@ -23,6 +25,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => OrderModification()),
       ListenableProvider<NavigationController>(
         create: (_) => NavigationController(),
       ),

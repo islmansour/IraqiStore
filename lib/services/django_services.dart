@@ -32,25 +32,55 @@ class DjangoServices {
     return null;
   }
 
-  Future<bool>? upsertOrder(Order order) async {
+  Future<int>? upsertOrder(Order order) async {
     var client = http.Client();
     var uri = Uri.parse(
         'http://127.0.0.1:8000/IraqiStore/upsert_order/' + order.id.toString());
-
+    var _id = -1;
     var response = await client
         .post(uri, headers: headers, body: jsonEncode(order.toJson()))
         .then((value) {
       if (value.statusCode == 201) {
-        return true;
+        return int.parse(value.body);
       } else {
         print('Error occured: ' + value.statusCode.toString());
       }
     });
 
+    return int.parse(response.toString());
+  }
+
+  Future<int>? upsertOrderItem(OrderItem orderItem) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/upsert_order_item/' +
+        orderItem.id.toString());
+    var _id = -1;
+    var response = await client
+        .post(uri, headers: headers, body: jsonEncode(orderItem.toJson()))
+        .then((value) {
+      if (value.statusCode == 201) {
+        return -1; //int.parse(value.body);
+      } else {
+        print('Error occured: ' + value.statusCode.toString());
+      }
+    });
+
+    return -1; //int.parse(response.toString());
+  }
+
+  Future<bool> deleteOrderItem(int orderItem) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/delete_order_item/' +
+        orderItem.toString());
+    await client.post(
+      uri,
+      headers: headers,
+    );
+
     return true;
   }
 
-  Future<List<OrderItem>?> getOrderItems(String orderId) async {
+  Future<List<OrderItem>?> getOrderItems(int orderId) async {
     var client = http.Client();
     var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/order_item_list/' +
         orderId.toString());
