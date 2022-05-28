@@ -26,7 +26,7 @@ class _OrderItemsListState extends State<OrderItemsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<OrderItem>?>(
-        future: DjangoServices().getOrderItems(widget.order.id.toString()),
+        future: DjangoServices().getOrderItems(widget.order.id),
         builder: (context, AsyncSnapshot<List<OrderItem>?> orderItemsSnap) {
           if (orderItemsSnap.connectionState == ConnectionState.none &&
               // ignore: unnecessary_null_comparison

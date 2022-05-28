@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/search.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:hardwarestore/widgets/account_min_admin.dart';
 import 'package:hardwarestore/widgets/contact_mini_admin.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
@@ -30,9 +33,16 @@ class _HomeAdminState extends State<HomeAdmin> {
   String _newSearch = "";
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _loadAccounts(context);
     _loadContacts(context);
+    _loadProductss(context);
     return Scaffold(
       floatingActionButton: AdminBubbleButtons(),
       body: SingleChildScrollView(
@@ -80,7 +90,7 @@ class _HomeAdminState extends State<HomeAdmin> {
             ],
           ),
         ),
-        if (_searching == false) OrdersList(),
+        if (_searching == false) const OrdersList(),
         if (_searching == false) QuotesList(),
         if (_searching == false) DeliverysList(),
         if (_searching == true && _newSearch.length >= 3)
@@ -150,6 +160,13 @@ void _loadAccounts(BuildContext context) async {
   Provider.of<CurrentAccountsUpdate>(context, listen: false).accounts =
       _accounts;
   Provider.of<CurrentAccountsUpdate>(context, listen: false).accountsLoaded();
+  return;
+}
+
+void _loadProductss(BuildContext context) async {
+  List<Product>? _produdcts = await DjangoServices().getProducts();
+  Provider.of<CurrentProductsUpdate>(context, listen: false).products =
+      _produdcts;
   return;
 }
 

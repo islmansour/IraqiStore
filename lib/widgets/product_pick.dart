@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/components/order.dart';
+import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/orders.dart';
 
-class OrderItemAdmin extends StatefulWidget {
-  final OrderItem item;
+class ProductPick extends StatefulWidget {
+  final Product item;
   final int orderId;
 
-  const OrderItemAdmin({Key? key, required this.item, required this.orderId})
+  const ProductPick({Key? key, required this.item, required this.orderId})
       : super(key: key);
 
   @override
-  State<OrderItemAdmin> createState() => _OrderItemAdminState();
+  State<ProductPick> createState() => _ProductPickState();
 }
 
-class _OrderItemAdminState extends State<OrderItemAdmin> {
+class _ProductPickState extends State<ProductPick> {
   double quantity = 0;
 
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
-
-    Product? _product;
-
-    _product = Provider.of<CurrentProductsUpdate>(context)
-        .products
-        ?.where((f) => f.id == widget.item.productId)
+    OrderItem? orderItem;
+    Order? order = Provider.of<CurrentOrdersUpdate>(context)
+        .orders
+        ?.where((element) => element.id == widget.orderId)
         .first;
 
+    if (order == null) {
+      print('>>>> unable to find order.');
+    }
+    // if (order?.orderItems != null && order!.orderItems!.isNotEmpty) {
+    //   orderItem = order.orderItems
+    //       ?.where((element) => element.productId == widget.item.id)
+    //       .first;
+    // }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -66,27 +71,77 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                           IconButton(
                             icon: const Icon(
                               Icons.add,
-                              color: Colors.yellow,
+                              color: Colors.white,
                               size: 34,
                             ),
                             tooltip: 'הוספה',
                             onPressed: () {
                               setState(() {
+                                bool newItem = true;
                                 if (quantity <= 0) return;
+                                if (order == null) {
+                                  print('Error receiving order.');
+                                  return;
+                                }
+                                orderItem = OrderItem();
+                                order.orderItems?.forEach((element) {
+                                  if (element.productId == widget.item.id) {
+                                    newItem = false;
+                                    element.quantity =
+                                        double.parse(quantity.toString());
+                                  }
+                                });
+                                if (newItem) {
+                                  orderItem?.id = 0;
+                                  orderItem?.productId = widget.item.id;
+                                  orderItem?.quantity = quantity.toDouble();
+                                  orderItem?.price = (widget.item.price! -
+                                          (widget.item.price! *
+                                              (widget.item.discount!
+                                                      .toDouble() /
+                                                  100))) *
+                                      quantity.toDouble();
+                                  orderItem?.created_by =
+                                      Provider.of<GetCurrentUser>(context,
+                                              listen: false)
+                                          .currentUser
+                                          ?.id;
+                                  orderItem?.orderId = order.id;
 
-                                Provider.of<CurrentOrdersUpdate>(context,
-                                            listen: false)
-                                        .orders
-                                        ?.where((element) =>
-                                            element.id == widget.orderId)
-                                        .first
-                                        .orderItems!
-                                        .where((it) => it.id == widget.item.id)
-                                        .first
-                                        .quantity ==
-                                    quantity;
-                                widget.item.quantity = quantity;
-                                DjangoServices().upsertOrderItem(widget.item);
+                                  Provider.of<CurrentOrdersUpdate>(context,
+                                          listen: false)
+                                      .orders
+                                      ?.where(
+                                          (element) => element.id == order.id)
+                                      .first
+                                      .orderItems ??= <OrderItem>[];
+                                  //  order.orderItems!.add(orderItem!);
+                                  if (Provider.of<CurrentOrdersUpdate>(context,
+                                              listen: false)
+                                          .orders ==
+                                      null) {
+                                    print(
+                                        'error while adding items to an order, order is null');
+                                    return;
+                                  }
+                                  Provider.of<CurrentOrdersUpdate>(context,
+                                          listen: false)
+                                      .orders
+                                      ?.where(
+                                          (element) => element.id == order.id)
+                                      .first
+                                      .orderItems
+                                      ?.add(orderItem!);
+                                }
+
+                                print(Provider.of<CurrentOrdersUpdate>(context,
+                                        listen: false)
+                                    .orders
+                                    ?.where((element) => element.id == order.id)
+                                    .first
+                                    .orderItems
+                                    ?.length
+                                    .toString());
                               });
                             },
                           ),
@@ -111,7 +166,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                     MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Text(
-                                    _product!.name.toString(),
+                                    widget.item.name.toString(),
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600,
@@ -131,14 +186,14 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                       Text(
                                           "הנחה:" +
                                               ' ' +
-                                              _product.discount.toString() +
+                                              widget.item.discount.toString() +
                                               ' %',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayMedium),
                                     ],
                                   ),
-                                  Text(_product.desc.toString(),
+                                  Text(widget.item.desc.toString(),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context)
@@ -152,9 +207,11 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                               alignment: Alignment.center,
                               width: 40,
                               child: TextFormField(
-                                initialValue: widget.item.quantity.toString(),
+                                initialValue: orderItem?.quantity.toString(),
                                 onChanged: (value) {
                                   setState(() {
+                                    if (value == "") value = "0";
+
                                     quantity = double.parse(value);
                                   });
                                 },
@@ -165,7 +222,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                   // border: OutlineInputBorder(),0
                                   labelText: 'כמות',
                                 ),
-                              )),
+                              ))
                         ],
                       ),
                     ),
@@ -190,15 +247,12 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                           IconButton(
                             icon: const Icon(
                               Icons.remove,
-                              color: Colors.yellow,
+                              color: Colors.white,
                               size: 34,
                             ),
                             tooltip: 'הסרה',
                             onPressed: () {
-                              setState(() {
-                                DjangoServices()
-                                    .deleteOrderItem(widget.item.id!);
-                              });
+                              setState(() {});
                             },
                           ),
                         ],

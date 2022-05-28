@@ -7,7 +7,7 @@ import 'dart:convert';
 part 'orders.g.dart';
 
 @JsonSerializable()
-class Order {
+class Order extends ChangeNotifier {
   int id;
   DateTime? orderDate;
   int? accountId;
@@ -26,7 +26,7 @@ class Order {
   static toNull(_) => null;
   @JsonKey(toJson: toNull, includeIfNull: false)
   String? order_number;
-
+  @JsonKey(toJson: toNull, includeIfNull: false)
   List<OrderItem>? orderItems;
 
   Order(
@@ -44,12 +44,20 @@ class Order {
       this.street = "",
       this.street2 = "",
       this.town = "",
-      this.wazeLink = ""}) {}
+      this.wazeLink = ""});
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$OrderToJson(this);
+
+  double get totalAmount {
+    double sum = 0;
+    orderItems?.forEach((element) {
+      if (element.price != null) sum += element.price!;
+    });
+    return sum;
+  }
 }
 
 List<Order> orderFromJson(String str) {
