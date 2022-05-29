@@ -67,19 +67,19 @@ import '../widgets/order_mini_admin.dart';
 //   }
 // }
 
-class CurrentOrdersUpdate extends ChangeNotifier {
-  List<Order>? orders;
+// class CurrentOrdersUpdate extends ChangeNotifier {
+//   List<Order>? orders;
 
-  void updateOrder(Order order) {
-    orders?.add((order));
-    notifyListeners();
-  }
+//   void updateOrder(Order order) {
+//     orders?.add((order));
+//     notifyListeners();
+//   }
 
-  void setOrders(List<Order>? newOrdersSet) {
-    orders = newOrdersSet;
-    //notifyListeners();
-  }
-}
+//   void setOrders(List<Order>? newOrdersSet) {
+//     orders = newOrdersSet;
+//     //notifyListeners();
+//   }
+// }
 
 class OrdersList extends StatelessWidget {
   const OrdersList({Key? key}) : super(key: key);
@@ -94,21 +94,23 @@ class OrdersList extends StatelessWidget {
             return Container();
           }
           int len = orderSnap.data?.length ?? 0;
-          Provider.of<CurrentOrdersUpdate>(context).setOrders(orderSnap.data);
+          // Provider.of<CurrentOrdersUpdate>(context).setOrders(orderSnap.data);
           if (orderSnap.data != null) {
             Provider.of<OrderModification>(context, listen: false).orders =
                 orderSnap.data!;
           }
 
           return ExpansionTile(
-              title: Text(
-                'הזמנות ' + len.toString() + ' ' + 'פתוחות',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lightBlue,
-                  fontWeight: FontWeight.bold,
-                ),
+              initiallyExpanded: true,
+              title: const Text('הזמנות '),
+              leading: const Icon(Icons.shopping_cart),
+              subtitle: Text(
+                len.toString() + ' ' + 'פתוחות',
               ),
+              iconColor: Colors.green,
+              textColor: Colors.green,
+              collapsedIconColor: Colors.blue,
+              collapsedTextColor: Colors.blue,
               children: [
                 ListTile(
                     title: SizedBox(
@@ -120,9 +122,15 @@ class OrdersList extends StatelessWidget {
                                 itemCount: orderSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
                                   return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      OrderMiniAdmin(
-                                          item: orderSnap.data![index]),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: OrderMiniAdmin(
+                                            item: orderSnap.data![index]),
+                                      ),
                                     ],
                                   );
                                 }))))

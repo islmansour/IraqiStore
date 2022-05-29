@@ -7,6 +7,7 @@ import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/lov.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -32,8 +33,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
       _formKey.currentState?.save();
       DjangoServices().upsertOrder(_data)?.then((value) {
         _data.id == value;
-        Provider.of<CurrentOrdersUpdate>(context, listen: false)
-            .updateOrder(_data);
+        Provider.of<OrderModification>(context, listen: false).update(_data);
       });
 
       // Save our form now.
@@ -138,7 +138,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                         .getListOfValue('ORDER_STATUS', format.locale)
                         .map((ListOfValues status) {
                       return DropdownMenuItem(
-                          value: status.value,
+                          value: status.name,
                           child: Row(
                             children: <Widget>[
                               const Icon(Icons.star),
@@ -158,7 +158,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                                 element.name == 'new' &&
                                 element.type == 'ORDER_STATUS')
                             .first
-                            .value
+                            .name
                         : _data.status,
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(right: 8))),

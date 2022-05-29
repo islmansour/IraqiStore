@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/orders.dart';
@@ -28,94 +27,94 @@ class _OrderItemListState extends State<OrderItemList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<OrderItem>?>(
-        future: DjangoServices().getOrderItems(widget.orderId),
-        builder: (context, AsyncSnapshot<List<OrderItem>?> orderItemSnap) {
-          if (orderItemSnap.connectionState == ConnectionState.none &&
-              orderItemSnap.hasData == null) {
-            return Container();
-          }
-          return SizedBox(
-              height: MediaQuery.of(context).size.height * 0.75,
-              child: Scrollbar(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: orderItemSnap.data?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        Provider.of<CurrentOrderItemUpdate>(context)
-                            .orderItems = orderItemSnap.data;
-                        return Slidable(
-                          key: ValueKey(index),
-                          endActionPane: ActionPane(
-                            // A motion is a widget used to control how the pane animates.
-                            motion: const ScrollMotion(),
+    if (Provider.of<OrderModification>(context)
+        .order
+        .where(
+          (element) => element.id == widget.orderId,
+        )
+        .isEmpty) {
+      Provider.of<OrderModification>(context).refreshOrdersFromDB();
+    }
+    List<OrderItem>? _items = Provider.of<OrderModification>(context)
+        .order
+        .where(
+          (element) => element.id == widget.orderId,
+        )
+        .first
+        .orderItems;
+    return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: Scrollbar(
+            child: RefreshIndicator(
+          onRefresh: _pullRefresh,
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: _items?.length ?? 0,
+              itemBuilder: (context, index) {
+                Provider.of<CurrentOrderItemUpdate>(context).orderItems =
+                    _items;
+                return Dismissible(
+                  key: Key(_items![index].id.toString()),
+                  background: Container(color: Colors.red),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    OrderItem _currentItem = _items[index];
 
-                            // A pane can dismiss the Slidable.
-                            dismissible: DismissiblePane(onDismissed: () {
-                              DjangoServices().deleteOrderItem(
-                                  orderItemSnap.data![index].id!);
+                    DjangoServices().deleteOrderItem(_items[index].id!);
 
-                              Provider.of<CurrentOrdersUpdate>(context,
-                                      listen: false)
-                                  .orders
-                                  ?.where(
-                                      (element) => element.id == widget.orderId)
-                                  .first
-                                  .orderItems!
-                                  .forEach((item) {
-                                if (item.id == orderItemSnap.data![index].id!) {
-                                  Provider.of<CurrentOrdersUpdate>(context,
-                                          listen: false)
-                                      .orders
-                                      ?.where((element) =>
-                                          element.id == widget.orderId)
-                                      .first
-                                      .orderItems![index] = OrderItem();
-                                }
-                              });
-
-                              String? out = Provider.of<CurrentOrdersUpdate>(
-                                      context,
-                                      listen: false)
-                                  .orders
-                                  ?.where(
-                                      (element) => element.id == widget.orderId)
-                                  .first
-                                  .orderItems!
-                                  .length
-                                  .toString();
-                              Order? x = Provider.of<CurrentOrdersUpdate>(
-                                      context,
-                                      listen: false)
-                                  .orders
-                                  ?.where(
-                                      (element) => element.id == widget.orderId)
-                                  .first;
-                              Provider.of<OrderModification>(context,
-                                      listen: false)
-                                  .update(x!);
-                            }),
-
-                            // All actions are defined in the children parameter.
-                            children: const [
-                              // A SlidableAction can have an icon and/or a label.
-                              SlidableAction(
-                                onPressed: null,
-                                backgroundColor: Color(0xFFFE4A49),
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete,
-                                label: 'מחק',
-                              ),
-                            ],
-                          ),
-                          child: OrderItemAdmin(
-                            item: orderItemSnap.data![index],
-                            orderId: widget.orderId,
-                          ),
+                    Provider.of<OrderModification>(context, listen: false)
+                        .order
+                        .where((element) => element.id == widget.orderId)
+                        .first
+                        .orderItems!
+                        .forEach((item) {
+                      if (item.id == _currentItem.id!) {
+                        Provider.of<OrderModification>(context, listen: false)
+                            .order
+                            .where((element) => element.id == widget.orderId)
+                            .first
+                            .orderItems
+                            ?.forEach(
+                          (itemElement) {
+                            if (itemElement.id == _currentItem.id) {
+                              itemElement = OrderItem();
+                            }
+                          },
                         );
-                      })));
-        });
+                      }
+
+                      Order x =
+                          Provider.of<OrderModification>(context, listen: false)
+                              .order
+                              .where((element) => element.id == widget.orderId)
+                              .first;
+
+                      Provider.of<OrderModification>(context, listen: false)
+                          .update(x);
+                    });
+
+                    setState(() {
+                      _items.removeAt(index);
+                    });
+                    Scaffold.of(context).showSnackBar(
+                        const SnackBar(content: Text("הוסר בהצלה")));
+                  },
+                  child: OrderItemAdmin(
+                    item: _items[index],
+                    orderId: widget.orderId,
+                  ),
+                );
+              }),
+        )));
+  }
+
+  Future<void> _pullRefresh() async {
+    //  List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
+    setState(() {
+      //    words = freshWords;
+    });
+    // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
   }
 }
 

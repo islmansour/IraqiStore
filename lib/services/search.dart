@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
+import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
+import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +30,25 @@ class ApplySearch extends ChangeNotifier {
         .toList();
   }
 
+  Future<List<SearchItem>> SearchProducts(String search) async {
+    await DjangoServices().getProducts().then((value) {
+      value
+          ?.where((element) => element.name.toString().contains(search))
+          .forEach((i) {
+        items.add(SearchItem(item: i, type: "Product"));
+      });
+      value
+          ?.where(
+              (element) => element.product_number.toString().contains(search))
+          .forEach((i) {
+        items.add(SearchItem(item: i, type: "Product"));
+      });
+    });
+
+    notifyListeners();
+    return items;
+  }
+
   Future<List<SearchItem>> SearchAllObjects(String search) async {
     await DjangoServices().getAccounts().then((value) {
       value
@@ -47,7 +68,6 @@ class ApplySearch extends ChangeNotifier {
         items.add(SearchItem(item: i, type: "Account"));
       });
     });
-    print('2    ');
 
     await DjangoServices().getContacts().then((value) {
       value
@@ -71,7 +91,6 @@ class ApplySearch extends ChangeNotifier {
         items.add(SearchItem(item: i, type: "Contact"));
       });
     });
-    print('3');
 
     await DjangoServices().getOrders().then((value) {
       value
@@ -80,7 +99,6 @@ class ApplySearch extends ChangeNotifier {
         items.add(SearchItem(item: i, type: "Order"));
       });
     });
-    print('4');
 
     await DjangoServices().getQuotes().then((value) {
       value
@@ -89,7 +107,6 @@ class ApplySearch extends ChangeNotifier {
         items.add(SearchItem(item: i, type: "Quote"));
       });
     });
-    print('number of items found is: ' + items.length.toString());
     notifyListeners();
     return items;
   }

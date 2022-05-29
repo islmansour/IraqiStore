@@ -52,20 +52,24 @@ class DjangoServices {
 
   Future<int>? upsertOrderItem(OrderItem orderItem) async {
     var client = http.Client();
+
     var uri = Uri.parse('http://127.0.0.1:8000/IraqiStore/upsert_order_item/' +
         orderItem.id.toString());
     var _id = -1;
-    var response = await client
-        .post(uri, headers: headers, body: jsonEncode(orderItem.toJson()))
-        .then((value) {
-      if (value.statusCode == 201) {
-        return -1; //int.parse(value.body);
-      } else {
-        print('Error occured: ' + value.statusCode.toString());
-      }
-    });
+    var response = await client.post(uri,
+        headers: headers, body: jsonEncode(orderItem.toJson()));
 
-    return -1; //int.parse(response.toString());
+    if (response.statusCode > -10) {
+      int result = -1;
+      try {
+        result = int.parse(response.body.toString());
+      } catch (e) {
+        print('Error getting ID of orderItem. API result is: ' + e.toString());
+        result = -1;
+      }
+      return result;
+    }
+    return -1;
   }
 
   Future<bool> deleteOrderItem(int orderItem) async {

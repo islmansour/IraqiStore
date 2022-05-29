@@ -32,9 +32,9 @@ void main() {
       ListenableProvider<CurrentNewsUpdates>(
         create: (_) => CurrentNewsUpdates(),
       ),
-      ListenableProvider<CurrentOrdersUpdate>(
-        create: (_) => CurrentOrdersUpdate(),
-      ),
+      // ListenableProvider<CurrentOrdersUpdate>(
+      //   create: (_) => CurrentOrdersUpdate(),
+      // ),
       ListenableProvider<CurrentQuotesUpdate>(
         create: (_) => CurrentQuotesUpdate(),
       ),
@@ -99,8 +99,9 @@ class IraqiStoreApp extends StatelessWidget {
                 textTheme: const TextTheme(
                   displayMedium: TextStyle(
                       fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
                       //  fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Colors.white),
                   displaySmall: TextStyle(
                     fontSize: 14.0,
                     color: Colors.white,
@@ -121,10 +122,6 @@ class IraqiStoreApp extends StatelessWidget {
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  bodyMedium: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
                   titleMedium: TextStyle(
                     fontSize: 14.0,
                     color: Colors.lightBlue,
@@ -139,12 +136,17 @@ class IraqiStoreApp extends StatelessWidget {
                       fontSize: 16.0,
                       color: Colors.lightBlue,
                       fontWeight: FontWeight.bold),
-                  bodyLarge:
-                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                  bodyLarge: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                  bodyMedium: TextStyle(fontSize: 14, color: Colors.black),
+                  bodySmall: TextStyle(fontSize: 12, color: Colors.black),
                   labelSmall: TextStyle(fontSize: 12.0, color: Colors.grey),
                   labelMedium: TextStyle(
-                    fontSize: 12.0,
-                  ),
+                      fontSize: 14.0,
+                      color: Colors.deepOrangeAccent,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               supportedLocales: const [
