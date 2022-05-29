@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/orders.dart';
 import '../../widgets/product_mini_admin.dart';
-import '../../widgets/product_pick.dart';
 
 class ProductsList extends StatefulWidget {
   ProductsList({Key? key}) : super(key: key);
@@ -38,7 +34,7 @@ class _ProductsListState extends State<ProductsList> {
               height: MediaQuery.of(context).size.height * 0.75,
               child: Scrollbar(
                   child: ListView.builder(
-                      physics: ScrollPhysics(),
+                      physics: const ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: productSnap.data?.length ?? 0,

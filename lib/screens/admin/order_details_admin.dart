@@ -1,12 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
-import 'package:hardwarestore/widgets/product_pick.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/orders.dart';
-import '../../services/tools.dart';
 import '../../widgets/admin_bubble_order.dart';
 
 class OrderDetailAdmin extends StatefulWidget {
@@ -29,12 +25,12 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
       floatingActionButton: OrderBubbleButtons(orderId: widget.item.id),
       body: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.max, children: [
-        OrderMiniAdmin(
+        OrderDetaulsNoInkWell(
           item: widget.item,
         ),
         OrderItemList(
           orderId: widget.item.id,
-        )
+        ),
       ])),
       appBar: AppBar(
         title: Text('הזמנה מס ' + widget.item.id.toString()),

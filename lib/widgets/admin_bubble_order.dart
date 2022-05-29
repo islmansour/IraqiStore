@@ -1,12 +1,6 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/add_items_to_orders.dart';
-import 'package:hardwarestore/widgets/product_pick.dart';
-
-import '../screens/admin/new_account.dart';
-import '../screens/admin/new_order.dart';
-import '../screens/admin/new_product.dart';
-import '../screens/admin/new_quote.dart';
 
 class OrderBubbleButtons extends StatefulWidget {
   final int orderId;
@@ -106,9 +100,11 @@ class _OrderBubbleButtonsState extends State<OrderBubbleButtons>
       animation: _animation,
 
       // On pressed change animation state
-      onPress: () => _animationController.isCompleted
-          ? _animationController.reverse()
-          : _animationController.forward(),
+      onPress: () {
+        _animationController.isCompleted
+            ? _animationController.reverse()
+            : _animationController.forward();
+      },
 
       // Floating Action button Icon color
       iconColor: Colors.blue,

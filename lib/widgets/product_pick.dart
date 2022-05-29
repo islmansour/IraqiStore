@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,23 +23,98 @@ class ProductPick extends StatefulWidget {
 class _ProductPickState extends State<ProductPick> {
   double quantity = 0;
 
+/*
+ * ones a quantity is given, add the item to the current order (to orderItems). From the parent widget, we can then confirm and call django to add to db. 29.5
+*/
+  void addToOrderItem(Order order, OrderItem? orderItem) {
+    // need to add error handling, can not be on this widget with no orders in the system.
+    if (Provider.of<OrderModification>(context, listen: false).order == null) {
+      print('error while adding items to an order, order is null');
+      return;
+    }
+
+    setState(() {
+      bool newItem = true;
+      if (quantity < 0) return;
+
+      // need to add error handling, can not be on this widget with no order in hand.
+      if (order == null) {
+        print('Error receiving order.');
+        return;
+      }
+
+      // if product was already added to the order, simply update the quantity for this item.
+      order.orderItems?.forEach((element) {
+        if (element.productId == widget.item.id) {
+          newItem = false;
+          element.quantity = double.parse(quantity.toString());
+          Provider.of<OrderModification>(context, listen: false)
+              .order
+              .where((element) => element.id == order.id)
+              .first
+              .orderItems
+              ?.forEach((i) {
+            if (i.productId == element.productId) {
+              i.quantity = double.parse(quantity.toString());
+              i.price = (widget.item.price! -
+                      (widget.item.price! * widget.item.discount! / 100)) *
+                  quantity.toDouble();
+            }
+          });
+        }
+      });
+
+      // adding a new product to the order items of the order.
+      if (newItem) {
+        if (quantity == 0) return;
+
+        orderItem = OrderItem();
+        orderItem?.id = 0;
+        orderItem?.productId = widget.item.id;
+        orderItem?.quantity = quantity.toDouble();
+        orderItem?.price = (widget.item.price! -
+                (widget.item.price! * widget.item.discount! / 100)) *
+            quantity.toDouble();
+        orderItem?.created_by =
+            Provider.of<GetCurrentUser>(context, listen: false).currentUser?.id;
+        orderItem?.orderId = order.id;
+
+        // if Order has a null orderItems, initiate it.
+        Provider.of<OrderModification>(context, listen: false)
+            .order
+            .where((element) => element.id == order.id)
+            .first
+            .orderItems ??= <OrderItem>[];
+
+        // once the new item is ready, add it to the order we are working on.
+        Provider.of<OrderModification>(context, listen: false)
+            .order
+            .where((element) => element.id == order.id)
+            .first
+            .orderItems
+            ?.add(orderItem!);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // this is used to determine the currency
     var format = NumberFormat.simpleCurrency(locale: 'he');
     OrderItem? orderItem;
-    Order? order = Provider.of<CurrentOrdersUpdate>(context)
-        .orders
-        ?.where((element) => element.id == widget.orderId)
+    Order? order = Provider.of<OrderModification>(context)
+        .order
+        .where((element) => element.id == widget.orderId)
         .first;
 
-    if (order == null) {
-      print('>>>> unable to find order.');
-    }
-    // if (order?.orderItems != null && order!.orderItems!.isNotEmpty) {
-    //   orderItem = order.orderItems
-    //       ?.where((element) => element.productId == widget.item.id)
-    //       .first;
-    // }
+    // if product is already in order, take it's data and put then in the instance of the orderItem in this widget.
+    // This will allow showing the quantity that is already been added to the item.
+    order.orderItems?.forEach(
+      (item) {
+        if (item.productId == widget.item.id) orderItem = item;
+      },
+    );
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -64,88 +140,9 @@ class _ProductPickState extends State<ProductPick> {
                               bottomLeft: Radius.circular(10),
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10))),
-                      //   height: 75,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 34,
-                            ),
-                            tooltip: 'הוספה',
-                            onPressed: () {
-                              setState(() {
-                                bool newItem = true;
-                                if (quantity <= 0) return;
-                                if (order == null) {
-                                  print('Error receiving order.');
-                                  return;
-                                }
-                                orderItem = OrderItem();
-                                order.orderItems?.forEach((element) {
-                                  if (element.productId == widget.item.id) {
-                                    newItem = false;
-                                    element.quantity =
-                                        double.parse(quantity.toString());
-                                  }
-                                });
-                                if (newItem) {
-                                  orderItem?.id = 0;
-                                  orderItem?.productId = widget.item.id;
-                                  orderItem?.quantity = quantity.toDouble();
-                                  orderItem?.price = (widget.item.price! -
-                                          (widget.item.price! *
-                                              (widget.item.discount!
-                                                      .toDouble() /
-                                                  100))) *
-                                      quantity.toDouble();
-                                  orderItem?.created_by =
-                                      Provider.of<GetCurrentUser>(context,
-                                              listen: false)
-                                          .currentUser
-                                          ?.id;
-                                  orderItem?.orderId = order.id;
-
-                                  Provider.of<CurrentOrdersUpdate>(context,
-                                          listen: false)
-                                      .orders
-                                      ?.where(
-                                          (element) => element.id == order.id)
-                                      .first
-                                      .orderItems ??= <OrderItem>[];
-                                  //  order.orderItems!.add(orderItem!);
-                                  if (Provider.of<CurrentOrdersUpdate>(context,
-                                              listen: false)
-                                          .orders ==
-                                      null) {
-                                    print(
-                                        'error while adding items to an order, order is null');
-                                    return;
-                                  }
-                                  Provider.of<CurrentOrdersUpdate>(context,
-                                          listen: false)
-                                      .orders
-                                      ?.where(
-                                          (element) => element.id == order.id)
-                                      .first
-                                      .orderItems
-                                      ?.add(orderItem!);
-                                }
-
-                                print(Provider.of<CurrentOrdersUpdate>(context,
-                                        listen: false)
-                                    .orders
-                                    ?.where((element) => element.id == order.id)
-                                    .first
-                                    .orderItems
-                                    ?.length
-                                    .toString());
-                              });
-                            },
-                          ),
-                        ],
+                        children: [],
                       ),
                     ),
                   )
@@ -159,48 +156,44 @@ class _ProductPickState extends State<ProductPick> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    widget.item.name.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0,
-                                    ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text(
+                                  widget.item.name.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                          widget.item.price.toString() +
-                                              " " +
-                                              format.currencySymbol +
-                                              " ",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displayMedium),
-                                      Text(
-                                          "הנחה:" +
-                                              ' ' +
-                                              widget.item.discount.toString() +
-                                              ' %',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displayMedium),
-                                    ],
-                                  ),
-                                  Text(widget.item.desc.toString(),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall),
-                                ],
-                              ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        widget.item.price.toString() +
+                                            " " +
+                                            format.currencySymbol +
+                                            " ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    Text(
+                                        "הנחה:" +
+                                            ' ' +
+                                            widget.item.discount.toString() +
+                                            ' %',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                  ],
+                                ),
+                                Text(widget.item.desc.toString(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
                           ),
                           Container(
@@ -209,11 +202,33 @@ class _ProductPickState extends State<ProductPick> {
                               child: TextFormField(
                                 initialValue: orderItem?.quantity.toString(),
                                 onChanged: (value) {
+                                  print('value....' + value);
                                   setState(() {
-                                    if (value == "") value = "0";
+                                    if (value == "" ||
+                                        double.parse(value) == 0) {
+                                      value = "0";
+                                      //this will make item disappear from UI , and if calling django to delete - it will be deleted from DB.
+                                      //after that we need to notify listeners that this order was modified, so we call the Provider update.
+                                      int? orderItemId = order.orderItems
+                                          ?.where((element) =>
+                                              element.productId ==
+                                              widget.item.id)
+                                          .first
+                                          .id;
+                                      DjangoServices()
+                                          .deleteOrderItem(orderItemId!);
+
+                                      order.orderItems?.removeWhere((element) =>
+                                          element.productId == widget.item.id);
+                                      // Informing listeners of the change made to the order.
+                                      Provider.of<OrderModification>(context,
+                                              listen: false)
+                                          .update(order);
+                                    }
 
                                     quantity = double.parse(value);
                                   });
+                                  addToOrderItem(order, orderItem);
                                 },
                                 keyboardType:
                                     const TextInputType.numberWithOptions(),
@@ -233,9 +248,9 @@ class _ProductPickState extends State<ProductPick> {
                 children: [
                   Expanded(
                     child: Container(
-                      decoration: const BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                          color: quantity == 0 ? Colors.grey : Colors.lightBlue,
+                          borderRadius: const BorderRadius.only(
                               bottomRight: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
                               topLeft: Radius.circular(10),
@@ -244,17 +259,78 @@ class _ProductPickState extends State<ProductPick> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          /*
                           IconButton(
-                            icon: const Icon(
-                              Icons.remove,
-                              color: Colors.white,
-                              size: 34,
-                            ),
-                            tooltip: 'הסרה',
-                            onPressed: () {
-                              setState(() {});
-                            },
-                          ),
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 34,
+                              ),
+                              tooltip: 'הוספה',
+                              onPressed: quantity == 0 ? null : null
+                              // () {
+                              //     setState(() {
+                              //       bool newItem = true;
+                              //       if (quantity <= 0) return;
+                              //       if (order == null) {
+                              //         print('Error receiving order.');
+                              //         return;
+                              //       }
+                              //       orderItem = OrderItem();
+                              //       order.orderItems?.forEach((element) {
+                              //         if (element.productId ==
+                              //             widget.item.id) {
+                              //           newItem = false;
+                              //           element.quantity =
+                              //               double.parse(quantity.toString());
+                              //         }
+                              //       });
+                              //       if (newItem) {
+                              //         orderItem?.id = 0;
+                              //         orderItem?.productId = widget.item.id;
+                              //         orderItem?.quantity =
+                              //             quantity.toDouble();
+                              //         orderItem?.price = (widget.item.price! -
+                              //                 (widget.item.price! *
+                              //                     widget.item.discount! /
+                              //                     100)) *
+                              //             quantity.toDouble();
+                              //         orderItem?.created_by =
+                              //             Provider.of<GetCurrentUser>(context,
+                              //                     listen: false)
+                              //                 .currentUser
+                              //                 ?.id;
+                              //         orderItem?.orderId = order.id;
+
+                              //         Provider.of<OrderModification>(context,
+                              //                 listen: false)
+                              //             .order
+                              //             .where((element) =>
+                              //                 element.id == order.id)
+                              //             .first
+                              //             .orderItems ??= <OrderItem>[];
+                              //         //  order.orderItems!.add(orderItem!);
+                              //         if (Provider.of<OrderModification>(
+                              //                     context,
+                              //                     listen: false)
+                              //                 .order ==
+                              //             null) {
+                              //           print(
+                              //               'error while adding items to an order, order is null');
+                              //           return;
+                              //         }
+                              //         Provider.of<OrderModification>(context,
+                              //                 listen: false)
+                              //             .order
+                              //             .where((element) =>
+                              //                 element.id == order.id)
+                              //             .first
+                              //             .orderItems
+                              //             ?.add(orderItem!);
+                              //       }
+                              //     });
+                              //   },
+                              ),*/
                         ],
                       ),
                     ),

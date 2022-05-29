@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/services/tools.dart';
 import '../components/bottomnav.dart';
 import '../components/news.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,8 @@ class Home extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: (() => {
-                Provider.of<CurrentOrdersUpdate>(context, listen: false)
-                    .updateOrder(Order(accountId: 123, contactId: 345))
+                Provider.of<OrderModification>(context, listen: false)
+                    .update(Order(accountId: 123, contactId: 345))
               })),
       body: OrdersList(), //NewsList(),
       appBar: AppBar(

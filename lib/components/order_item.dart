@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../models/order_item.dart';
@@ -36,9 +37,9 @@ class _OrderItemsListState extends State<OrderItemsList> {
           int len = orderItemsSnap.data?.length ?? 0;
           double? sum = 0;
 
-          Provider.of<CurrentOrdersUpdate>(context)
-              .orders
-              ?.where(
+          Provider.of<OrderModification>(context)
+              .order
+              .where(
                 (element) => element.id == widget.order.id,
               )
               .first
