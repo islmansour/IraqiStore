@@ -179,7 +179,7 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                                     " ",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displayMedium),
+                                                    .bodyMedium),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -192,7 +192,7 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                                     ' %',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .displayMedium),
+                                                    .bodyMedium),
                                           ),
                                         ],
                                       ),
