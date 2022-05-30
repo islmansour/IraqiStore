@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/services/django_services.dart';
 
 import '../models/order_item.dart';
 import '../models/orders.dart';
+import '../models/quote.dart';
 
-class OrderModification extends ChangeNotifier {
+class EntityModification extends ChangeNotifier {
   // a global orders
   List<Order> _order = <Order>[];
   List<Order> get order =>
       _order; // just a getter to access the local list of orders
 
-  void set orders(List<Order> initOrdersSet) {
+  set orders(List<Order> initOrdersSet) {
     // a setter to set the list of global orders.
     _order = initOrdersSet;
   }
@@ -32,5 +34,30 @@ class OrderModification extends ChangeNotifier {
 
   void refreshOrdersFromDB() async {
     _order = (await DjangoServices().getOrders())!;
+  }
+
+  List<Quote> _quotes = <Quote>[];
+  List<Quote> get quotes =>
+      _quotes; // just a getter to access the local list of orders
+
+  set quotes(List<Quote> initOrdersSet) {
+    // a setter to set the list of global orders.
+    _quotes = initOrdersSet;
+  }
+
+  void updateQuote(Quote update) {
+    _quotes.removeWhere((element) => element.id == update.id);
+
+    _quotes.add(update);
+
+    notifyListeners();
+  }
+
+  Future<List<QuoteItem>?> getQuoteItemsForOrder(int quoteId) async {
+    return DjangoServices().getQuoteItems(quoteId);
+  }
+
+  void refreshQuotesFromDB() async {
+    _quotes = (await DjangoServices().getQuotes())!;
   }
 }

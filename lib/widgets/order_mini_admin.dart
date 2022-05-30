@@ -225,7 +225,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                         //   children: [
                         //     Padding(
                         //       padding: const EdgeInsets.all(4.0),
-                        //       child: Consumer<OrderModification>(
+                        //       child: Consumer<EntityModification>(
                         //           builder: (context, repo, _) {
                         //         if (repo.order
                         //             .where((element) =>
@@ -272,7 +272,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Consumer<OrderModification>(
+                              child: Consumer<EntityModification>(
                                   builder: (context, repo, _) {
                                 if (repo.order
                                     .where((element) =>
@@ -515,7 +515,7 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(4.0),
-                            child: Consumer<OrderModification>(
+                            child: Consumer<EntityModification>(
                                 builder: (context, repo, _) {
                               if (repo.order
                                   .where(

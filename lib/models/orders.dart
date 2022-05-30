@@ -48,7 +48,6 @@ class Order extends ChangeNotifier {
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 
   double get totalAmount {

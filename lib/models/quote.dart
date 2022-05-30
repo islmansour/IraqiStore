@@ -25,9 +25,11 @@ class Quote {
   int? created_by;
   DateTime? created;
 
+  @JsonKey(toJson: toNull, includeIfNull: false)
   List<QuoteItem>? quoteItems;
 
   Quote({
+    this.quoteItems,
     this.status,
     this.accountId,
     this.contactId,
@@ -48,6 +50,14 @@ class Quote {
 
   /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$QuoteToJson(this);
+
+  double get totalAmount {
+    double sum = 0;
+    quoteItems?.forEach((element) {
+      if (element.price != null) sum += element.price!;
+    });
+    return sum;
+  }
 }
 
 List<Quote> quoteFromJson(String str) {

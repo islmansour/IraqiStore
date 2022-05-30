@@ -12,8 +12,10 @@ class QuoteItem {
   double? quantity;
   int? created_by;
   String? notes;
+  int? quoteId;
 
   QuoteItem({
+    this.quoteId,
     this.created_by,
     this.id,
     this.notes,

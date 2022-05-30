@@ -25,7 +25,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => OrderModification()),
+      ChangeNotifierProvider(create: (context) => EntityModification()),
       ListenableProvider<NavigationController>(
         create: (_) => NavigationController(),
       ),
@@ -35,9 +35,7 @@ void main() {
       // ListenableProvider<CurrentOrdersUpdate>(
       //   create: (_) => CurrentOrdersUpdate(),
       // ),
-      ListenableProvider<CurrentQuotesUpdate>(
-        create: (_) => CurrentQuotesUpdate(),
-      ),
+
       ListenableProvider<CurrentDeliverysUpdate>(
         create: (_) => CurrentDeliverysUpdate(),
       ),

@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/user.dart';
-import 'package:hardwarestore/models/order_item.dart';
+import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../models/orders.dart';
+import '../models/quote.dart';
 
-class ProductPick extends StatefulWidget {
+class QuoteProductPick extends StatefulWidget {
   final Product item;
-  final int orderId;
+  final int quoteId;
 
-  const ProductPick({Key? key, required this.item, required this.orderId})
+  const QuoteProductPick({Key? key, required this.item, required this.quoteId})
       : super(key: key);
 
   @override
-  State<ProductPick> createState() => _ProductPickState();
+  State<QuoteProductPick> createState() => _QuoteProductPickState();
 }
 
-class _ProductPickState extends State<ProductPick> {
+class _QuoteProductPickState extends State<QuoteProductPick> {
   double quantity = 0;
 
 /*
- * ones a quantity is given, add the item to the current order (to orderItems). From the parent widget, we can then confirm and call django to add to db. 29.5
+ * ones a quantity is given, add the item to the current quote (to quoteItems). From the parent widget, we can then confirm and call django to add to db. 29.5
 */
-  void addToOrderItem(Order order, OrderItem? orderItem) {
-    // need to add error handling, can not be on this widget with no orders in the system.
-    if (Provider.of<EntityModification>(context, listen: false).order == null) {
-      print('error while adding items to an order, order is null');
+  void addToQuoteItem(Quote quote, QuoteItem? quoteItem) {
+    // need to add error handling, can not be on this widget with no quotes in the system.
+    if (Provider.of<EntityModification>(context, listen: false).quotes ==
+        null) {
+      print('error while adding items to an quote, quote is null');
       return;
     }
 
@@ -37,22 +38,22 @@ class _ProductPickState extends State<ProductPick> {
       bool newItem = true;
       if (quantity < 0) return;
 
-      // need to add error handling, can not be on this widget with no order in hand.
-      if (order == null) {
-        print('Error receiving order.');
+      // need to add error handling, can not be on this widget with no quote in hand.
+      if (quote == null) {
+        print('Error receiving quote.');
         return;
       }
 
-      // if product was already added to the order, simply update the quantity for this item.
-      order.orderItems?.forEach((element) {
+      // if product was already added to the quote, simply update the quantity for this item.
+      quote.quoteItems?.forEach((element) {
         if (element.productId == widget.item.id) {
           newItem = false;
           element.quantity = double.parse(quantity.toString());
           Provider.of<EntityModification>(context, listen: false)
-              .order
-              .where((element) => element.id == order.id)
+              .quotes
+              .where((element) => element.id == quote.id)
               .first
-              .orderItems
+              .quoteItems
               ?.forEach((i) {
             if (i.productId == element.productId) {
               i.quantity = double.parse(quantity.toString());
@@ -64,35 +65,35 @@ class _ProductPickState extends State<ProductPick> {
         }
       });
 
-      // adding a new product to the order items of the order.
+      // adding a new product to the quote items of the quote.
       if (newItem) {
         if (quantity == 0) return;
 
-        orderItem = OrderItem();
-        orderItem?.id = 0;
-        orderItem?.productId = widget.item.id;
-        orderItem?.quantity = quantity.toDouble();
-        orderItem?.price = (widget.item.price! -
+        quoteItem = QuoteItem();
+        quoteItem?.id = 0;
+        quoteItem?.productId = widget.item.id;
+        quoteItem?.quantity = quantity.toDouble();
+        quoteItem?.price = (widget.item.price! -
                 (widget.item.price! * widget.item.discount! / 100)) *
             quantity.toDouble();
-        orderItem?.created_by =
+        quoteItem?.created_by =
             Provider.of<GetCurrentUser>(context, listen: false).currentUser?.id;
-        orderItem?.orderId = order.id;
+        quoteItem?.quoteId = quote.id;
 
-        // if Order has a null orderItems, initiate it.
+        // if Quote has a null quoteItems, initiate it.
         Provider.of<EntityModification>(context, listen: false)
-            .order
-            .where((element) => element.id == order.id)
+            .quotes
+            .where((element) => element.id == quote.id)
             .first
-            .orderItems ??= <OrderItem>[];
+            .quoteItems ??= <QuoteItem>[];
 
-        // once the new item is ready, add it to the order we are working on.
+        // once the new item is ready, add it to the quote we are working on.
         Provider.of<EntityModification>(context, listen: false)
-            .order
-            .where((element) => element.id == order.id)
+            .quotes
+            .where((element) => element.id == quote.id)
             .first
-            .orderItems
-            ?.add(orderItem!);
+            .quoteItems
+            ?.add(quoteItem!);
       }
     });
   }
@@ -101,17 +102,17 @@ class _ProductPickState extends State<ProductPick> {
   Widget build(BuildContext context) {
     // this is used to determine the currency
     var format = NumberFormat.simpleCurrency(locale: 'he');
-    OrderItem? orderItem;
-    Order? order = Provider.of<EntityModification>(context)
-        .order
-        .where((element) => element.id == widget.orderId)
+    QuoteItem? quoteItem;
+    Quote? quote = Provider.of<EntityModification>(context)
+        .quotes
+        .where((element) => element.id == widget.quoteId)
         .first;
 
-    // if product is already in order, take it's data and put then in the instance of the orderItem in this widget.
+    // if product is already in quote, take it's data and put then in the instance of the quoteItem in this widget.
     // This will allow showing the quantity that is already been added to the item.
-    order.orderItems?.forEach(
+    quote.quoteItems?.forEach(
       (item) {
-        if (item.productId == widget.item.id) orderItem = item;
+        if (item.productId == widget.item.id) quoteItem = item;
       },
     );
 
@@ -200,7 +201,7 @@ class _ProductPickState extends State<ProductPick> {
                               alignment: Alignment.center,
                               width: 40,
                               child: TextFormField(
-                                initialValue: orderItem?.quantity.toString(),
+                                initialValue: quoteItem?.quantity.toString(),
                                 onChanged: (value) {
                                   print('value....' + value);
                                   setState(() {
@@ -208,27 +209,27 @@ class _ProductPickState extends State<ProductPick> {
                                         double.parse(value) == 0) {
                                       value = "0";
                                       //this will make item disappear from UI , and if calling django to delete - it will be deleted from DB.
-                                      //after that we need to notify listeners that this order was modified, so we call the Provider update.
-                                      int? orderItemId = order.orderItems
+                                      //after that we need to notify listeners that this quote was modified, so we call the Provider update.
+                                      int? quoteItemId = quote.quoteItems
                                           ?.where((element) =>
                                               element.productId ==
                                               widget.item.id)
                                           .first
                                           .id;
                                       DjangoServices()
-                                          .deleteOrderItem(orderItemId!);
+                                          .deleteQuoteItem(quoteItemId!);
 
-                                      order.orderItems?.removeWhere((element) =>
+                                      quote.quoteItems?.removeWhere((element) =>
                                           element.productId == widget.item.id);
-                                      // Informing listeners of the change made to the order.
+                                      // Informing listeners of the change made to the quote.
                                       Provider.of<EntityModification>(context,
                                               listen: false)
-                                          .update(order);
+                                          .updateQuote(quote);
                                     }
 
                                     quantity = double.parse(value);
                                   });
-                                  addToOrderItem(order, orderItem);
+                                  addToQuoteItem(quote, quoteItem);
                                 },
                                 keyboardType:
                                     const TextInputType.numberWithOptions(),
@@ -258,80 +259,7 @@ class _ProductPickState extends State<ProductPick> {
                       //   height: 75,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          /*
-                          IconButton(
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 34,
-                              ),
-                              tooltip: 'הוספה',
-                              onPressed: quantity == 0 ? null : null
-                              // () {
-                              //     setState(() {
-                              //       bool newItem = true;
-                              //       if (quantity <= 0) return;
-                              //       if (order == null) {
-                              //         print('Error receiving order.');
-                              //         return;
-                              //       }
-                              //       orderItem = OrderItem();
-                              //       order.orderItems?.forEach((element) {
-                              //         if (element.productId ==
-                              //             widget.item.id) {
-                              //           newItem = false;
-                              //           element.quantity =
-                              //               double.parse(quantity.toString());
-                              //         }
-                              //       });
-                              //       if (newItem) {
-                              //         orderItem?.id = 0;
-                              //         orderItem?.productId = widget.item.id;
-                              //         orderItem?.quantity =
-                              //             quantity.toDouble();
-                              //         orderItem?.price = (widget.item.price! -
-                              //                 (widget.item.price! *
-                              //                     widget.item.discount! /
-                              //                     100)) *
-                              //             quantity.toDouble();
-                              //         orderItem?.created_by =
-                              //             Provider.of<GetCurrentUser>(context,
-                              //                     listen: false)
-                              //                 .currentUser
-                              //                 ?.id;
-                              //         orderItem?.orderId = order.id;
-
-                              //         Provider.of<EntityModification>(context,
-                              //                 listen: false)
-                              //             .order
-                              //             .where((element) =>
-                              //                 element.id == order.id)
-                              //             .first
-                              //             .orderItems ??= <OrderItem>[];
-                              //         //  order.orderItems!.add(orderItem!);
-                              //         if (Provider.of<EntityModification>(
-                              //                     context,
-                              //                     listen: false)
-                              //                 .order ==
-                              //             null) {
-                              //           print(
-                              //               'error while adding items to an order, order is null');
-                              //           return;
-                              //         }
-                              //         Provider.of<EntityModification>(context,
-                              //                 listen: false)
-                              //             .order
-                              //             .where((element) =>
-                              //                 element.id == order.id)
-                              //             .first
-                              //             .orderItems
-                              //             ?.add(orderItem!);
-                              //       }
-                              //     });
-                              //   },
-                              ),*/
-                        ],
+                        children: [],
                       ),
                     ),
                   )

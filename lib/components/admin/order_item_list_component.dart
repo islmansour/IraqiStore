@@ -27,15 +27,15 @@ class _OrderItemListState extends State<OrderItemList> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<OrderModification>(context)
+    if (Provider.of<EntityModification>(context)
         .order
         .where(
           (element) => element.id == widget.orderId,
         )
         .isEmpty) {
-      Provider.of<OrderModification>(context).refreshOrdersFromDB();
+      Provider.of<EntityModification>(context).refreshOrdersFromDB();
     }
-    List<OrderItem>? _items = Provider.of<OrderModification>(context)
+    List<OrderItem>? _items = Provider.of<EntityModification>(context)
         .order
         .where(
           (element) => element.id == widget.orderId,
@@ -63,14 +63,14 @@ class _OrderItemListState extends State<OrderItemList> {
 
                     DjangoServices().deleteOrderItem(_items[index].id!);
 
-                    Provider.of<OrderModification>(context, listen: false)
+                    Provider.of<EntityModification>(context, listen: false)
                         .order
                         .where((element) => element.id == widget.orderId)
                         .first
                         .orderItems!
                         .forEach((item) {
                       if (item.id == _currentItem.id!) {
-                        Provider.of<OrderModification>(context, listen: false)
+                        Provider.of<EntityModification>(context, listen: false)
                             .order
                             .where((element) => element.id == widget.orderId)
                             .first
@@ -84,13 +84,13 @@ class _OrderItemListState extends State<OrderItemList> {
                         );
                       }
 
-                      Order x =
-                          Provider.of<OrderModification>(context, listen: false)
-                              .order
-                              .where((element) => element.id == widget.orderId)
-                              .first;
+                      Order x = Provider.of<EntityModification>(context,
+                              listen: false)
+                          .order
+                          .where((element) => element.id == widget.orderId)
+                          .first;
 
-                      Provider.of<OrderModification>(context, listen: false)
+                      Provider.of<EntityModification>(context, listen: false)
                           .update(x);
                     });
 

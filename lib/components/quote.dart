@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/models/quote.dart';
+import 'package:hardwarestore/services/django_services.dart';
+import 'package:provider/provider.dart';
 
-import '../services/django_services.dart';
+import '../models/quote.dart';
+import '../services/tools.dart';
 import '../widgets/quote_mini_admin.dart';
 
-class QuotesList extends StatefulWidget {
-  QuotesList({Key? key}) : super(key: key);
+class QuotesList extends StatelessWidget {
+  const QuotesList({Key? key}) : super(key: key);
 
-  @override
-  State<QuotesList> createState() => _QuotesListState();
-}
-
-class _QuotesListState extends State<QuotesList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Quote>?>(
         future: DjangoServices().getQuotes(),
-        builder: (context, AsyncSnapshot<List<Quote>?> orderSnap) {
-          if (orderSnap.connectionState == ConnectionState.none &&
-              orderSnap.hasData == null) {
+        builder: (context, AsyncSnapshot<List<Quote>?> quoteSnap) {
+          if (quoteSnap.connectionState == ConnectionState.none &&
+              quoteSnap.hasData == null) {
             return Container();
           }
-          int len = orderSnap.data?.length ?? 0;
+          int len = quoteSnap.data?.length ?? 0;
+          // Provider.of<CurrentQuotesUpdate>(context).setQuotes(quoteSnap.data);
+          if (quoteSnap.data != null) {
+            Provider.of<EntityModification>(context, listen: false).quotes =
+                quoteSnap.data!;
+          }
 
           return ExpansionTile(
-              title: Text(
-                'הצעות ' + len.toString() + ' ' + 'פתוחות',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lightGreen,
-                  fontWeight: FontWeight.bold,
-                ),
+              initiallyExpanded: false,
+              title: const Text('הצעות מחיר'),
+              leading: const Icon(Icons.shopping_basket),
+              subtitle: Text(
+                len.toString() + ' ' + 'פתוחות',
               ),
+              iconColor: Colors.green,
+              textColor: Colors.green,
+              collapsedIconColor: Colors.green.shade300,
+              collapsedTextColor: Colors.green.shade300,
               children: [
                 ListTile(
                     title: SizedBox(
@@ -40,20 +44,22 @@ class _QuotesListState extends State<QuotesList> {
                             child: ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount: orderSnap.data?.length ?? 0,
+                                itemCount: quoteSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  return QuoteMiniAdmin(
-                                      item: orderSnap.data![index]);
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: QuoteMiniAdmin(
+                                            item: quoteSnap.data![index]),
+                                      ),
+                                    ],
+                                  );
                                 }))))
               ]);
         });
-  }
-}
-
-class CurrentQuotesUpdate extends ChangeNotifier {
-  List<Quote> quotes = [];
-  void updateQuote(Quote quote) {
-    quotes.add((quote));
-    notifyListeners();
   }
 }

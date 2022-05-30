@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: (() => {
-                Provider.of<OrderModification>(context, listen: false)
+                Provider.of<EntityModification>(context, listen: false)
                     .update(Order(accountId: 123, contactId: 345))
               })),
       body: OrdersList(), //NewsList(),

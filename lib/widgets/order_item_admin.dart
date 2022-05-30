@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
-import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
@@ -181,7 +180,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                       try {
                                         OrderItem _updatedItem = OrderItem();
                                         Order x = Provider.of<
-                                                    OrderModification>(context,
+                                                    EntityModification>(context,
                                                 listen: false)
                                             .order
                                             .where((element) =>
@@ -204,13 +203,13 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                               ?.then((value) {
                                             _updatedItem.id = value;
                                             _item.id = value;
-                                            Provider.of<OrderModification>(
+                                            Provider.of<EntityModification>(
                                                     context,
                                                     listen: false)
                                                 .update(x);
                                           });
                                         });
-                                        Provider.of<OrderModification>(context,
+                                        Provider.of<EntityModification>(context,
                                                 listen: false)
                                             .update(x);
                                       } catch (e) {

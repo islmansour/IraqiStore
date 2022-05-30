@@ -54,6 +54,6 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
   }
 
   writeNotNull('order_number', Order.toNull(instance.order_number));
-  val['orderItems'] = instance.orderItems;
+  writeNotNull('orderItems', Order.toNull(instance.orderItems));
   return val;
 }

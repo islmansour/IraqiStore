@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -7,16 +7,17 @@ import 'package:provider/provider.dart';
 
 import '../../widgets/product_pick.dart';
 import '../services/search.dart';
+import '../widgets/product_pick_quote.dart';
 
-class AddItemToOrder extends StatefulWidget {
-  final int? orderId;
-  const AddItemToOrder({Key? key, required this.orderId}) : super(key: key);
+class AddItemToQuote extends StatefulWidget {
+  final int? quoteId;
+  const AddItemToQuote({Key? key, required this.quoteId}) : super(key: key);
 
   @override
-  State<AddItemToOrder> createState() => _AddItemToOrderState();
+  State<AddItemToQuote> createState() => _AddItemToQuoteState();
 }
 
-class _AddItemToOrderState extends State<AddItemToOrder> {
+class _AddItemToQuoteState extends State<AddItemToQuote> {
   bool _searching = false;
   String _newSearch = "";
   List<Product>? myProducts;
@@ -28,10 +29,10 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
 
   @override
   Widget build(BuildContext context) {
-    Order? _order = Provider.of<EntityModification>(context)
-        .order
+    Quote? _quote = Provider.of<EntityModification>(context)
+        .quotes
         .where(
-          (order) => order.id == widget.orderId,
+          (quote) => quote.id == widget.quoteId,
         )
         .first;
     return GestureDetector(
@@ -127,11 +128,11 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
 
                                               switch (type) {
                                                 case "Product":
-                                                  output = ProductPick(
+                                                  output = QuoteProductPick(
                                                     item: searchSnap
                                                         .data![index]
                                                         .item as Product,
-                                                    orderId: widget.orderId!,
+                                                    quoteId: widget.quoteId!,
                                                   );
                                                   break;
                                               }
@@ -150,33 +151,33 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                   shrinkWrap: true,
                                   itemCount: productSnap.data?.length ?? 0,
                                   itemBuilder: (context, index) {
-                                    return ProductPick(
+                                    return QuoteProductPick(
                                         item: productSnap.data![index],
-                                        orderId: widget.orderId!);
+                                        quoteId: widget.quoteId!);
                                   }))),
                     ElevatedButton(
                       onPressed: () {
                         Provider.of<EntityModification>(context, listen: false)
-                            .order
-                            .where((element) => element.id == widget.orderId)
+                            .quotes
+                            .where((element) => element.id == widget.quoteId)
                             .first
-                            .orderItems
+                            .quoteItems
                             ?.forEach((item) {
-                          Order? x = Provider.of<EntityModification>(context,
+                          Quote? x = Provider.of<EntityModification>(context,
                                   listen: false)
-                              .order
-                              .where((element) => element.id == widget.orderId)
+                              .quotes
+                              .where((element) => element.id == widget.quoteId)
                               .first;
-                          DjangoServices().upsertOrderItem(item)?.then((value) {
+                          DjangoServices().upsertQuoteItem(item)?.then((value) {
                             item.id = value;
                             Provider.of<EntityModification>(context,
                                     listen: false)
-                                .update(x);
+                                .updateQuote(x);
                           });
 
                           Provider.of<EntityModification>(context,
                                   listen: false)
-                              .update(x);
+                              .updateQuote(x);
                         });
                       },
                       child: Text('Confirm'),

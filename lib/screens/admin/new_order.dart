@@ -33,7 +33,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
       _formKey.currentState?.save();
       DjangoServices().upsertOrder(_data)?.then((value) {
         _data.id == value;
-        Provider.of<OrderModification>(context, listen: false).update(_data);
+        Provider.of<EntityModification>(context, listen: false).update(_data);
       });
 
       // Save our form now.

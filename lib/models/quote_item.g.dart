@@ -13,6 +13,7 @@ QuoteItem _$QuoteItemFromJson(Map<String, dynamic> json) => QuoteItem(
       price: (json['price'] as num?)?.toDouble(),
       productId: json['productId'] as int?,
       quantity: (json['quantity'] as num?)?.toDouble(),
+      quoteId: json['quoteId'] as int?,
     );
 
 Map<String, dynamic> _$QuoteItemToJson(QuoteItem instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$QuoteItemToJson(QuoteItem instance) => <String, dynamic>{
       'quantity': instance.quantity,
       'created_by': instance.created_by,
       'notes': instance.notes,
+      'quoteId': instance.quoteId
     };

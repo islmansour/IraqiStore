@@ -97,14 +97,14 @@ class _ImgBBState extends State<ImgBB> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: const Text(''),
       ),
       body: loading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Center(
               child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 TextButton(
@@ -114,10 +114,10 @@ class _ImgBBState extends State<ImgBB> {
                   },
                   child: _image == null
                       ? Text(txt)
-                      : Container(
+                      : SizedBox(
                           height: 100, width: 100, child: Image.file(_image!)),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 delay
@@ -127,7 +127,7 @@ class _ImgBBState extends State<ImgBB> {
                         backgroundImage: NetworkImage(
                             imgbbResponse.data!.displayUrl.toString()),
                       ),
-                Spacer(),
+                const Spacer(),
                 Text(imageString)
               ],
             )),

@@ -33,7 +33,7 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
         ),
       ])),
       appBar: AppBar(
-        title: Text('הזמנה מס ' + widget.item.id.toString()),
+        title: Text('הזמנה מס ' + widget.item.order_number.toString()),
       ),
       // bottomNavigationBar: const AdminBottomNav(1),
     );

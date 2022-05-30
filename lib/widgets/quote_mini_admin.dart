@@ -5,55 +5,320 @@ import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../components/admin/lov.dart';
 import '../models/account.dart';
 import '../models/quote.dart';
-import '../screens/admin/Quote_details_admin.dart';
+import '../screens/admin/quote_details_admin.dart';
+import '../services/tools.dart';
 
-class QuoteMiniAdmin extends StatelessWidget {
+class QuoteMiniAdmin extends StatefulWidget {
   final Quote item;
 
   const QuoteMiniAdmin({Key? key, required this.item}) : super(key: key);
 
   @override
+  State<QuoteMiniAdmin> createState() => _QuoteMiniAdminState();
+}
+
+class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
+  @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
+    String _status = "";
+    try {
+      _status = Provider.of<CurrentListOfValuesUpdates>(context)
+          .getListOfValue('QUOTE_STATUS', format.locale)
+          .where((element) => element.name == widget.item.status)
+          .first
+          .value!;
+    } catch (e) {}
 
-    // ignore: non_constant_identifier_names
-    Account? QuoteAccount;
-    // ignore: non_constant_identifier_names
-    Contact? QuoteContact;
+    Account? quoteAccount;
+    Contact? quoteContact;
 
-    QuoteAccount = Provider.of<CurrentAccountsUpdate>(context)
+    quoteAccount = Provider.of<CurrentAccountsUpdate>(context)
         .accounts
-        ?.where((f) => f.id == item.accountId)
+        ?.where((f) => f.id == widget.item.accountId)
         .first;
 
-    item.contactId != null && item.contactId != 0
-        ? QuoteContact = Provider.of<CurrentContactsUpdate>(context)
+    widget.item.contactId != null && widget.item.contactId != 0
+        ? quoteContact = Provider.of<CurrentContactsUpdate>(context)
             .contacts
-            ?.where((f) => f.id == item.contactId)
+            ?.where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
     double sum = 0;
-    // print(' item.QuoteItems' + item.QuoteItems!.length.toString());
-    item.quoteItems?.forEach(
+
+    widget.item.quoteItems?.forEach(
       (element) {
-        sum = sum + element.price!;
+        if (element.price != null) sum = sum + element.price!;
       },
     );
-
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuoteDetailAdmin(
-                    item: item,
+                    item: widget.item,
                   )),
         );
-        // Goto a single Quote screen with we display Quote details and bellow that the Quote Items.
+        // Goto a single quote screen with we display quote details and bellow that the Quote Items.
       },
+      child: Card(
+        child: SizedBox(
+            height: 110,
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  // padding: const EdgeInsets.only(right: 4, top: 3),
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.lightGreen,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          // width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(
+                            widget.item.quote_number.toString(),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          child: Text(
+                            _status,
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: widget.item.created == null
+                      ? Text('Now',
+                          style: Theme.of(context).textTheme.labelSmall)
+                      : Text(
+                          DateFormat('dd/MM/yy hh:mm')
+                              .format(widget.item.created!),
+                          style: Theme.of(context).textTheme.labelSmall),
+                ),
+                //  Padding(
+                //     padding: const EdgeInsets.only(right: 4.0, top: 4),
+                // child:
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 4.0, top: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          // height: 35,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.business,
+                                    color: Colors.green,
+                                    size: 16,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: Text(quoteAccount?.name ?? "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.person,
+                                      size: 16,
+                                      color: Colors.green,
+                                    ),
+                                    Text(
+                                        quoteContact != null
+                                            ? quoteContact.first_name! +
+                                                " " +
+                                                quoteContact.last_name!
+                                            : "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium,
+                                        overflow: TextOverflow.ellipsis),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          // width: MediaQuery.of(context).size.width * 0.28,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.phone_iphone,
+                                    //size: 20,
+                                    color: Colors.green, size: 16,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    child: Text(quoteAccount?.phone ?? "אין",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.phone_iphone,
+                                      // size: 20,
+                                      color: Colors.green, size: 16,
+                                    ),
+                                    Text(
+                                        quoteContact != null &&
+                                                quoteContact.phone != null
+                                            ? quoteContact.phone!
+                                            : "אין",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(flex: 7, child: Container()),
+                    Flexible(
+                      flex: 3,
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Consumer<EntityModification>(
+                                  builder: (context, repo, _) {
+                                if (repo.quotes
+                                    .where((element) =>
+                                        element.id == widget.item.id)
+                                    .isNotEmpty) {
+                                  return Text(
+                                      format.currencySymbol +
+                                          ' ' +
+                                          repo.quotes
+                                              .where((element) =>
+                                                  element.id == widget.item.id)
+                                              .first
+                                              .totalAmount
+                                              .toStringAsFixed(2)
+                                              .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium);
+                                } else {
+                                  return Text(
+                                      format.currencySymbol + ' ' + '0.0',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium);
+                                }
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )),
+      ),
+    );
+  }
+}
+
+class QuoteDetaulsNoInkWell extends StatefulWidget {
+  final Quote item;
+
+  QuoteDetaulsNoInkWell({Key? key, required this.item}) : super(key: key);
+
+  @override
+  State<QuoteDetaulsNoInkWell> createState() => _QuoteDetaulsNoInkWellState();
+}
+
+class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
+  @override
+  Widget build(BuildContext context) {
+    var format = NumberFormat.simpleCurrency(locale: 'he');
+    String _status = "";
+    try {
+      _status = Provider.of<CurrentListOfValuesUpdates>(context)
+          .getListOfValue('ORDER_STATUS', format.locale)
+          .where((element) => element.name == widget.item.status)
+          .first
+          .value!;
+    } catch (e) {}
+
+    Account? quoteAccount;
+    Contact? quoteContact;
+
+    quoteAccount = Provider.of<CurrentAccountsUpdate>(context)
+        .accounts
+        ?.where((f) => f.id == widget.item.accountId)
+        .first;
+
+    widget.item.contactId != null && widget.item.contactId != 0
+        ? quoteContact = Provider.of<CurrentContactsUpdate>(context)
+            .contacts
+            ?.where((f) => f.id == widget.item.contactId)
+            .first
+        : null;
+
+    double sum = 0;
+
+    widget.item.quoteItems?.forEach(
+      (element) {
+        if (element.price != null) sum = sum + element.price!;
+      },
+    );
+    return Card(
       child: SizedBox(
           height: 100,
           width: double.infinity,
@@ -61,122 +326,191 @@ class QuoteMiniAdmin extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.only(right: 4, top: 3),
+                // padding: const EdgeInsets.only(right: 4, top: 3),
                 height: 20,
                 width: double.infinity,
-                color: Colors.grey.shade300,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Text(
-                        item.quote_number.toString(),
-                        style: const TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.lightGreen,
-                          fontWeight: FontWeight.bold,
+                color: Colors.lightGreen,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        // width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          widget.item.quote_number.toString(),
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      child: Text(
-                        item.status!,
-                        style: const TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.lightGreen,
-                          fontWeight: FontWeight.bold,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: Text(
+                          _status,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      child: const Text(
-                        'delivery',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.lightGreen,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
-                child: item == null || item.created == null
-                    ? const Text('')
-                    : Text(DateFormat('dd/MM/yy hh:mm').format(item.created!),
+                child: widget.item.created == null
+                    ? Text('Now', style: Theme.of(context).textTheme.labelSmall)
+                    : Text(
+                        DateFormat('dd/MM/yy hh:mm')
+                            .format(widget.item.created!),
                         style: Theme.of(context).textTheme.labelSmall),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 4.0, top: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 35,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              //  Padding(
+              //     padding: const EdgeInsets.only(right: 4.0, top: 4),
+              // child:
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.only(right: 4.0, top: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.40,
+                        // height: 35,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.business,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  child: Text(quoteAccount?.name ?? "",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: Colors.green,
+                                  ),
+                                  Text(
+                                      quoteContact != null
+                                          ? quoteContact.first_name! +
+                                              " " +
+                                              quoteContact.last_name!
+                                          : "",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                      overflow: TextOverflow.ellipsis),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        // width: MediaQuery.of(context).size.width * 0.28,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.phone_iphone,
+                                  //size: 20,
+                                  color: Colors.green, size: 16,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  child: Text(quoteAccount?.phone ?? "אין",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.phone_iphone,
+                                    // size: 20,
+                                    color: Colors.green, size: 16,
+                                  ),
+                                  Text(
+                                      quoteContact != null &&
+                                              quoteContact.phone != null
+                                          ? quoteContact.phone!
+                                          : "אין",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      //  SizedBox(
+                      //   width: MediaQuery.of(context).size.width * 0.10,
+                      //    child:
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(QuoteAccount?.name ?? "",
-                              style: Theme.of(context).textTheme.displayMedium,
-                              overflow: TextOverflow.ellipsis),
-                          Text(
-                              QuoteContact != null
-                                  ? QuoteContact.first_name! +
-                                      " " +
-                                      QuoteContact.last_name!
-                                  : "",
-                              style: Theme.of(context).textTheme.displayMedium,
-                              overflow: TextOverflow.ellipsis),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Consumer<EntityModification>(
+                                builder: (context, repo, _) {
+                              if (repo.quotes
+                                  .where(
+                                      (element) => element.id == widget.item.id)
+                                  .isNotEmpty) {
+                                return Text(
+                                    format.currencySymbol +
+                                        ' ' +
+                                        repo.quotes
+                                            .where((element) =>
+                                                element.id == widget.item.id)
+                                            .first
+                                            .totalAmount
+                                            .toStringAsFixed(2)
+                                            .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium);
+                              } else {
+                                return Text(format.currencySymbol + ' ' + '0.0',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium);
+                              }
+                            }),
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      child: Column(
-                        children: [
-                          Text(QuoteAccount?.phone ?? "",
-                              style: Theme.of(context).textTheme.displayMedium),
-                          Text(
-                              QuoteContact != null && QuoteContact.phone != null
-                                  ? QuoteContact.phone!
-                                  : "",
-                              style: Theme.of(context).textTheme.displayMedium),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      child: Column(
-                        children: [
-                          Text(
-                              format.currencySymbol +
-                                  ' ' +
-                                  sum.toString(), //  .data.toString(),
-                              style: Theme.of(context).textTheme.displayMedium)
-                        ],
-                      ),
-                    ),
-                  ],
+                      //   ),
+                    ],
+                  ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                        decoration: DottedDecoration(
-                            shape: Shape.line,
-                            linePosition: LinePosition.bottom,
-                            color: Colors.black),
-                        child: Text('')),
-                  ),
-                ],
-              ),
+              //  ),
             ],
           )),
     );
