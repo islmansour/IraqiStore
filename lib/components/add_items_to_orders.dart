@@ -172,6 +172,7 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                             Provider.of<EntityModification>(context,
                                     listen: false)
                                 .update(x);
+                            Navigator.pop(context);
                           });
 
                           Provider.of<EntityModification>(context,

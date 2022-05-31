@@ -60,7 +60,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Account'),
+        title: const Text('לקוחות'),
       ),
       body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -68,14 +68,14 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
             key: _formKey,
             child: ListView(
               children: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => OTPLogin()));
-                    },
-                    child: Text('Login')),
+                // TextButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (BuildContext context) => OTPLogin()));
+                //     },
+                //     child: Text('Login')),
                 TextFormField(
                   initialValue: _data.name != null ? _data.name : "",
                   onSaved: (String? value) {
