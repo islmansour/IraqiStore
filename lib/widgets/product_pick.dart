@@ -44,7 +44,7 @@ class _ProductPickState extends State<ProductPick> {
       }
 
       // if product was already added to the order, simply update the quantity for this item.
-      order.orderItems?.forEach((element) {
+      order.tmpItems?.forEach((element) {
         if (element.productId == widget.item.id) {
           newItem = false;
           element.quantity = double.parse(quantity.toString());
@@ -52,7 +52,7 @@ class _ProductPickState extends State<ProductPick> {
               .order
               .where((element) => element.id == order.id)
               .first
-              .orderItems
+              .tmpItems
               ?.forEach((i) {
             if (i.productId == element.productId) {
               i.quantity = double.parse(quantity.toString());
@@ -84,14 +84,14 @@ class _ProductPickState extends State<ProductPick> {
             .order
             .where((element) => element.id == order.id)
             .first
-            .orderItems ??= <OrderItem>[];
+            .tmpItems ??= <OrderItem>[];
 
-        // once the new item is ready, add it to the order we are working on.
+        //once the new item is ready, add it to the order we are working on.
         Provider.of<EntityModification>(context, listen: false)
             .order
             .where((element) => element.id == order.id)
             .first
-            .orderItems
+            .tmpItems
             ?.add(orderItem!);
       }
     });
@@ -200,30 +200,39 @@ class _ProductPickState extends State<ProductPick> {
                               alignment: Alignment.center,
                               width: 40,
                               child: TextFormField(
+                                enabled:
+                                    orderItem?.id != null && orderItem?.id != 0
+                                        ? false
+                                        : true,
                                 initialValue: orderItem?.quantity.toString(),
                                 onChanged: (value) {
-                                  print('value....' + value);
                                   setState(() {
                                     if (value == "" ||
                                         double.parse(value) == 0) {
                                       value = "0";
                                       //this will make item disappear from UI , and if calling django to delete - it will be deleted from DB.
                                       //after that we need to notify listeners that this order was modified, so we call the Provider update.
-                                      int? orderItemId = order.orderItems
-                                          ?.where((element) =>
-                                              element.productId ==
-                                              widget.item.id)
-                                          .first
-                                          .id;
-                                      DjangoServices()
-                                          .deleteOrderItem(orderItemId!);
+                                      // int? orderItemId = order.tmpItems
+                                      //     ?.where((element) =>
+                                      //         element.productId ==
+                                      //         widget.item.id)
+                                      //     .first
+                                      //     .id;
+                                      //////////////////////////// -------   NEED TO FIX --------------------
+                                      // DjangoServices()
+                                      //     .deleteOrderItem(orderItemId!);
+                                      //////////////////////////// -------   NEED TO FIX --------------------
 
-                                      order.orderItems?.removeWhere((element) =>
+                                      order.tmpItems?.removeWhere((element) =>
                                           element.productId == widget.item.id);
                                       // Informing listeners of the change made to the order.
-                                      Provider.of<EntityModification>(context,
-                                              listen: false)
-                                          .update(order);
+                                      //////////////////////////// -------   NEED TO FIX --------------------
+                                      // DjangoServices()
+                                      //     .deleteOrderItem(orderItemId!);
+                                      //////////////////////////// -------   NEED TO FIX --------------------
+                                      // Provider.of<EntityModification>(context,
+                                      //         listen: false)
+                                      //     .update(order);
                                     }
 
                                     quantity = double.parse(value);
@@ -258,80 +267,7 @@ class _ProductPickState extends State<ProductPick> {
                       //   height: 75,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          /*
-                          IconButton(
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 34,
-                              ),
-                              tooltip: 'הוספה',
-                              onPressed: quantity == 0 ? null : null
-                              // () {
-                              //     setState(() {
-                              //       bool newItem = true;
-                              //       if (quantity <= 0) return;
-                              //       if (order == null) {
-                              //         print('Error receiving order.');
-                              //         return;
-                              //       }
-                              //       orderItem = OrderItem();
-                              //       order.orderItems?.forEach((element) {
-                              //         if (element.productId ==
-                              //             widget.item.id) {
-                              //           newItem = false;
-                              //           element.quantity =
-                              //               double.parse(quantity.toString());
-                              //         }
-                              //       });
-                              //       if (newItem) {
-                              //         orderItem?.id = 0;
-                              //         orderItem?.productId = widget.item.id;
-                              //         orderItem?.quantity =
-                              //             quantity.toDouble();
-                              //         orderItem?.price = (widget.item.price! -
-                              //                 (widget.item.price! *
-                              //                     widget.item.discount! /
-                              //                     100)) *
-                              //             quantity.toDouble();
-                              //         orderItem?.created_by =
-                              //             Provider.of<GetCurrentUser>(context,
-                              //                     listen: false)
-                              //                 .currentUser
-                              //                 ?.id;
-                              //         orderItem?.orderId = order.id;
-
-                              //         Provider.of<EntityModification>(context,
-                              //                 listen: false)
-                              //             .order
-                              //             .where((element) =>
-                              //                 element.id == order.id)
-                              //             .first
-                              //             .orderItems ??= <OrderItem>[];
-                              //         //  order.orderItems!.add(orderItem!);
-                              //         if (Provider.of<EntityModification>(
-                              //                     context,
-                              //                     listen: false)
-                              //                 .order ==
-                              //             null) {
-                              //           print(
-                              //               'error while adding items to an order, order is null');
-                              //           return;
-                              //         }
-                              //         Provider.of<EntityModification>(context,
-                              //                 listen: false)
-                              //             .order
-                              //             .where((element) =>
-                              //                 element.id == order.id)
-                              //             .first
-                              //             .orderItems
-                              //             ?.add(orderItem!);
-                              //       }
-                              //     });
-                              //   },
-                              ),*/
-                        ],
+                        children: [],
                       ),
                     ),
                   )

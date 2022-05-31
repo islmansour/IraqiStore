@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/product_pick.dart';
+import '../screens/admin/order_details_admin.dart';
 import '../services/search.dart';
 
 class AddItemToOrder extends StatefulWidget {
@@ -34,6 +36,17 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
           (order) => order.id == widget.orderId,
         )
         .first;
+
+// prepare tmpItems for modifications. This variable will allow user cancel the operation and not have it confirmed when working with widget ProductPick.
+// In this file, right at the end, there is a confirm button. This buttom will take the tmpItems , merge them with the current orderitems then updade the db.
+    Provider.of<EntityModification>(context)
+        .order
+        .where(
+          (order) => order.id == widget.orderId,
+        )
+        .first
+        .initOrderItems();
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -154,34 +167,44 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                         item: productSnap.data![index],
                                         orderId: widget.orderId!);
                                   }))),
-                    ElevatedButton(
-                      onPressed: () {
-                        Provider.of<EntityModification>(context, listen: false)
-                            .order
-                            .where((element) => element.id == widget.orderId)
-                            .first
-                            .orderItems
-                            ?.forEach((item) {
-                          Order? x = Provider.of<EntityModification>(context,
+                    TextButton(
+                        onPressed: () {
+                          Provider.of<EntityModification>(context,
                                   listen: false)
                               .order
                               .where((element) => element.id == widget.orderId)
-                              .first;
-                          DjangoServices().upsertOrderItem(item)?.then((value) {
-                            item.id = value;
-                            Provider.of<EntityModification>(context,
-                                    listen: false)
-                                .update(x);
-                            Navigator.pop(context);
-                          });
+                              .first
+                              .confirmOrder();
 
                           Provider.of<EntityModification>(context,
                                   listen: false)
-                              .update(x);
-                        });
-                      },
-                      child: Text('Confirm'),
-                    )
+                              .order
+                              .where((element) => element.id == widget.orderId)
+                              .first
+                              .orderItems
+                              ?.forEach((item) {
+                            Order? x = Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .order
+                                .where(
+                                    (element) => element.id == widget.orderId)
+                                .first;
+                            DjangoServices()
+                                .upsertOrderItem(item)
+                                ?.then((value) {
+                              item.id = value;
+                              Provider.of<EntityModification>(context,
+                                      listen: false)
+                                  .update(x);
+                            });
+
+                            Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .update(x);
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Text('אישור'))
                   ],
                 );
               }),

@@ -29,6 +29,28 @@ class Order extends ChangeNotifier {
   @JsonKey(toJson: toNull, includeIfNull: false)
   List<OrderItem>? orderItems;
 
+// used in ProductPick to allow adding product to order, but user can cancel the changes by hitting back. If the order is confirmed , these are moving to orderItem variable.
+  @JsonKey(ignore: true)
+  List<OrderItem>? tmpItems;
+
+  void confirmOrder() {
+    tmpItems?.forEach((element) {
+      if (orderItems!
+          .where((item) => item.productId == element.productId)
+          .isEmpty) {
+        orderItems?.add(element);
+      } else {
+        orderItems?.forEach((item) {
+          if (item.productId == element.id) item = element;
+        });
+      }
+    });
+  }
+
+  void initOrderItems() {
+    // tmpItems = orderItems;
+  }
+
   Order(
       {this.accountId,
       this.orderItems,

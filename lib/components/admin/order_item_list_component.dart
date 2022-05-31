@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/widgets/order_item_admin.dart';
 import 'package:provider/provider.dart';
 
-import '../../screens/admin/order_details_admin.dart';
 import '../../services/tools.dart';
 
 class OrderItemList extends StatefulWidget {
@@ -54,6 +52,7 @@ class _OrderItemListState extends State<OrderItemList> {
               itemBuilder: (context, index) {
                 Provider.of<CurrentOrderItemUpdate>(context).orderItems =
                     _items;
+
                 return Dismissible(
                   key: Key(_items![index].id.toString()),
                   background: Container(color: Colors.red),
