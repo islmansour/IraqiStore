@@ -45,9 +45,7 @@ void main() {
       ListenableProvider<CurrentContactsUpdate>(
         create: (_) => CurrentContactsUpdate(),
       ),
-      ListenableProvider<CurrentProductsUpdate>(
-        create: (_) => CurrentProductsUpdate(),
-      ),
+
       ListenableProvider<CurrentOrderItemUpdate>(
         create: (_) => CurrentOrderItemUpdate(),
       ),

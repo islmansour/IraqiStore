@@ -32,9 +32,9 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
     var format = NumberFormat.simpleCurrency(locale: 'he');
     Product? _product;
 
-    _product = Provider.of<CurrentProductsUpdate>(context)
+    _product = Provider.of<EntityModification>(context)
         .products
-        ?.where((f) => f.id == widget.item.productId)
+        .where((f) => f.id == widget.item.productId)
         .first;
 
     return Padding(
@@ -84,7 +84,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 Text(
-                                  _product!.name.toString(),
+                                  _product.name.toString(),
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w600,

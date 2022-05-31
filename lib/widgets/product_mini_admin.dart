@@ -3,6 +3,7 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -37,12 +38,11 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
 
-    String? currentImg =
-        Provider.of<CurrentProductsUpdate>(context, listen: false)
-            .products
-            ?.where((element) => element.id == widget.item.id)
-            .first
-            .img;
+    String? currentImg = Provider.of<EntityModification>(context, listen: false)
+        .products
+        .where((element) => element.id == widget.item.id)
+        .first
+        .img;
 
     return InkWell(
       onTap: () {
@@ -54,49 +54,44 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                   )),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-            decoration: BoxDecoration(
-                border:
-                    Border.all(width: 0.5, color: Colors.lightGreen.shade400),
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20))),
-            height: 76,
-            width: double.infinity,
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: SizedBox(
+            height: 100,
             child: Column(
               children: [
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Flexible(
-                      flex: 30, // 15%
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.lightBlue,
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10))),
-                        height: 75,
-                        alignment: Alignment.center,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (currentImg == 'http://localhost.com' ||
-                                currentImg == "" ||
-                                currentImg == null)
-                              const Icon(Icons.image_not_supported,
-                                  size: 65, color: Colors.white)
-                            else
-                              Expanded(
-                                child: Image.network(
-                                  currentImg,
-                                ),
-                              ),
-                          ],
-                        ),
-                      )),
+                  // Flexible(
+                  //     flex: 30, // 15%
+                  //     child: Container(
+                  //       decoration: const BoxDecoration(
+                  //           color: Colors.lightBlue,
+                  //           borderRadius: BorderRadius.only(
+                  //               bottomRight: Radius.circular(10),
+                  //               bottomLeft: Radius.circular(10),
+                  //               topLeft: Radius.circular(10),
+                  //               topRight: Radius.circular(10))),
+                  //       height: 75,
+                  //       alignment: Alignment.center,
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           if (currentImg == 'http://localhost.com' ||
+                  //               currentImg == "" ||
+                  //               currentImg == null)
+                  //             const Icon(Icons.image_not_supported,
+                  //                 size: 65, color: Colors.white)
+                  //           else
+                  //             Expanded(
+                  //               child: Image.network(
+                  //                 currentImg,
+                  //               ),
+                  //             ),
+                  //         ],
+                  //       ),
+                  //     )),
                   Flexible(
                       flex: 70, // 60%
                       child: Column(
@@ -104,50 +99,38 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                           Row(
                             children: [
                               Expanded(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              // bottomLeft: Radius.circular(10),
-                                              topLeft: Radius.circular(10))),
-                                      height: 30,
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                    widget.item.product_number
-                                                            .toString() +
-                                                        ": ",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headlineMedium),
-                                                Text(
-                                                    widget.item.name.toString(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.amber.shade300,
+                                      borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10))),
+                                  height: 30,
+                                  alignment: Alignment.centerRight,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                                widget.item.product_number
+                                                        .toString() +
+                                                    ": ",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium),
+                                            Text(widget.item.name.toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      decoration: DottedDecoration(
-                                        shape: Shape.line,
-                                        linePosition: LinePosition.bottom,
-                                        color: Colors.lightGreen.shade400,
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -156,7 +139,7 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Flexible(
-                                flex: 70,
+                                flex: 30,
                                 child: Column(
                                   children: [
                                     Container(
@@ -201,7 +184,27 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                 ),
                               ),
                               Flexible(
-                                flex: 30,
+                                flex: 55,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        children: [
+                                          Text(widget.item.desc!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall,
+                                              maxLines: 4,
+                                              overflow: TextOverflow.ellipsis)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                flex: 10,
                                 child: Column(
                                   children: [
                                     Padding(
@@ -225,8 +228,8 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                       )),
                 ])
               ],
-            )),
-      ),
+            ),
+          )),
     );
   }
 }

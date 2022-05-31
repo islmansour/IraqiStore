@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
@@ -32,9 +31,9 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
     var format = NumberFormat.simpleCurrency(locale: 'he');
     Product? _product;
 
-    _product = Provider.of<CurrentProductsUpdate>(context)
+    _product = Provider.of<EntityModification>(context)
         .products
-        ?.where((f) => f.id == widget.item.productId)
+        .where((f) => f.id == widget.item.productId)
         .first;
 
     return Padding(
@@ -84,7 +83,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 Text(
-                                  _product!.name.toString(),
+                                  _product.name.toString(),
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w600,

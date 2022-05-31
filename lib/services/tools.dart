@@ -4,6 +4,7 @@ import 'package:hardwarestore/services/django_services.dart';
 
 import '../models/order_item.dart';
 import '../models/orders.dart';
+import '../models/products.dart';
 import '../models/quote.dart';
 
 class EntityModification extends ChangeNotifier {
@@ -59,5 +60,26 @@ class EntityModification extends ChangeNotifier {
 
   void refreshQuotesFromDB() async {
     _quotes = (await DjangoServices().getQuotes())!;
+  }
+
+  List<Product> _products = <Product>[];
+  List<Product> get products =>
+      _products; // just a getter to access the local list of orders
+
+  set products(List<Product> initProductSet) {
+    // a setter to set the list of global orders.
+    _products = initProductSet;
+  }
+
+  void updateProduct(Product update) {
+    _products.removeWhere((element) => element.id == update.id);
+
+    _products.add(update);
+
+    notifyListeners();
+  }
+
+  void refreshProductsFromDB() async {
+    _products = (await DjangoServices().getProducts())!;
   }
 }

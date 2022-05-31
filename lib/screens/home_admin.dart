@@ -165,8 +165,8 @@ void _loadAccounts(BuildContext context) async {
 
 void _loadProductss(BuildContext context) async {
   List<Product>? _produdcts = await DjangoServices().getProducts();
-  Provider.of<CurrentProductsUpdate>(context, listen: false).products =
-      _produdcts;
+  Provider.of<EntityModification>(context, listen: false).products =
+      _produdcts!;
   return;
 }
 

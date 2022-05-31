@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -86,17 +87,17 @@ class _ProductDetailsAdminState extends State<ProductDetailsAdmin> {
     );
     if (response.statusCode != 400) {
       imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      Provider.of<CurrentProductsUpdate>(context, listen: false)
+      Provider.of<EntityModification>(context, listen: false)
           .products
-          ?.where((element) => element.id == widget.item.id)
+          .where((element) => element.id == widget.item.id)
           .first
           .img = imgbbResponse.data?.displayUrl;
-      Product? _p = Provider.of<CurrentProductsUpdate>(context, listen: false)
+      Product? _p = Provider.of<EntityModification>(context, listen: false)
           .products
-          ?.where((element) => element.id == widget.item.id)
+          .where((element) => element.id == widget.item.id)
           .first;
 
-      DjangoServices().upsertProduct(_p!);
+      DjangoServices().upsertProduct(_p);
       setState(() {
         delay = false;
         loading = false;
@@ -124,12 +125,11 @@ class _ProductDetailsAdminState extends State<ProductDetailsAdmin> {
 
 
     */
-    String? currentImg =
-        Provider.of<CurrentProductsUpdate>(context, listen: false)
-            .products
-            ?.where((element) => element.id == widget.item.id)
-            .first
-            .img;
+    String? currentImg = Provider.of<EntityModification>(context, listen: false)
+        .products
+        .where((element) => element.id == widget.item.id)
+        .first
+        .img;
 
     return Container(
         padding: const EdgeInsets.all(5),

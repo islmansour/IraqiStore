@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -86,17 +87,17 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     );
     if (response.statusCode != 400) {
       imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      Provider.of<CurrentProductsUpdate>(context, listen: false)
+      Provider.of<EntityModification>(context, listen: false)
           .products
-          ?.where((element) => element.id == widget.item?.id)
+          .where((element) => element.id == widget.item?.id)
           .first
           .img = imgbbResponse.data?.displayUrl;
-      Product? _p = Provider.of<CurrentProductsUpdate>(context, listen: false)
+      Product? _p = Provider.of<EntityModification>(context, listen: false)
           .products
-          ?.where((element) => element.id == widget.item?.id)
+          .where((element) => element.id == widget.item?.id)
           .first;
 
-      DjangoServices().upsertProduct(_p!);
+      DjangoServices().upsertProduct(_p);
       setState(() {
         delay = false;
         loading = false;
@@ -151,10 +152,10 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
             child: ListView(
               children: <Widget>[
                 TextFormField(
-                  initialValue: _data.name != null ? _data.name : "",
+                  initialValue: _data.name ?? "",
                   onSaved: (String? value) {
                     // ignore: unrelated_type_equality_checks
-                    if (_data == null || _data.id == null || _data.id == 0) {
+                    if (_data.id == null || _data.id == 0) {
                       _data.id = 0;
                       _data.active = true;
                       _data.created_by =
@@ -168,20 +169,12 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                       hintText: 'name', labelText: 'Name'),
                 ),
                 TextFormField(
-                  initialValue: _data.category != null ? _data.category : "",
+                  initialValue: _data.category ?? "",
                   onSaved: (String? value) {
                     _data.category = value;
                   },
                   decoration: const InputDecoration(
                       hintText: 'category', labelText: 'Category'),
-                ),
-                TextFormField(
-                  initialValue: _data.desc != null ? _data.desc : "",
-                  onSaved: (String? value) {
-                    _data.desc = value;
-                  },
-                  decoration: const InputDecoration(
-                      hintText: 'description', labelText: 'Description'),
                 ),
                 TextFormField(
                   initialValue:
@@ -204,6 +197,45 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                   decoration: const InputDecoration(
                       hintText: 'price', labelText: 'Price'),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: TextFormField(
+                    maxLines: 4,
+                    keyboardType: TextInputType.multiline,
+                    initialValue: _data.desc ?? "",
+                    onSaved: (String? value) {
+                      _data.desc = value;
+                    },
+                    decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                        hintText: 'description',
+                        labelText: 'Description'),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    children: [
+                      Text('מצב',
+                          style: TextStyle(color: Colors.grey.shade700)),
+                      Switch(
+                        value: (_data.id == null || _data.id == 0)
+                            ? true
+                            : _data.active!,
+                        onChanged: (value) {
+                          setState(() {
+                            _data.active = value;
+                          });
+                        },
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
                 TextButton(
                   onPressed: () async {
                     await getImage();
@@ -217,21 +249,6 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                           height: 75,
                           width: 75,
                           child: Image.network(currentImg)),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: Switch(
-                    value: (_data == null || _data.id == null || _data.id == 0)
-                        ? true
-                        : _data.active!,
-                    onChanged: (value) {
-                      setState(() {
-                        _data.active = value;
-                      });
-                    },
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.green,
-                  ),
                 ),
                 Container(
                   width: screenSize.width,
