@@ -28,6 +28,24 @@ class Quote {
   @JsonKey(toJson: toNull, includeIfNull: false)
   List<QuoteItem>? quoteItems;
 
+// used in ProductPick to allow adding product to order, but user can cancel the changes by hitting back. If the order is confirmed , these are moving to orderItem variable.
+  @JsonKey(ignore: true)
+  List<QuoteItem>? tmpItems;
+
+  void confirmQuote() {
+    tmpItems?.forEach((element) {
+      if (quoteItems!
+          .where((item) => item.productId == element.productId)
+          .isEmpty) {
+        quoteItems?.add(element);
+      } else {
+        quoteItems?.forEach((item) {
+          if (item.productId == element.id) item = element;
+        });
+      }
+    });
+  }
+
   Quote({
     this.quoteItems,
     this.status,

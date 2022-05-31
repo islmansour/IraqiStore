@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +44,7 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
       }
 
       // if product was already added to the quote, simply update the quantity for this item.
-      quote.quoteItems?.forEach((element) {
+      quote.tmpItems?.forEach((element) {
         if (element.productId == widget.item.id) {
           newItem = false;
           element.quantity = double.parse(quantity.toString());
@@ -53,7 +52,7 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
               .quotes
               .where((element) => element.id == quote.id)
               .first
-              .quoteItems
+              .tmpItems
               ?.forEach((i) {
             if (i.productId == element.productId) {
               i.quantity = double.parse(quantity.toString());
@@ -85,14 +84,14 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
             .quotes
             .where((element) => element.id == quote.id)
             .first
-            .quoteItems ??= <QuoteItem>[];
+            .tmpItems ??= <QuoteItem>[];
 
         // once the new item is ready, add it to the quote we are working on.
         Provider.of<EntityModification>(context, listen: false)
             .quotes
             .where((element) => element.id == quote.id)
             .first
-            .quoteItems
+            .tmpItems
             ?.add(quoteItem!);
       }
     });
@@ -201,30 +200,33 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
                               alignment: Alignment.center,
                               width: 40,
                               child: TextFormField(
+                                enabled:
+                                    quoteItem?.id != null && quoteItem?.id != 0
+                                        ? false
+                                        : true,
                                 initialValue: quoteItem?.quantity.toString(),
                                 onChanged: (value) {
-                                  print('value....' + value);
                                   setState(() {
                                     if (value == "" ||
                                         double.parse(value) == 0) {
                                       value = "0";
                                       //this will make item disappear from UI , and if calling django to delete - it will be deleted from DB.
                                       //after that we need to notify listeners that this quote was modified, so we call the Provider update.
-                                      int? quoteItemId = quote.quoteItems
-                                          ?.where((element) =>
-                                              element.productId ==
-                                              widget.item.id)
-                                          .first
-                                          .id;
-                                      DjangoServices()
-                                          .deleteQuoteItem(quoteItemId!);
+                                      // int? quoteItemId = quote.quoteItems
+                                      //     ?.where((element) =>
+                                      //         element.productId ==
+                                      //         widget.item.id)
+                                      //     .first
+                                      //     .id;
+                                      // DjangoServices()
+                                      //     .deleteQuoteItem(quoteItemId!);
 
                                       quote.quoteItems?.removeWhere((element) =>
                                           element.productId == widget.item.id);
-                                      // Informing listeners of the change made to the quote.
-                                      Provider.of<EntityModification>(context,
-                                              listen: false)
-                                          .updateQuote(quote);
+                                      //   // Informing listeners of the change made to the quote.
+                                      //   Provider.of<EntityModification>(context,
+                                      //           listen: false)
+                                      //       .updateQuote(quote);
                                     }
 
                                     quantity = double.parse(value);

@@ -152,30 +152,45 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 8.0, top: 2),
-                                            child: Text(
-                                                "מחיר:" +
-                                                    " " +
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.price_change_rounded,
+                                                  size: 20,
+                                                  color: Colors.amber.shade500,
+                                                ),
+                                                Text(
                                                     widget.item.price
-                                                        .toString() +
-                                                    " " +
-                                                    format.currencySymbol +
-                                                    " ",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium),
+                                                            .toString() +
+                                                        " " +
+                                                        format.currencySymbol +
+                                                        " ",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium),
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 8.0, top: 4),
-                                            child: Text(
-                                                "הנחה:" +
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.discount_rounded,
+                                                  size: 20,
+                                                  color: Colors.amber.shade500,
+                                                ),
+                                                Text(
                                                     ' ' +
-                                                    widget.item.discount
-                                                        .toString() +
-                                                    ' %',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium),
+                                                        widget.item.discount
+                                                            .toString() +
+                                                        ' %',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -184,13 +199,20 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                 ),
                               ),
                               Flexible(
-                                flex: 55,
+                                flex: 60,
                                 child: Column(
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
+                                          Icon(
+                                            Icons.description_rounded,
+                                            size: 20,
+                                            color: Colors.amber.shade500,
+                                          ),
                                           Text(widget.item.desc!,
                                               style: Theme.of(context)
                                                   .textTheme

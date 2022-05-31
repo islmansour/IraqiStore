@@ -5,7 +5,6 @@ import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
-import '../../widgets/product_pick.dart';
 import '../services/search.dart';
 import '../widgets/product_pick_quote.dart';
 
@@ -35,6 +34,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
           (quote) => quote.id == widget.quoteId,
         )
         .first;
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -155,8 +155,14 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                                         item: productSnap.data![index],
                                         quoteId: widget.quoteId!);
                                   }))),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
+                        Provider.of<EntityModification>(context, listen: false)
+                            .quotes
+                            .where((element) => element.id == widget.quoteId)
+                            .first
+                            .confirmQuote();
+
                         Provider.of<EntityModification>(context, listen: false)
                             .quotes
                             .where((element) => element.id == widget.quoteId)
@@ -179,6 +185,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                                   listen: false)
                               .updateQuote(x);
                         });
+                        Navigator.pop(context);
                       },
                       child: Text('Confirm'),
                     )

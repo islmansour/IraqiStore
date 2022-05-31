@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/product_pick.dart';
-import '../screens/admin/order_details_admin.dart';
 import '../services/search.dart';
 
 class AddItemToOrder extends StatefulWidget {
