@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/services/django_services.dart';
 
+import '../models/contact.dart';
 import '../models/order_item.dart';
 import '../models/orders.dart';
 import '../models/products.dart';
@@ -62,6 +64,8 @@ class EntityModification extends ChangeNotifier {
     _quotes = (await DjangoServices().getQuotes())!;
   }
 
+///////////////////////////////////////////////////////////////////////////////////
+  /// Products
   List<Product> _products = <Product>[];
   List<Product> get products =>
       _products; // just a getter to access the local list of orders
@@ -81,5 +85,51 @@ class EntityModification extends ChangeNotifier {
 
   void refreshProductsFromDB() async {
     _products = (await DjangoServices().getProducts())!;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  /// Accounts
+  List<Account> _accounts = <Account>[];
+  List<Account> get accounts =>
+      _accounts; // just a getter to access the local list of orders
+
+  set accounts(List<Account> initAccounts) {
+    // a setter to set the list of global orders.
+    _accounts = initAccounts;
+  }
+
+  void updateAccount(Account update) {
+    _accounts.removeWhere((element) => element.id == update.id);
+
+    _accounts.add(update);
+
+    notifyListeners();
+  }
+
+  void refreshAccountsFromDB() async {
+    _accounts = (await DjangoServices().getAccounts())!;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  /// Contacts
+  List<Contact> _contacts = <Contact>[];
+  List<Contact> get contacts =>
+      _contacts; // just a getter to access the local list of orders
+
+  set contacts(List<Contact> initContacts) {
+    // a setter to set the list of global orders.
+    _contacts = initContacts;
+  }
+
+  void updateContact(Contact update) {
+    _contacts.removeWhere((element) => element.id == update.id);
+
+    _contacts.add(update);
+
+    notifyListeners();
+  }
+
+  void refreshContactsFromDB() async {
+    _contacts = (await DjangoServices().getContacts())!;
   }
 }

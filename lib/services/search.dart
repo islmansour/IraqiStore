@@ -21,13 +21,28 @@ class ApplySearch extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Account>? SearchAccounts(BuildContext context, String search) {
-    return Provider.of<CurrentAccountsUpdate>(context)
-        .accounts
-        ?.where((element) =>
-            element.name.toString().contains(search) ||
-            element.account_number.toString().contains(search))
-        .toList();
+  Future<List<SearchItem>> SearchAccounts(String search) async {
+    print(search);
+    await DjangoServices().getAccounts().then((value) {
+      value
+          ?.where((element) => element.name.toString().contains(search))
+          .forEach((i) {
+        items.add(SearchItem(item: i, type: "Account"));
+      });
+      value
+          ?.where((element) => element.phone.toString().contains(search))
+          .forEach((i) {
+        items.add(SearchItem(item: i, type: "Account"));
+      });
+      value
+          ?.where(
+              (element) => element.account_number.toString().contains(search))
+          .forEach((i) {
+        items.add(SearchItem(item: i, type: "Account"));
+      });
+    });
+    notifyListeners();
+    return items;
   }
 
   Future<List<SearchItem>> SearchProducts(String search) async {

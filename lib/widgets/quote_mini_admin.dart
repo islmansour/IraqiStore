@@ -1,7 +1,5 @@
-import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
-import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -36,15 +34,15 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
     Account? quoteAccount;
     Contact? quoteContact;
 
-    quoteAccount = Provider.of<CurrentAccountsUpdate>(context)
+    quoteAccount = Provider.of<EntityModification>(context)
         .accounts
-        ?.where((f) => f.id == widget.item.accountId)
+        .where((f) => f.id == widget.item.accountId)
         .first;
 
     widget.item.contactId != null && widget.item.contactId != 0
-        ? quoteContact = Provider.of<CurrentContactsUpdate>(context)
+        ? quoteContact = Provider.of<EntityModification>(context)
             .contacts
-            ?.where((f) => f.id == widget.item.contactId)
+            .where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
@@ -138,7 +136,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.35,
-                                    child: Text(quoteAccount?.name ?? "",
+                                    child: Text(quoteAccount.name ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium,
@@ -147,7 +145,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.only(top: 4.0),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -187,7 +185,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.25,
-                                    child: Text(quoteAccount?.phone ?? "אין",
+                                    child: Text(quoteAccount.phone ?? "אין",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -195,7 +193,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.only(top: 4.0),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -299,15 +297,15 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
     Account? quoteAccount;
     Contact? quoteContact;
 
-    quoteAccount = Provider.of<CurrentAccountsUpdate>(context)
+    quoteAccount = Provider.of<EntityModification>(context)
         .accounts
-        ?.where((f) => f.id == widget.item.accountId)
+        .where((f) => f.id == widget.item.accountId)
         .first;
 
     widget.item.contactId != null && widget.item.contactId != 0
-        ? quoteContact = Provider.of<CurrentContactsUpdate>(context)
+        ? quoteContact = Provider.of<EntityModification>(context)
             .contacts
-            ?.where((f) => f.id == widget.item.contactId)
+            .where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
@@ -389,7 +387,7 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.35,
-                                  child: Text(quoteAccount?.name ?? "",
+                                  child: Text(quoteAccount.name ?? "",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium,
@@ -438,7 +436,7 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
-                                  child: Text(quoteAccount?.phone ?? "אין",
+                                  child: Text(quoteAccount.phone ?? "אין",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),

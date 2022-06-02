@@ -57,9 +57,9 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
             child: ListView(
               children: <Widget>[
                 DropdownButtonFormField(
-                    items: Provider.of<CurrentAccountsUpdate>(context)
+                    items: Provider.of<EntityModification>(context)
                         .accounts
-                        ?.map((Account acc) {
+                        .map((Account acc) {
                       return DropdownMenuItem(
                           value: acc.id,
                           child: Row(
@@ -94,9 +94,9 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                         contentPadding: EdgeInsets.only(right: 8))),
                 _data.accountId != null
                     ? DropdownButtonFormField(
-                        items: Provider.of<CurrentContactsUpdate>(context)
+                        items: Provider.of<EntityModification>(context)
                             .contacts
-                            ?.where((element) => element.id == _data.accountId)
+                            .where((element) => element.id == _data.accountId)
                             .toList()
                             .map((Contact con) {
                           return DropdownMenuItem(

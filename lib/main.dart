@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
-import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/delivery.dart';
-import 'package:hardwarestore/components/order.dart';
-import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/components/user.dart';
-import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
@@ -32,20 +26,9 @@ void main() {
       ListenableProvider<CurrentNewsUpdates>(
         create: (_) => CurrentNewsUpdates(),
       ),
-      // ListenableProvider<CurrentOrdersUpdate>(
-      //   create: (_) => CurrentOrdersUpdate(),
-      // ),
-
       ListenableProvider<CurrentDeliverysUpdate>(
         create: (_) => CurrentDeliverysUpdate(),
       ),
-      ListenableProvider<CurrentAccountsUpdate>(
-        create: (_) => CurrentAccountsUpdate(),
-      ),
-      ListenableProvider<CurrentContactsUpdate>(
-        create: (_) => CurrentContactsUpdate(),
-      ),
-
       ListenableProvider<CurrentOrderItemUpdate>(
         create: (_) => CurrentOrderItemUpdate(),
       ),

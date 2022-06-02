@@ -13,6 +13,7 @@ class ProductsAdminScreen extends StatelessWidget {
           child: Column(
               mainAxisSize: MainAxisSize.max, children: [ProductsList()])),
       appBar: AppBar(
+        backgroundColor: Colors.amber,
         title: const Text('מוצרים'),
       ),
       bottomNavigationBar: const AdminBottomNav(1),

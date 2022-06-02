@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/account.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/models/orders.dart';
@@ -156,25 +154,20 @@ class _HomeAdminState extends State<HomeAdmin> {
 }
 
 void _loadAccounts(BuildContext context) async {
-  List<Account>? _accounts = await DjangoServices().getAccounts();
-  Provider.of<CurrentAccountsUpdate>(context, listen: false).accounts =
-      _accounts;
-  Provider.of<CurrentAccountsUpdate>(context, listen: false).accountsLoaded();
+  Provider.of<EntityModification>(context, listen: false)
+      .refreshAccountsFromDB();
   return;
 }
 
 void _loadProductss(BuildContext context) async {
   List<Product>? _produdcts = await DjangoServices().getProducts();
-  Provider.of<EntityModification>(context, listen: false).products =
-      _produdcts!;
+  Provider.of<EntityModification>(context, listen: false)
+      .refreshProductsFromDB();
   return;
 }
 
 void _loadContacts(BuildContext context) async {
-  List<Contact>? _contacts = await DjangoServices().getContacts();
-  int? x = _contacts?.length;
-  Provider.of<CurrentContactsUpdate>(context, listen: false).contacts =
-      _contacts;
-  Provider.of<CurrentContactsUpdate>(context, listen: false).contactsLoaded();
+  Provider.of<EntityModification>(context, listen: false)
+      .refreshContactsFromDB();
   return;
 }

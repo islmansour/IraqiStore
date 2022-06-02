@@ -37,7 +37,7 @@ class BottomNav extends StatelessWidget {
         BottomNavigationBarItem(
             icon: Icon(Icons.help_center), label: 'Products'),
         BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Orders'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Manage'),
+        BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Manage'),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
       ],
     );

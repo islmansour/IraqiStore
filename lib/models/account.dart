@@ -1,6 +1,10 @@
 import 'dart:convert';
 
+import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/models/quote.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'contact.dart';
 
 part 'account.g.dart';
 
@@ -24,6 +28,11 @@ class Account {
   // ignore: non_constant_identifier_names
   int? created_by;
 
+  @JsonKey(ignore: true)
+  List<Contact>? accountContacts;
+  List<Order>? accountOrders;
+  List<Quote>? accountQuotes;
+
   Account(
       {this.active,
       this.contactId,
@@ -39,7 +48,7 @@ class Account {
       this.street,
       this.street2,
       this.town,
-      this.zip});
+      this.zip}) {}
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);

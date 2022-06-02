@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/navbaradmin.dart';
+import 'package:hardwarestore/screens/admin/accounts_screen.dart';
 
 import '../../components/account.dart';
 import '../../components/contact.dart';
@@ -10,10 +11,197 @@ class ManageAdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [AccountsList(), ContactsList()])),
+      body:
+          // AccountsList(), ContactsList()
+          Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.business_rounded,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ManageAccountScreen()),
+                          );
+                        },
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+              Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+              Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.shopping_basket,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.people,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+              Card(
+                  //users settings
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.manage_accounts,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+              Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.delivery_dining,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Card(
+                  //profile setting
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.settings,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+              Card(
+                  //statistics
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Container(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.bar_chart,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                        onPressed: () {},
+                      ),
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                          // The child of a round Card should be in round shape
+                          shape: BoxShape.circle,
+                          color: Colors.white))),
+            ],
+          )
+        ],
+      ),
       appBar: AppBar(
         title: const Text('ניהול'),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../components/account.dart';
@@ -13,9 +14,9 @@ class SingleOrderAdmin extends StatelessWidget {
   Widget build(BuildContext context) {
     Account? currentAccount;
 
-    currentAccount = Provider.of<CurrentAccountsUpdate>(context)
+    currentAccount = Provider.of<EntityModification>(context)
         .accounts
-        ?.where((f) => f.id == item.accountId)
+        .where((f) => f.id == item.accountId)
         .first;
     return Container(
         padding: const EdgeInsets.all(15),
@@ -39,7 +40,7 @@ class SingleOrderAdmin extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text(currentAccount?.name ?? "",
+                    Text(currentAccount.name ?? "",
                         style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),
@@ -51,7 +52,7 @@ class SingleOrderAdmin extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(currentAccount?.phone ?? "",
+                    Text(currentAccount.phone ?? "",
                         style: Theme.of(context).textTheme.displayMedium),
                   ],
                 )

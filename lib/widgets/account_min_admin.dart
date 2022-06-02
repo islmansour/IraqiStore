@@ -4,6 +4,7 @@ import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/screens/admin/new_account.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 class AccountMiniAdmin extends StatefulWidget {
@@ -20,19 +21,16 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.item.contactId != null)
-      print(
-          'account ${widget.item.account_number} has a contact with id ${widget.item.contactId}');
     if (widget.item.contactId != null &&
-        Provider.of<CurrentContactsUpdate>(context).contacts != null &&
-        Provider.of<CurrentContactsUpdate>(context).contacts!.isNotEmpty &&
-        Provider.of<CurrentContactsUpdate>(context)
+        Provider.of<EntityModification>(context).contacts != null &&
+        Provider.of<EntityModification>(context).contacts.isNotEmpty &&
+        Provider.of<EntityModification>(context)
                 .contacts
-                ?.where((element) => element.id == widget.item.contactId) !=
+                .where((element) => element.id == widget.item.contactId) !=
             null) {
-      accountContact = Provider.of<CurrentContactsUpdate>(context)
+      accountContact = Provider.of<EntityModification>(context)
           .contacts
-          ?.where((element) => element.id == widget.item.contactId)
+          .where((element) => element.id == widget.item.contactId)
           .first;
     }
 
@@ -49,7 +47,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
       child: Card(
         child: SizedBox(
             // padding: const EdgeInsets.all(5),
-            height: 80,
+            height: 100,
             width: double.infinity,
             child: Column(
               children: [
@@ -119,7 +117,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodySmall,
+                                            .headlineSmall,
                                       ),
                               ),
                             ],

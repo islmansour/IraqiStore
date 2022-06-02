@@ -36,15 +36,15 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
     Account? orderAccount;
     Contact? orderContact;
 
-    orderAccount = Provider.of<CurrentAccountsUpdate>(context)
+    orderAccount = Provider.of<EntityModification>(context)
         .accounts
-        ?.where((f) => f.id == widget.item.accountId)
+        .where((f) => f.id == widget.item.accountId)
         .first;
 
     widget.item.contactId != null && widget.item.contactId != 0
-        ? orderContact = Provider.of<CurrentContactsUpdate>(context)
+        ? orderContact = Provider.of<EntityModification>(context)
             .contacts
-            ?.where((f) => f.id == widget.item.contactId)
+            .where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
@@ -124,6 +124,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.40,
                           // height: 35,
+
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -138,7 +139,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.35,
-                                    child: Text(orderAccount?.name ?? "",
+                                    child: Text(orderAccount.name ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium,
@@ -147,7 +148,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.only(top: 4.0),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -187,7 +188,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.25,
-                                    child: Text(orderAccount?.phone ?? "אין",
+                                    child: Text(orderAccount.phone ?? "אין",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -195,7 +196,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.only(top: 4.0),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -338,15 +339,15 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
     Account? orderAccount;
     Contact? orderContact;
 
-    orderAccount = Provider.of<CurrentAccountsUpdate>(context)
+    orderAccount = Provider.of<EntityModification>(context)
         .accounts
-        ?.where((f) => f.id == widget.item.accountId)
+        .where((f) => f.id == widget.item.accountId)
         .first;
 
     widget.item.contactId != null && widget.item.contactId != 0
-        ? orderContact = Provider.of<CurrentContactsUpdate>(context)
+        ? orderContact = Provider.of<EntityModification>(context)
             .contacts
-            ?.where((f) => f.id == widget.item.contactId)
+            .where((f) => f.id == widget.item.contactId)
             .first
         : null;
 
@@ -428,7 +429,7 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.35,
-                                  child: Text(orderAccount?.name ?? "",
+                                  child: Text(orderAccount.name ?? "",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium,
@@ -477,7 +478,7 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
-                                  child: Text(orderAccount?.phone ?? "אין",
+                                  child: Text(orderAccount.phone ?? "אין",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),

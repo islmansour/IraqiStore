@@ -3,6 +3,7 @@ import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/contact.dart';
+import '../services/tools.dart';
 import '../widgets/contact_mini_admin.dart';
 
 class ContactsList extends StatefulWidget {
@@ -32,8 +33,13 @@ class _ContactsListState extends State<ContactsList> {
           int len = contactSnap.data?.length ?? 0;
 
           return ExpansionTile(
-              title: Text('אנשי קשר ' + len.toString(),
-                  style: Theme.of(context).textTheme.displayMedium),
+              initiallyExpanded: false,
+              leading: const Icon(Icons.people),
+              title: const Text('אנשי קשר '),
+              iconColor: Colors.orange,
+              textColor: Colors.orange,
+              collapsedIconColor: Colors.orange.shade300,
+              collapsedTextColor: Colors.orange.shade300,
               children: [
                 ListTile(
                     title: SizedBox(
@@ -44,24 +50,12 @@ class _ContactsListState extends State<ContactsList> {
                                 shrinkWrap: true,
                                 itemCount: contactSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  Provider.of<CurrentContactsUpdate>(context)
-                                      .contacts = contactSnap.data;
+                                  Provider.of<EntityModification>(context)
+                                      .contacts = contactSnap.data!;
                                   return ContactMiniAdmin(
                                       item: contactSnap.data![index]);
                                 }))))
               ]);
         });
-  }
-}
-
-class CurrentContactsUpdate extends ChangeNotifier {
-  List<Contact>? contacts;
-  void updateContact(Contact contact) {
-    contacts?.add((contact));
-    notifyListeners();
-  }
-
-  void contactsLoaded() {
-    notifyListeners();
   }
 }

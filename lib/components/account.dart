@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../models/account.dart';
@@ -22,47 +23,30 @@ class _AccountsListState extends State<AccountsList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Account>?>(
-        future: DjangoServices().getAccounts(),
-        builder: (context, AsyncSnapshot<List<Account>?> accountSnap) {
-          if (accountSnap.connectionState == ConnectionState.none &&
-              accountSnap.hasData == null) {
-            return Container();
-          }
-          int len = accountSnap.data?.length ?? 0;
+    return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.90,
+        child: Scrollbar(
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount:
+                    Provider.of<EntityModification>(context).accounts.length,
+                itemBuilder: (context, index) {
+                  Provider.of<EntityModification>(context)
+                              .accounts[index]
+                              .accountContacts ==
+                          null
+                      ? print(
+                          '1. account ${Provider.of<EntityModification>(context).accounts[index].id} has no contacts')
+                      : print(
+                          '2. account ${Provider.of<EntityModification>(context).accounts[index].id} has ${Provider.of<EntityModification>(context).accounts[index].accountContacts?.length} contacts.');
 
-          return ExpansionTile(
-              initiallyExpanded: true,
-              title: Text('לקוחות ' + len.toString(),
-                  style: Theme.of(context).textTheme.displayMedium),
-              children: [
-                ListTile(
-                    title: SizedBox(
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: Scrollbar(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: accountSnap.data?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  Provider.of<CurrentAccountsUpdate>(context)
-                                      .accounts = accountSnap.data;
-                                  return AccountMiniAdmin(
-                                      item: accountSnap.data![index]);
-                                }))))
-              ]);
-        });
-  }
-}
-
-class CurrentAccountsUpdate extends ChangeNotifier {
-  List<Account>? accounts;
-  void updateAccount(Account account) {
-    accounts?.add((account));
-    notifyListeners();
-  }
-
-  void accountsLoaded() {
-    notifyListeners();
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: AccountMiniAdmin(
+                        item: Provider.of<EntityModification>(context)
+                            .accounts[index]),
+                  );
+                })));
   }
 }

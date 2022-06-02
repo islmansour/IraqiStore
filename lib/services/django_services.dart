@@ -204,7 +204,6 @@ class DjangoServices {
         .post(uri, headers: headers, body: jsonEncode(product.toJson()))
         .then((value) {
       if (value.statusCode == 201) {
-        print('success 201');
         return true;
       } else {
         print('Error occured:L ' + value.statusCode.toString());
@@ -240,6 +239,51 @@ class DjangoServices {
     return null;
   }
 
+  Future<List<Contact>?> getAccountContact(String _account) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'http://$ipaddress:8000/IraqiStore/get_account_contacts/' + _account);
+
+    var response = await client.get(uri);
+
+    if (response.statusCode == 200) {
+      String json = response.body;
+      json = utf8.decode(json.runes.toList());
+      return contactFromJson(json);
+    }
+    return null;
+  }
+
+  Future<List<Order>?> getAccountOrders(String _account) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'http://$ipaddress:8000/IraqiStore/order_list_by_account/' + _account);
+
+    var response = await client.get(uri);
+
+    if (response.statusCode == 200) {
+      String json = response.body;
+      json = utf8.decode(json.runes.toList());
+      return orderFromJson(json);
+    }
+    return null;
+  }
+
+  Future<List<Quote>?> getAccountQuotes(String _account) async {
+    var client = http.Client();
+    var uri = Uri.parse(
+        'http://$ipaddress:8000/IraqiStore/quote_list_by_account/' + _account);
+
+    var response = await client.get(uri);
+
+    if (response.statusCode == 200) {
+      String json = response.body;
+      json = utf8.decode(json.runes.toList());
+      return quoteFromJson(json);
+    }
+    return null;
+  }
+
   Future<List<Account>?> getAccounts() async {
     var client = http.Client();
     var uri = Uri.parse('http://$ipaddress:8000/IraqiStore/account_list');
@@ -248,7 +292,17 @@ class DjangoServices {
     if (response.statusCode == 200) {
       String json = response.body;
       json = utf8.decode(json.runes.toList());
-      return accountFromJson(json);
+      List<Account> _results = accountFromJson(json);
+      _results.forEach((element) async {
+        element.accountContacts = <Contact>[];
+        element.accountContacts =
+            await getAccountContact(element.id.toString());
+
+        element.accountOrders = await getAccountOrders(element.id.toString());
+        element.accountQuotes = await getAccountQuotes(element.id.toString());
+      });
+
+      return _results;
     }
     return null;
   }
