@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
-import 'package:hardwarestore/components/delivery.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
@@ -26,9 +25,9 @@ void main() {
       ListenableProvider<CurrentNewsUpdates>(
         create: (_) => CurrentNewsUpdates(),
       ),
-      ListenableProvider<CurrentDeliverysUpdate>(
-        create: (_) => CurrentDeliverysUpdate(),
-      ),
+      // ListenableProvider<CurrentDeliverysUpdate>(
+      //   create: (_) => CurrentDeliverysUpdate(),
+      // ),
       ListenableProvider<CurrentOrderItemUpdate>(
         create: (_) => CurrentOrderItemUpdate(),
       ),

@@ -71,6 +71,7 @@ class _ProductPickState extends State<ProductPick> {
         orderItem?.id = 0;
         orderItem?.productId = widget.item.id;
         orderItem?.quantity = quantity.toDouble();
+        orderItem?.discount = widget.item.discount;
         orderItem?.price = (widget.item.price! -
                 (widget.item.price! * widget.item.discount! / 100)) *
             quantity.toDouble();

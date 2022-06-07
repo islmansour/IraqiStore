@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/quote_item.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 
 import '../models/contact.dart';
@@ -32,11 +33,13 @@ class EntityModification extends ChangeNotifier {
   }
 
   Future<List<OrderItem>?> getOrderItemsForOrder(int orderId) async {
-    return DjangoServices().getOrderItems(orderId);
+    // return DjangoServices().getOrderItems(orderId);
+    return Repository().getOrderItems(orderId);
   }
 
-  void refreshOrdersFromDB() async {
-    _order = (await DjangoServices().getOrders())!;
+  refreshOrdersFromDB() async {
+    _order = (await Repository().getOrders())!;
+    notifyListeners();
   }
 
   List<Quote> _quotes = <Quote>[];
@@ -57,11 +60,14 @@ class EntityModification extends ChangeNotifier {
   }
 
   Future<List<QuoteItem>?> getQuoteItemsForOrder(int quoteId) async {
-    return DjangoServices().getQuoteItems(quoteId);
+    //return DjangoServices().getQuoteItems(quoteId);
+    return Repository().getQuoteItems(quoteId);
   }
 
-  void refreshQuotesFromDB() async {
-    _quotes = (await DjangoServices().getQuotes())!;
+  refreshQuotesFromDB() async {
+    // _quotes = (await DjangoServices().getQuotes())!;\
+    _quotes = (await Repository().getQuotes())!;
+    notifyListeners();
   }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -83,8 +89,9 @@ class EntityModification extends ChangeNotifier {
     notifyListeners();
   }
 
-  void refreshProductsFromDB() async {
-    _products = (await DjangoServices().getProducts())!;
+  refreshProductsFromDB() async {
+    _products = (await Repository().getProducts())!;
+    notifyListeners();
   }
 
   ///////////////////////////////////////////////////////////////////////////////////
@@ -106,8 +113,9 @@ class EntityModification extends ChangeNotifier {
     notifyListeners();
   }
 
-  void refreshAccountsFromDB() async {
-    _accounts = (await DjangoServices().getAccounts())!;
+  refreshAccountsFromDB() async {
+    _accounts = (await Repository().getAccounts())!;
+    notifyListeners();
   }
 
   ///////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +137,8 @@ class EntityModification extends ChangeNotifier {
     notifyListeners();
   }
 
-  void refreshContactsFromDB() async {
-    _contacts = (await DjangoServices().getContacts())!;
+  refreshContactsFromDB() async {
+    _contacts = (await Repository().getContacts())!;
+    notifyListeners();
   }
 }

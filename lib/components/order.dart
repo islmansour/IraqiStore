@@ -6,60 +6,114 @@ import 'package:provider/provider.dart';
 import '../services/tools.dart';
 import '../widgets/order_mini_admin.dart';
 
-class OrdersList extends StatelessWidget {
+class OrdersList extends StatefulWidget {
   const OrdersList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Order>?>(
-        future: DjangoServices().getOrders(),
-        builder: (context, AsyncSnapshot<List<Order>?> orderSnap) {
-          if (orderSnap.connectionState == ConnectionState.none &&
-              orderSnap.hasData == null) {
-            return Container();
-          }
-          int len = orderSnap.data?.length ?? 0;
-          // Provider.of<CurrentOrdersUpdate>(context).setOrders(orderSnap.data);
-          if (orderSnap.data != null) {
-            Provider.of<EntityModification>(context, listen: false).orders =
-                orderSnap.data!;
-          }
+  State<OrdersList> createState() => _OrdersListState();
+}
 
-          return ExpansionTile(
-              initiallyExpanded: false,
-              title: const Text('הזמנות '),
-              leading: const Icon(Icons.shopping_cart),
-              subtitle: Text(
-                len.toString() + ' ' + 'פתוחות',
-              ),
-              iconColor: Colors.blue,
-              textColor: Colors.blue,
-              collapsedIconColor: Colors.blue.shade300,
-              collapsedTextColor: Colors.blue.shade300,
-              children: [
-                ListTile(
-                    title: SizedBox(
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: Scrollbar(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: orderSnap.data?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: OrderMiniAdmin(
-                                            item: orderSnap.data![index]),
-                                      ),
-                                    ],
-                                  );
-                                }))))
-              ]);
-        });
+class _OrdersListState extends State<OrdersList> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<EntityModification>(builder: (context, repo, _) {
+      if (repo.order
+          .where((element) => element.status != 'closed')
+          .isNotEmpty) {
+        return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Scrollbar(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: repo.order
+                        .where((element) => element.status != 'closed')
+                        .length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: OrderMiniAdmin(
+                                item: repo.order
+                                    .where(
+                                        (element) => element.status != 'closed')
+                                    .toList()[index]),
+                          ),
+                        ],
+                      );
+                    })));
+      } else {
+        return (Container());
+      }
+    });
+  }
+}
+
+class OrdersListHome extends StatefulWidget {
+  const OrdersListHome({Key? key}) : super(key: key);
+
+  @override
+  State<OrdersListHome> createState() => _OrdersListHomeState();
+}
+
+class _OrdersListHomeState extends State<OrdersListHome> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<EntityModification>(builder: (context, repo, _) {
+      if (repo.order
+          .where((element) => element.status != 'closed')
+          .isNotEmpty) {
+        return ExpansionTile(
+            initiallyExpanded: false,
+            title: const Text('הזמנות '),
+            leading: const Icon(Icons.shopping_cart),
+            subtitle: Text(
+              repo.order
+                      .where((element) => element.status != 'closed')
+                      .length
+                      .toString() +
+                  ' ' +
+                  'פתוחות',
+            ),
+            iconColor: Colors.blue,
+            textColor: Colors.blue,
+            collapsedIconColor: Colors.blue.shade300,
+            collapsedTextColor: Colors.blue.shade300,
+            children: [
+              ListTile(
+                  title: SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Scrollbar(
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: repo.order
+                                  .where(
+                                      (element) => element.status != 'closed')
+                                  .length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: OrderMiniAdmin(
+                                          item: repo.order
+                                              .where((element) =>
+                                                  element.status != 'closed')
+                                              .toList()[index]),
+                                    ),
+                                  ],
+                                );
+                              }))))
+            ]);
+      } else {
+        return (Container());
+      }
+    });
+    //   });
   }
 }

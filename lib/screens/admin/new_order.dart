@@ -6,6 +6,7 @@ import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/lov.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      DjangoServices().upsertOrder(_data)?.then((value) {
+      //DjangoServices().upsertOrder(_data)?.then((value) {
+      Repository().upsertOrder(_data)?.then((value) {
         _data.id == value;
         Provider.of<EntityModification>(context, listen: false).update(_data);
       });

@@ -10,6 +10,7 @@ class OrderItem {
   int? productId;
   int? orderId;
   double? price;
+  double? discount;
   double? quantity;
   int? created_by;
   String? notes;
@@ -20,6 +21,7 @@ class OrderItem {
       this.id,
       this.notes,
       this.orderId,
+      this.discount,
       this.price,
       this.productId,
       this.quantity,

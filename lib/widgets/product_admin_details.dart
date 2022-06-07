@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:image_picker/image_picker.dart';
@@ -96,7 +97,7 @@ class _ProductDetailsAdminState extends State<ProductDetailsAdmin> {
           .where((element) => element.id == widget.item.id)
           .first;
 
-      DjangoServices().upsertProduct(_p);
+      Repository().upsertProduct(_p);
       setState(() {
         delay = false;
         loading = false;

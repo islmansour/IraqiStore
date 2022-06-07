@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/quote.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/widgets/quote_item_admin.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,6 @@ class _QuoteItemListState extends State<QuoteItemList> {
         .first
         .quoteItems;
 
-    print('quote items found ${_items?.length}');
     return SizedBox(
         height: MediaQuery.of(context).size.height * 0.75,
         child: Scrollbar(
@@ -61,7 +61,7 @@ class _QuoteItemListState extends State<QuoteItemList> {
                   onDismissed: (direction) {
                     QuoteItem _currentItem = _items[index];
 
-                    DjangoServices().deleteQuoteItem(_items[index].id!);
+                    Repository().deleteQuoteItem(_items[index].id!);
 
                     Provider.of<EntityModification>(context, listen: false)
                         .quotes

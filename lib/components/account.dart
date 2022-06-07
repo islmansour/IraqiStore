@@ -32,15 +32,6 @@ class _AccountsListState extends State<AccountsList> {
                 itemCount:
                     Provider.of<EntityModification>(context).accounts.length,
                 itemBuilder: (context, index) {
-                  Provider.of<EntityModification>(context)
-                              .accounts[index]
-                              .accountContacts ==
-                          null
-                      ? print(
-                          '1. account ${Provider.of<EntityModification>(context).accounts[index].id} has no contacts')
-                      : print(
-                          '2. account ${Provider.of<EntityModification>(context).accounts[index].id} has ${Provider.of<EntityModification>(context).accounts[index].accountContacts?.length} contacts.');
-
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: AccountMiniAdmin(

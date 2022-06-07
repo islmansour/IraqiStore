@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
 import '../models/account.dart';
+import '../models/orders.dart';
+import '../models/quote.dart';
 
 class SearchItem {
   String? type;
@@ -22,31 +26,30 @@ class ApplySearch extends ChangeNotifier {
   }
 
   Future<List<SearchItem>> SearchAccounts(String search) async {
-    print(search);
-    await DjangoServices().getAccounts().then((value) {
-      value
-          ?.where((element) => element.name.toString().contains(search))
-          .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
-      });
-      value
-          ?.where((element) => element.phone.toString().contains(search))
-          .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
-      });
-      value
-          ?.where(
-              (element) => element.account_number.toString().contains(search))
-          .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
-      });
-    });
+    // await Repository().getAccounts().then((value) {
+    //   value
+    //       ?.where((element) => element.name.toString().contains(search))
+    //       .forEach((i) {
+    //     items.add(SearchItem(item: i, type: "Account"));
+    //   });
+    //   value
+    //       ?.where((element) => element.phone.toString().contains(search))
+    //       .forEach((i) {
+    //     items.add(SearchItem(item: i, type: "Account"));
+    //   });
+    //   value
+    //       ?.where(
+    //           (element) => element.account_number.toString().contains(search))
+    //       .forEach((i) {
+    //     items.add(SearchItem(item: i, type: "Account"));
+    //   });
+    // });
     notifyListeners();
     return items;
   }
 
   Future<List<SearchItem>> SearchProducts(String search) async {
-    await DjangoServices().getProducts().then((value) {
+    await Repository().getProducts().then((value) {
       value
           ?.where((element) => element.name.toString().contains(search))
           .forEach((i) {
@@ -64,27 +67,172 @@ class ApplySearch extends ChangeNotifier {
     return items;
   }
 
-  Future<List<SearchItem>> SearchAllObjects(String search) async {
-    await DjangoServices().getAccounts().then((value) {
+  Future<List<SearchItem>> SearchQuote(
+      BuildContext context, String search) async {
+    //  await DjangoServices().getQuotes().then((value) {
+    List<Quote> value = Provider.of<EntityModification>(context).quotes;
+    try {
       value
-          ?.where((element) => element.name.toString().contains(search))
+          .where((element) => element.quote_number.toString().contains(search))
           .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
+        items.add(SearchItem(item: i, type: "Quote"));
       });
+
+      value.forEach((quote) {
+        Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .where((account) => account.id == quote.accountId)
+            .forEach((element) {
+          if (element.name!.contains(search)) {
+            items.add(SearchItem(item: quote, type: "Quote"));
+          }
+        });
+      });
+
+      value.forEach((quote) {
+        Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .where((account) => account.id == quote.accountId)
+            .forEach((element) {
+          if (element.phone != null && element.phone!.contains(search)) {
+            items.add(SearchItem(item: quote, type: "Quote"));
+          }
+        });
+      });
+
+      value.forEach((quote) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == quote.contactId)
+            .forEach((element) {
+          if (element.first_name!.contains(search)) {
+            items.add(SearchItem(item: quote, type: "Quote"));
+          }
+        });
+      });
+
+      value.forEach((quote) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == quote.contactId)
+            .forEach((element) {
+          if (element.last_name!.contains(search)) {
+            items.add(SearchItem(item: quote, type: "Quote"));
+          }
+        });
+      });
+
+      value.forEach((quote) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == quote.contactId)
+            .forEach((element) {
+          if (element.phone != null && element.phone!.contains(search)) {
+            items.add(SearchItem(item: quote, type: "Quote"));
+          }
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+
+    notifyListeners();
+    return items;
+  }
+
+  Future<List<SearchItem>> SearchOrder(
+      BuildContext context, String search) async {
+    //await DjangoServices().getOrders().then((value) {
+    List<Order> value = Provider.of<EntityModification>(context).order;
+    try {
       value
-          ?.where((element) => element.phone.toString().contains(search))
+          .where((element) => element.order_number.toString().contains(search))
           .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
+        items.add(SearchItem(item: i, type: "Order"));
       });
-      value
-          ?.where(
-              (element) => element.account_number.toString().contains(search))
-          .forEach((i) {
-        items.add(SearchItem(item: i, type: "Account"));
+
+      value.forEach((order) {
+        Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .where((account) => account.id == order.accountId)
+            .forEach((element) {
+          if (element.name!.contains(search)) {
+            items.add(SearchItem(item: order, type: "Order"));
+          }
+        });
       });
+
+      value.forEach((order) {
+        Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .where((account) => account.id == order.accountId)
+            .forEach((element) {
+          if (element.phone != null && element.phone!.contains(search)) {
+            items.add(SearchItem(item: order, type: "Order"));
+          }
+        });
+      });
+
+      value.forEach((order) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == order.contactId)
+            .forEach((element) {
+          if (element.first_name!.contains(search)) {
+            items.add(SearchItem(item: order, type: "Order"));
+          }
+        });
+      });
+
+      value.forEach((order) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == order.contactId)
+            .forEach((element) {
+          if (element.last_name!.contains(search)) {
+            items.add(SearchItem(item: order, type: "Order"));
+          }
+        });
+      });
+
+      value.forEach((order) {
+        Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .where((contact) => contact.id == order.contactId)
+            .forEach((element) {
+          if (element.phone != null && element.phone!.contains(search)) {
+            items.add(SearchItem(item: order, type: "Order"));
+          }
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+
+    notifyListeners();
+    return items;
+  }
+
+  Future<List<SearchItem>> SearchAllObjects(
+      BuildContext context, String search) async {
+    List<Account> _accounts = Provider.of<EntityModification>(context).accounts;
+    _accounts
+        .where((element) => element.name.toString().contains(search))
+        .forEach((i) {
+      items.add(SearchItem(item: i, type: "Account"));
+    });
+    _accounts
+        .where((element) => element.phone.toString().contains(search))
+        .forEach((i) {
+      items.add(SearchItem(item: i, type: "Account"));
+    });
+    _accounts
+        .where((element) => element.account_number.toString().contains(search))
+        .forEach((i) {
+      items.add(SearchItem(item: i, type: "Account"));
     });
 
-    await DjangoServices().getContacts().then((value) {
+    await Repository().getContacts().then((value) {
       value
           ?.where((element) => element.first_name.toString().contains(search))
           .forEach((i) {
@@ -107,7 +255,7 @@ class ApplySearch extends ChangeNotifier {
       });
     });
 
-    await DjangoServices().getOrders().then((value) {
+    await Repository().getOrders().then((value) {
       value
           ?.where((element) => element.order_number.toString().contains(search))
           .forEach((i) {
@@ -115,7 +263,7 @@ class ApplySearch extends ChangeNotifier {
       });
     });
 
-    await DjangoServices().getQuotes().then((value) {
+    await Repository().getQuotes().then((value) {
       value
           ?.where((element) => element.quote_number.toString().contains(search))
           .forEach((i) {

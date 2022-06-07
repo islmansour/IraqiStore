@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,8 @@ class _CreateNewQuoteFormState extends State<CreateNewQuoteForm> {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      DjangoServices().upsertQuote(_data); // Save our form now.
+      //  DjangoServices().upsertQuote(_data); // Save our form now.
+      Repository().upsertQuote(_data);
     }
   }
 

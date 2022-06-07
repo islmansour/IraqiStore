@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
             ),
         body: SingleChildScrollView(
           child: FutureBuilder<List<Product>?>(
-              future: DjangoServices().getProducts(),
+              future: Repository().getProducts(),
               builder: (context, AsyncSnapshot<List<Product>?> productSnap) {
                 if (productSnap.connectionState == ConnectionState.none &&
                     productSnap.hasData == null) {
@@ -174,7 +175,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                               .quotes
                               .where((element) => element.id == widget.quoteId)
                               .first;
-                          DjangoServices().upsertQuoteItem(item)?.then((value) {
+                          Repository().upsertQuoteItem(item)?.then((value) {
                             item.id = value;
                             Provider.of<EntityModification>(context,
                                     listen: false)

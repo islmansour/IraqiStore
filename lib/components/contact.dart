@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Contact>?>(
-        future: DjangoServices().getContacts(),
+        future: Repository().getContacts(),
         builder: (context, AsyncSnapshot<List<Contact>?> contactSnap) {
           if (contactSnap.connectionState == ConnectionState.none &&
               contactSnap.hasData == null) {

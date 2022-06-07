@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +25,16 @@ class QuoteItemAdmin extends StatefulWidget {
 
 class _QuoteItemAdminState extends State<QuoteItemAdmin> {
   double quantity = 0;
-  bool quantityChanged = false;
+  double discount = 0;
+  bool recordChanged = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    discount = widget.item.discount ?? 0;
+    quantity = widget.item.quantity ?? 0;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +56,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                   topLeft: Radius.circular(20))),
-          height: 90,
+          height: 120,
           width: double.infinity,
           child: Row(
             children: [
@@ -56,7 +65,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                   Expanded(
                     child: Container(
                       decoration: const BoxDecoration(
-                          color: Colors.lightBlue,
+                          color: Colors.lightGreen,
                           borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
@@ -81,7 +90,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 Text(
                                   _product.name.toString(),
@@ -93,24 +102,74 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                                 ),
                                 Row(
                                   children: [
-                                    Text(
-                                        widget.item.price!
-                                                .toStringAsFixed(2)
-                                                .toString() +
-                                            " " +
-                                            format.currencySymbol +
-                                            " ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium),
-                                    Text(
-                                        "הנחה:" +
-                                            ' ' +
-                                            _product.discount.toString() +
-                                            ' %',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium),
+                                    // Text(
+                                    //     widget.item.price!
+                                    //             .toStringAsFixed(2)
+                                    //             .toString() +
+                                    //         " " +
+                                    //         format.currencySymbol +
+                                    //         " ",
+                                    //     style: Theme.of(context)
+                                    //         .textTheme
+                                    //         .bodyMedium),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 60,
+                                      child: TextFormField(
+                                        enabled: false,
+                                        style: const TextStyle(fontSize: 12),
+                                        initialValue: _product.price == null
+                                            ? "0"
+                                            : _product.price.toString(),
+                                        onChanged: null,
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(),
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+
+                                          labelStyle: TextStyle(fontSize: 12),
+                                          // border: OutlineInputBorder(),0
+                                          labelText: '₪',
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(right: 4),
+                                      alignment: Alignment.center,
+                                      width: 60,
+                                      child: TextFormField(
+                                        style: const TextStyle(fontSize: 12),
+                                        initialValue: discount.toString(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            recordChanged = true;
+
+                                            try {
+                                              discount = double.parse(value);
+                                            } catch (e) {
+                                              discount = 0;
+                                            }
+                                          });
+                                        },
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(),
+                                        decoration: const InputDecoration(
+                                          labelStyle: TextStyle(fontSize: 12),
+                                          border: InputBorder.none,
+
+                                          // border: OutlineInputBorder(),0
+                                          labelText: '% הנחה',
+                                        ),
+                                      ),
+                                    )
+                                    // Text(
+                                    //     "הנחה:" +
+                                    //         ' ' +
+                                    //         _product.discount.toString() +
+                                    //         ' %',
+                                    //     style: Theme.of(context)
+                                    //         .textTheme
+                                    //         .bodyMedium),
                                   ],
                                 ),
                                 Text(_product.desc.toString(),
@@ -121,29 +180,62 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                               ],
                             ),
                           ),
-                          Container(
-                              alignment: Alignment.center,
-                              width: 40,
-                              child: TextFormField(
-                                initialValue: widget.item.quantity.toString(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    try {
-                                      quantity = double.parse(value);
-                                    } catch (e) {
-                                      quantity = 0;
-                                    }
-                                    quantityChanged = true;
-                                  });
-                                },
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(),
-                                decoration: const InputDecoration(
-                                  labelStyle: TextStyle(fontSize: 12),
-                                  // border: OutlineInputBorder(),0
-                                  labelText: 'כמות',
-                                ),
-                              )),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.only(top: 22),
+                                  alignment: Alignment.bottomCenter,
+                                  width: 40,
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 12),
+                                    initialValue:
+                                        widget.item.quantity.toString(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        try {
+                                          quantity = double.parse(value);
+                                        } catch (e) {
+                                          quantity = 0;
+                                        }
+                                        recordChanged = true;
+                                      });
+                                    },
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(),
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+
+                                      labelStyle: TextStyle(fontSize: 12),
+                                      // border: OutlineInputBorder(),0
+                                      labelText: 'כמות',
+                                    ),
+                                  )),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'סה״כ ',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    (_product.price! * widget.item.quantity! -
+                                            (widget.item.quantity! *
+                                                (widget.item.discount! *
+                                                    _product.price! /
+                                                    100)))
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -156,7 +248,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                     child: Container(
                       decoration: BoxDecoration(
                           color:
-                              quantityChanged ? Colors.lightBlue : Colors.grey,
+                              recordChanged ? Colors.lightGreen : Colors.grey,
                           borderRadius: const BorderRadius.only(
                               bottomRight: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
@@ -173,10 +265,9 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                               size: 34,
                             ),
                             tooltip: 'עדכון',
-                            onPressed: quantityChanged
+                            onPressed: recordChanged
                                 ? () {
                                     setState(() {
-                                      if (quantity <= 0) return;
                                       try {
                                         QuoteItem _updatedItem = QuoteItem();
                                         Quote x = Provider.of<
@@ -192,13 +283,15 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                                                 (it) => it.id == widget.item.id)
                                             .forEach((_item) {
                                           _item.quantity = quantity;
+                                          _item.discount = discount;
+
                                           _item.price = (_product!.price! -
                                                   (_product.price! *
-                                                      _product.discount! /
+                                                      discount /
                                                       100)) *
                                               quantity;
                                           _updatedItem = _item;
-                                          DjangoServices()
+                                          Repository()
                                               .upsertQuoteItem(_updatedItem)
                                               ?.then((value) {
                                             _updatedItem.id = value;

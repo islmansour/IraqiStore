@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../../components/account.dart';
-import '../../models/account.dart';
+import '../../components/order.dart';
+import '../../models/orders.dart';
 import '../../services/search.dart';
-import '../../widgets/account_min_admin.dart';
+import '../../widgets/order_mini_admin.dart';
 
-class ManageAccountScreen extends StatefulWidget {
-  const ManageAccountScreen({Key? key}) : super(key: key);
+class AllOrdersScreen extends StatefulWidget {
+  const AllOrdersScreen({Key? key}) : super(key: key);
 
   @override
-  State<ManageAccountScreen> createState() => _ManageAccountScreenState();
+  State<AllOrdersScreen> createState() => _AllOrdersScreenState();
 }
 
-class _ManageAccountScreenState extends State<ManageAccountScreen> {
+class _AllOrdersScreenState extends State<AllOrdersScreen> {
   bool _searching = false;
   String _newSearch = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.indigo.shade300,
+          backgroundColor: Colors.blue,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -68,10 +68,10 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                   ],
                 ),
               ),
-              if (_searching == false) AccountsList(),
+              if (_searching == false) OrdersList(),
               if (_searching == true && _newSearch.length >= 3)
                 FutureBuilder<List<SearchItem>?>(
-                    future: ApplySearch().SearchAllObjects(context, _newSearch),
+                    future: ApplySearch().SearchOrder(context, _newSearch),
                     builder:
                         (context, AsyncSnapshot<List<SearchItem>?> searchSnap) {
                       if (searchSnap.connectionState == ConnectionState.none &&
@@ -95,10 +95,10 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                         searchSnap.data![index].type.toString();
 
                                     switch (type) {
-                                      case "Account":
-                                        output = AccountMiniAdmin(
+                                      case "Order":
+                                        output = OrderMiniAdmin(
                                             item: searchSnap.data![index].item
-                                                as Account);
+                                                as Order);
                                         break;
                                     }
                                   }

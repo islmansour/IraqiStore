@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
@@ -98,7 +99,7 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                               print(result.user!.uid);
                               // There is a provider that hold current user
                               // Once a user is authenticated, call django send the uid and get the user object back.
-                              DjangoServices().getUser(result.user!.uid).then(
+                              Repository().getUser(result.user!.uid).then(
                                   (value) => Provider.of<GetCurrentUser>(
                                           context,
                                           listen: false)

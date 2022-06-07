@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,7 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
             ),
         body: SingleChildScrollView(
           child: FutureBuilder<List<Product>?>(
-              future: DjangoServices().getProducts(),
+              future: Repository().getProducts(),
               builder: (context, AsyncSnapshot<List<Product>?> productSnap) {
                 if (productSnap.connectionState == ConnectionState.none &&
                     productSnap.hasData == null) {
@@ -187,9 +188,8 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                 .where(
                                     (element) => element.id == widget.orderId)
                                 .first;
-                            DjangoServices()
-                                .upsertOrderItem(item)
-                                ?.then((value) {
+                            // DjangoServices()
+                            Repository().upsertOrderItem(item)?.then((value) {
                               item.id = value;
                               Provider.of<EntityModification>(context,
                                       listen: false)

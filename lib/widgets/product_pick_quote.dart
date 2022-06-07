@@ -70,6 +70,7 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
 
         quoteItem = QuoteItem();
         quoteItem?.id = 0;
+        quoteItem?.discount = widget.item.discount;
         quoteItem?.productId = widget.item.id;
         quoteItem?.quantity = quantity.toDouble();
         quoteItem?.price = (widget.item.price! -

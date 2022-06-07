@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/widgets/order_item_admin.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,8 @@ class _OrderItemListState extends State<OrderItemList> {
                   onDismissed: (direction) {
                     OrderItem _currentItem = _items[index];
 
-                    DjangoServices().deleteOrderItem(_items[index].id!);
+                    //DjangoServices().deleteOrderItem(_items[index].id!);
+                    Repository().deleteOrderItem(_items[index].id!);
 
                     Provider.of<EntityModification>(context, listen: false)
                         .order

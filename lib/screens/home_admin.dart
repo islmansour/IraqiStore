@@ -38,9 +38,24 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    _loadAccounts(context);
-    _loadContacts(context);
-    _loadProductss(context);
+    if (Provider.of<EntityModification>(context, listen: false)
+        .accounts
+        .isEmpty) _loadAccounts(context);
+    if (Provider.of<EntityModification>(context, listen: false)
+        .contacts
+        .isEmpty) _loadContacts(context);
+    if (Provider.of<EntityModification>(context, listen: false)
+        .products
+        .isEmpty) _loadProductss(context);
+    if (Provider.of<EntityModification>(context, listen: false).order.isEmpty) {
+      _loadOrders(context);
+    }
+    if (Provider.of<EntityModification>(context, listen: false)
+        .quotes
+        .isEmpty) {
+      _loadQuotes(context);
+    }
+
     return Scaffold(
       floatingActionButton: AdminBubbleButtons(),
       body: SingleChildScrollView(
@@ -88,12 +103,12 @@ class _HomeAdminState extends State<HomeAdmin> {
             ],
           ),
         ),
-        if (_searching == false) const OrdersList(),
-        if (_searching == false) QuotesList(),
-        if (_searching == false) DeliverysList(),
+        if (_searching == false) const OrdersListHome(),
+        if (_searching == false) const QuotesListHome(),
+        // if (_searching == false) DeliverysList(),
         if (_searching == true && _newSearch.length >= 3)
           FutureBuilder<List<SearchItem>?>(
-              future: ApplySearch().SearchAllObjects(_newSearch),
+              future: ApplySearch().SearchAllObjects(context, _newSearch),
               builder: (context, AsyncSnapshot<List<SearchItem>?> searchSnap) {
                 if (searchSnap.connectionState == ConnectionState.none &&
                     searchSnap.hasData == null) {
@@ -154,20 +169,29 @@ class _HomeAdminState extends State<HomeAdmin> {
 }
 
 void _loadAccounts(BuildContext context) async {
-  Provider.of<EntityModification>(context, listen: false)
+  await Provider.of<EntityModification>(context, listen: false)
       .refreshAccountsFromDB();
   return;
 }
 
 void _loadProductss(BuildContext context) async {
-  List<Product>? _produdcts = await DjangoServices().getProducts();
-  Provider.of<EntityModification>(context, listen: false)
+  await Provider.of<EntityModification>(context, listen: false)
       .refreshProductsFromDB();
   return;
 }
 
 void _loadContacts(BuildContext context) async {
-  Provider.of<EntityModification>(context, listen: false)
+  await Provider.of<EntityModification>(context, listen: false)
       .refreshContactsFromDB();
   return;
+}
+
+void _loadOrders(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshOrdersFromDB();
+}
+
+void _loadQuotes(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshQuotesFromDB();
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,7 +43,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      DjangoServices().upsertAccount(_data);
+      Repository().upsertAccount(_data);
       Navigator.pop(context); // Save our form now.
 // Save our form now.
     }

@@ -20,7 +20,13 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       street2: json['street2'] as String?,
       town: json['town'] as String?,
       zip: json['zip'] as int?,
-    );
+    )
+      ..accountOrders = (json['accountOrders'] as List<dynamic>?)
+          ?.map((e) => Order.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..accountQuotes = (json['accountQuotes'] as List<dynamic>?)
+          ?.map((e) => Quote.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$AccountToJson(Account instance) {
   final val = <String, dynamic>{
@@ -45,5 +51,7 @@ Map<String, dynamic> _$AccountToJson(Account instance) {
 
   writeNotNull('account_number', Account.toNull(instance.account_number));
   val['created_by'] = instance.created_by;
+  val['accountOrders'] = instance.accountOrders;
+  val['accountQuotes'] = instance.accountQuotes;
   return val;
 }

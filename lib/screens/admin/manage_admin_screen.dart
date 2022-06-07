@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/navbaradmin.dart';
 import 'package:hardwarestore/screens/admin/accounts_screen.dart';
+import 'package:hardwarestore/screens/admin/all_quotes_screen.dart';
 
 import '../../components/account.dart';
 import '../../components/contact.dart';
+import 'all_orders_screen.dart';
 
 class ManageAdminScreen extends StatelessWidget {
   const ManageAdminScreen({Key? key}) : super(key: key);
@@ -35,7 +37,8 @@ class ManageAdminScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ManageAccountScreen()),
+                                builder: (context) =>
+                                    const ManageAccountScreen()),
                           );
                         },
                       ),
@@ -57,7 +60,14 @@ class ManageAdminScreen extends StatelessWidget {
                           color: Colors.blue,
                           size: 50,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AllOrdersScreen()),
+                          );
+                          //
+                        },
                       ),
                       width: 80,
                       height: 80,
@@ -77,7 +87,14 @@ class ManageAdminScreen extends StatelessWidget {
                           color: Colors.blue,
                           size: 50,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AllQuotesScreen()),
+                          );
+                          //
+                        },
                       ),
                       width: 80,
                       height: 80,
