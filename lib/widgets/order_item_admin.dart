@@ -268,8 +268,6 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                 ? () {
                                     setState(() {
                                       try {
-                                        print(
-                                            'quantity is $quantity and discount is $discount');
                                         OrderItem _updatedItem = OrderItem();
                                         Order x = Provider.of<
                                                     EntityModification>(context,

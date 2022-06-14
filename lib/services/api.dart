@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/widgets/order_item_admin.dart';
@@ -10,6 +11,7 @@ import 'dart:async';
 import '../models/account.dart';
 import '../models/contact.dart';
 import '../models/delivery.dart';
+import '../models/forms.dart';
 import '../models/lov.dart';
 import '../models/order_item.dart';
 import '../models/quote.dart';
@@ -23,7 +25,7 @@ class ApiBaseHelper {
 
   //String ipaddress = '139.162.139.161';
   final String _baseUrl = 'http://127.0.0.1:8000';
-  //final String _baseUrl = '139.162.139.161:8000';
+  //final String _baseUrl = 'http://139.162.139.161:8000';
 
   Future<dynamic> get(String url) async {
     var responseJson;
@@ -235,10 +237,20 @@ class Repository {
     return contactFromJson(response);
   }
 
-  Future<int>? upsertContact(Account account) async {
+  Future<Contact?> getSingleContact(String contactId) async {
+    final response =
+        await _helper.get("/IraqiStore/single_contact/" + contactId);
+
+    if (contactFromJson(response).isNotEmpty)
+      return contactFromJson(response).first;
+    else
+      return null;
+  }
+
+  Future<int>? upsertContact(Contact contact) async {
     final response = await _helper.post(
-        '/IraqiStore/upsert_account/' + account.id.toString(),
-        body: account.toJson());
+        '/IraqiStore/upsert_contact/' + contact.id.toString(),
+        body: contact.toJson());
 
     return int.parse(response.toString());
   }
@@ -264,8 +276,29 @@ class Repository {
         await _helper.get("/IraqiStore/quote_list_by_account/" + _account);
     return quoteFromJson(response);
   }
+
+  Future<List<LegalDocument>?> getFormsByAccount(String _account) async {
+    final response =
+        await _helper.get("/IraqiStore/get_legal_docs_by_account/" + _account);
+    return legalDocumentFromJson(response);
+  }
+
+  Future<List<LegalDocument>?> getFormsByContact(String _contact) async {
+    final response =
+        await _helper.get("/IraqiStore/get_legal_docs_by_contact/" + _contact);
+    return legalDocumentFromJson(response);
+  }
+
   /////////////////////////// END RELATED ENTITIES
+  /// LEGEL DOC
   ///
+  Future<int>? upsertLegalDocument(LegalDocument doc) async {
+    final response = await _helper.post(
+        '/IraqiStore/upsert_legal_document/' + doc.id.toString(),
+        body: doc.toJson());
+
+    return int.parse(response.toString());
+  }
 
   /////////////////////////// START RELATED LIST OF VALUES
   Future<List<ListOfValues>?> getLOVs() async {
@@ -276,8 +309,26 @@ class Repository {
 
   /////////////////////////// START USERS
   Future<List<User>?> getUser(String id) async {
-    final response = await _helper.get("/IraqiStore/get_user");
+    final response = await _helper.get("/IraqiStore/get_single_user/" + id);
     return userFromJson(response);
+  }
+
+  Future<List<User>?> getUsers() async {
+    final response = await _helper.get("/IraqiStore/get_users");
+    return userFromJson(response);
+  }
+
+  Future<List<User>?> getUserByLogin(String login) async {
+    final response = await _helper.get("/IraqiStore/get_user_by_uid/" + login);
+    return userFromJson(response);
+  }
+
+  Future<int>? upsertUser(User user) async {
+    final response = await _helper.post(
+        '/IraqiStore/upsert_user/' + user.id.toString(),
+        body: user.toJson());
+
+    return int.parse(response.toString());
   }
 
   /////////////////////////// END USERS

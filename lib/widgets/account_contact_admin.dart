@@ -3,16 +3,16 @@ import 'package:hardwarestore/models/contact.dart';
 
 import '../screens/admin/new_contact.dart';
 
-class ContactMiniAdmin extends StatefulWidget {
+class AccountContactFrom extends StatefulWidget {
   final Contact item;
 
-  const ContactMiniAdmin({Key? key, required this.item}) : super(key: key);
+  const AccountContactFrom({Key? key, required this.item}) : super(key: key);
 
   @override
-  State<ContactMiniAdmin> createState() => _ContactMiniAdminState();
+  State<AccountContactFrom> createState() => _AccountContactFromState();
 }
 
-class _ContactMiniAdminState extends State<ContactMiniAdmin> {
+class _AccountContactFromState extends State<AccountContactFrom> {
   Contact? contactContact = Contact();
 
   @override
@@ -50,12 +50,6 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                           children: [
                             Container(
                               padding: const EdgeInsets.only(right: 12),
-                              //   width: 65,
-                              // child: Text(
-                              //   widget.item.first_name.toString(),
-                              //   style:
-                              //       Theme.of(context).textTheme.displayMedium,
-                              // ),
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.7,
@@ -181,22 +175,6 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                     Row(
                       children: [
                         Container(
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(right: 0.0),
-                                  child: IconButton(
-                                    color: Colors.blueGrey,
-                                    icon: const Icon(Icons.email),
-                                    onPressed: () {
-                                      setState(() {});
-                                    },
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Container(
                           // color: Colors.blue.shade400,
                           alignment: Alignment.topCenter,
                           child: Column(
@@ -204,7 +182,7 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                               Padding(
                                   padding: const EdgeInsets.only(right: 0.0),
                                   child: IconButton(
-                                    color: Colors.brown,
+                                    color: Colors.teal,
                                     icon: const Icon(Icons.phone),
                                     onPressed: () {
                                       setState(() {});
@@ -213,26 +191,10 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                             ],
                           ),
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                              //       color: Colors.blue.shade400,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10))),
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(right: 0.0),
-                                  child: IconButton(
-                                    color: Colors.orange,
-                                    icon: const Icon(Icons.message),
-                                    onPressed: () {
-                                      setState(() {});
-                                    },
-                                  )),
-                            ],
-                          ),
-                        )
+                        Text(
+                          widget.item.phone.toString(),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ],
                     )
                   ],

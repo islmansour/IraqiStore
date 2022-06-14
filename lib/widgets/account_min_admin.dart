@@ -1,4 +1,3 @@
-import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/models/account.dart';
@@ -108,7 +107,12 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 child: accountContact?.id == null ||
                                         accountContact?.id == 0
-                                    ? Text('אין')
+                                    ? Text(
+                                        'אין',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall,
+                                      )
                                     : Text(
                                         accountContact!.last_name.toString() +
                                             ' ' +
@@ -117,95 +121,127 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headlineSmall,
+                                            .headlineMedium,
                                       ),
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 8, left: 4),
-                                //width: 65,
-                                child: Icon(
-                                  Icons.home_work,
-                                  color: Colors.indigo.shade300,
-                                  size: 16,
-                                ),
-                              ),
-                              SizedBox(
-                                width: widget.item.street == null
-                                    ? 50
-                                    : widget.item.street!.length > 30
-                                        ? MediaQuery.of(context).size.width *
-                                            0.3
-                                        : widget.item.street!.length * 5 +
-                                            5, //MediaQuery.of(context).size.width * 0.3,
-                                child: widget.item.street == null
-                                    ? Text('אין רחוב')
-                                    : Text(
-                                        widget.item.street.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 8, left: 4),
-                                child: widget.item.pobox == null
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        'ת.ד ' + widget.item.pobox.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                            ],
+                          const SizedBox(
+                            height: 10,
                           ),
                           Row(
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 8, left: 4),
-                                child: widget.item.pobox == null
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        widget.item.town.toString() + ',',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        right: 8, left: 4),
+                                    //width: 65,
+                                    child: Icon(
+                                      Icons.home_work,
+                                      color: Colors.indigo.shade300,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.only(right: 2),
-                                child: widget.item.pobox == null
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        widget.item.zip.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: widget.item.street == null ||
+                                                widget.item.street == ""
+                                            ? 50
+                                            : widget.item.street!.length > 30
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3
+                                                : widget.item.street!.length *
+                                                    10,
+                                        child: widget.item.street == null ||
+                                                widget.item.street == ""
+                                            ? Text(
+                                                'אין רחוב',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              )
+                                            : Text(
+                                                widget.item.street.toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              ),
                                       ),
-                              ),
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            right: 8, left: 4),
+                                        child: widget.item.pobox == null ||
+                                                widget.item.pobox == ""
+                                            ? Text(
+                                                '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              )
+                                            : Text(
+                                                'ת.ד ' +
+                                                    widget.item.pobox
+                                                        .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            right: 0, left: 4),
+                                        child: widget.item.town == null ||
+                                                widget.item.town == ""
+                                            ? Text(
+                                                '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              )
+                                            : Text(
+                                                widget.item.town.toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              ),
+                                      ),
+                                      Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 2),
+                                        child: widget.item.zip == null ||
+                                                widget.item.zip == ""
+                                            ? Text(
+                                                '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              )
+                                            : Text(
+                                                widget.item.zip.toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall,
+                                              ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
                             ],
                           )
                         ],

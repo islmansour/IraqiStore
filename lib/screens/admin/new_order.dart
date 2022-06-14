@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/account.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
-import 'package:hardwarestore/components/admin/order_item_list_component.dart';
-import 'package:hardwarestore/components/contact.dart';
-import 'package:hardwarestore/components/order.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/lov.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/add_items_to_orders.dart';
 import '../../components/user.dart';
 import '../../models/contact.dart';
 import '../../models/orders.dart';
@@ -29,16 +25,45 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
   Order _data = Order();
 
   void submit() {
-    // First validate form.
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState?.save();
-      //DjangoServices().upsertOrder(_data)?.then((value) {
-      Repository().upsertOrder(_data)?.then((value) {
-        _data.id == value;
-        Provider.of<EntityModification>(context, listen: false).update(_data);
-      });
+    try {
+      // First validate form.
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+        //DjangoServices().upsertOrder(_data)?.then((value) {
+        Repository().upsertOrder(_data)?.then((value) {
+          _data.id == value;
+          Provider.of<EntityModification>(context, listen: false).update(_data);
+        });
+        Navigator.pop(context);
+        // Save our form now.
+      }
+    } catch (e) {
+      Scaffold.of(context).showSnackBar(
+          const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
+    }
+  }
 
-      // Save our form now.
+  void submitProducts() {
+    try {
+      // First validate form.
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+        //DjangoServices().upsertOrder(_data)?.then((value) {
+        Repository().upsertOrder(_data)?.then((value) {
+          _data.id == value;
+          Provider.of<EntityModification>(context, listen: false).update(_data);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      AddItemToOrder(orderId: _data.id)));
+        });
+
+        // Save our form now.
+      }
+    } catch (e) {
+      Scaffold.of(context).showSnackBar(
+          const SnackBar(content: Text("התרחשה תקלה במעבר למסך מוצרים.")));
     }
   }
 
@@ -81,16 +106,23 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                           ));
                     }).toList(),
                     onChanged: (newValue) {
-                      // do other stuff with _category
-                      setState(() {
-                        _data.accountId = int.parse(newValue.toString());
-                        _data.id = 0;
-                        widget.hasAccount = true;
-                        _data.created_by =
-                            Provider.of<GetCurrentUser>(context, listen: false)
-                                .currentUser
-                                ?.id;
-                      });
+                      try {
+                        // do other stuff with _category
+                        setState(() {
+                          _data.accountId = int.parse(newValue.toString());
+                          _data.id = 0;
+                          widget.hasAccount = true;
+                          _data.created_by = Provider.of<GetCurrentUser>(
+                                  context,
+                                  listen: false)
+                              .currentUser
+                              ?.id;
+                        });
+                      } catch (e) {
+                        Scaffold.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                "התרחשה תקלה בהכנת רשימת הלקוחות לבחירה.")));
+                      }
                     },
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(right: 8))),
@@ -121,9 +153,15 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                         }).toList(),
                         onChanged: (newValue) {
                           // do other stuff with _category
-                          setState(() {
-                            _data.contactId = int.parse(newValue.toString());
-                          });
+                          try {
+                            setState(() {
+                              _data.contactId = int.parse(newValue.toString());
+                            });
+                          } catch (e) {
+                            Scaffold.of(context).showSnackBar(const SnackBar(
+                                content: Text(
+                                    "התרחשה תקלה בבחירת איש קשר להזמנה.")));
+                          }
                         },
                         decoration: const InputDecoration(
                             contentPadding: EdgeInsets.only(right: 8)))
@@ -149,8 +187,13 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                           ));
                     }).toList(),
                     onChanged: (newValue) {
-                      // do other stuff with _category
-                      setState(() => _data.status = newValue.toString());
+                      try {
+                        // do other stuff with _category
+                        setState(() => _data.status = newValue.toString());
+                      } catch (e) {
+                        Scaffold.of(context).showSnackBar(const SnackBar(
+                            content: Text("התרחשה תקלה בבחירת ססטוס ההסמנה.")));
+                      }
                     },
                     value: _data.status == "" || _data.status == null
                         ? Provider.of<CurrentListOfValuesUpdates>(context)
@@ -185,16 +228,31 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                     onSaved: (String? value) {
                       _data.town = value!;
                     }),
-                Container(
-                  width: screenSize.width,
-                  child: TextButton(
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(color: Colors.green),
+                Column(
+                  children: [
+                    Container(
+                      width: screenSize.width,
+                      child: ElevatedButton(
+                        child: const Text(
+                          'Add Products',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: submitProducts,
+                      ),
+                      margin: const EdgeInsets.only(top: 20.0),
                     ),
-                    onPressed: submit,
-                  ),
-                  margin: const EdgeInsets.only(top: 20.0),
+                    Container(
+                      width: screenSize.width,
+                      child: ElevatedButton(
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: submit,
+                      ),
+                      margin: const EdgeInsets.only(top: 20.0),
+                    ),
+                  ],
                 )
               ],
             ),

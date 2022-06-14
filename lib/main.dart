@@ -6,8 +6,10 @@ import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
+import 'package:hardwarestore/screens/login_page.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/widgets/legal_form.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
@@ -54,6 +56,9 @@ class IraqiStoreApp extends StatelessWidget {
     Provider.of<CurrentListOfValuesUpdates>(context, listen: false).loadLovs();
     NavigationController navigation =
         Provider.of<NavigationController>(context);
+
+    if (Provider.of<GetCurrentUser>(context).currentUser == null)
+      navigation.screenName = '/login';
     return FutureBuilder(
       // Initialize FlutterFire
       future: Firebase.initializeApp(),
@@ -134,7 +139,7 @@ class IraqiStoreApp extends StatelessWidget {
               locale: const Locale("he", "HE"),
               home: Navigator(
                 pages: [
-                  const MaterialPage(child: HomeAdmin()),
+                  MaterialPage(child: HomeAdmin()),
                   if (navigation.screenName == '/orders')
                     const MaterialPage(child: Orders()),
                   if (navigation.screenName == '/products')
@@ -145,6 +150,8 @@ class IraqiStoreApp extends StatelessWidget {
                     const MaterialPage(child: Chat()),
                   if (navigation.screenName == '/product-admin')
                     const MaterialPage(child: ProductsAdminScreen()),
+                  if (navigation.screenName == '/login')
+                    MaterialPage(child: LoginPage()),
                 ],
                 onPopPage: (route, result) {
                   bool popStatus = (route.didPop(result));

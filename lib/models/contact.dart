@@ -19,14 +19,16 @@ class Contact {
   String? email;
   bool? active;
   int? created_by;
+  int? accountId;
 
   Contact(
       {this.active,
+      this.accountId,
       this.created_by,
       this.email,
-      //this.first_name,
+      this.first_name,
       this.id,
-      // this.last_name,
+      this.last_name,
       this.phone,
       this.phone2,
       this.pobox,

@@ -44,8 +44,10 @@ dependencies:
   firebase_core: ^1.17.0
   firebase_auth: ^3.3.18
   pin_code_fields: ^7.3.0
-  currency_icons: ^0.3.0
-  dotted_decoration: ^2.0.0
+  signature: ^5.0.1
+  pdf: ^3.8.1
+  path_provider: ^2.0.11
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,16 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+   - assets/images/
+
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Arimo-Regular.ttf
+        - asset: assets/fonts/Arimo-Bold.ttf
+        - asset: assets/fonts/Arimo-SemiBold.ttf
+         # style: italic
 
   # To add assets to your application, add an assets section, like this:
   # assets:

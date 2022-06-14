@@ -29,6 +29,9 @@ class AdminBottomNav extends StatelessWidget {
           case 3:
             navigation.changeScreen('/chat');
             break;
+          case 9:
+            navigation.changeScreen('/login');
+            break;
         }
       },
       items: const [

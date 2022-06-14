@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/api.dart';
+import 'package:hardwarestore/widgets/account_contact_admin.dart';
 import 'package:provider/provider.dart';
 
-import '../models/contact.dart';
-import '../services/tools.dart';
-import '../widgets/contact_mini_admin.dart';
+import '../../models/contact.dart';
+import '../../services/tools.dart';
 
-class ContactsList extends StatefulWidget {
-  ContactsList({Key? key}) : super(key: key);
+class AccountContactsList extends StatefulWidget {
+  AccountContactsList({Key? key}) : super(key: key);
 
   @override
-  State<ContactsList> createState() => _ContactsListState();
+  State<AccountContactsList> createState() => _AccountContactsListState();
 }
 
-class _ContactsListState extends State<ContactsList> {
+class _AccountContactsListState extends State<AccountContactsList> {
   List<Contact>? myContacts;
   var isLoaded = false;
   @override
@@ -30,7 +30,6 @@ class _ContactsListState extends State<ContactsList> {
               contactSnap.hasData == null) {
             return Container();
           }
-          int len = contactSnap.data?.length ?? 0;
 
           return SizedBox(
               height: MediaQuery.of(context).size.height * 0.80,
@@ -42,7 +41,8 @@ class _ContactsListState extends State<ContactsList> {
                       itemBuilder: (context, index) {
                         Provider.of<EntityModification>(context).contacts =
                             contactSnap.data!;
-                        return ContactMiniAdmin(item: contactSnap.data![index]);
+                        return AccountContactFrom(
+                            item: contactSnap.data![index]);
                       })));
         });
   }

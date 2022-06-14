@@ -35,6 +35,8 @@ class Order extends ChangeNotifier {
 
   void confirmOrder() {
     tmpItems?.forEach((element) {
+      orderItems ??= <OrderItem>[];
+
       if (orderItems!
           .where((item) => item.productId == element.productId)
           .isEmpty) {

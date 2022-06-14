@@ -30,6 +30,9 @@ class BottomNav extends StatelessWidget {
           case 4:
             navigation.changeScreen('/chat');
             break;
+          case 9:
+            navigation.changeScreen('/login');
+            break;
         }
       },
       items: const [

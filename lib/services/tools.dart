@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/quote_item.dart';
+import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 
@@ -139,6 +140,12 @@ class EntityModification extends ChangeNotifier {
 
   refreshContactsFromDB() async {
     _contacts = (await Repository().getContacts())!;
+    notifyListeners();
+  }
+
+  List<User> _users = <User>[];
+  refreshUsersFromDB() async {
+    _users = (await Repository().getUsers())!;
     notifyListeners();
   }
 }

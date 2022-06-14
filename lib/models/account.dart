@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -30,8 +31,12 @@ class Account {
 
   @JsonKey(ignore: true)
   List<Contact>? accountContacts;
+  @JsonKey(ignore: true)
   List<Order>? accountOrders;
+  @JsonKey(ignore: true)
   List<Quote>? accountQuotes;
+  @JsonKey(ignore: true)
+  List<LegalDocument>? accountLegalForms;
 
   Account(
       {this.active,

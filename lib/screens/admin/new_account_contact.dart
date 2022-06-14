@@ -1,34 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/models/account.dart';
+import 'package:hardwarestore/components/contact.dart';
+import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../components/admin/account_contact.dart';
-import '../../components/admin/account_forms.dart';
-import '../../components/admin/account_orders.dart';
-import '../../components/admin/account_quotes.dart';
+import '../../components/admin/account_contacts_component.dart';
 import '../../components/user.dart';
+import '../../models/user.dart';
 
-class CreateNewAccountForm extends StatefulWidget {
-  final Account? item;
-  CreateNewAccountForm({Key? key, this.item}) : super(key: key);
+class CreateAccountContactForm extends StatefulWidget {
+  final Contact? item;
+  final int? accountId;
+  CreateAccountContactForm({Key? key, this.item, this.accountId})
+      : super(key: key);
 
   @override
-  State<CreateNewAccountForm> createState() => _CreateNewAccountFormState();
+  State<CreateAccountContactForm> createState() =>
+      _CreateAccountContactFormState();
 }
 
-class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
+class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
   // ignore: unnecessary_new
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Account _data = Account();
+  Contact _data = Contact();
+
+  String? _validateEmail(String? value) {
+    // If empty value, the isEmail function throw a error.
+    // So I changed this function with try and catch.
+    try {} catch (e) {
+      return 'The E-mail Address must be a valid email address.';
+    }
+
+    return "";
+  }
 
   void submit() {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      Repository().upsertAccount(_data);
-      Navigator.pop(context); // Save our form now.
+      Repository().upsertContact(_data)?.then((value) {
+        _data.id = value;
+        Provider.of<EntityModification>(context, listen: false)
+            .updateContact(_data);
+        Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .where((element) => element.id == widget.accountId)
+            .first
+            .accountContacts
+            ?.add(_data);
+
+        if (Provider.of<EntityModification>(context, listen: false)
+                .accounts
+                .where((element) => element.id == widget.accountId)
+                .first
+                .contactId ==
+            null) {
+          Provider.of<EntityModification>(context, listen: false)
+              .accounts
+              .where((element) => element.id == widget.accountId)
+              .first
+              .contactId = value;
+          Repository().upsertAccount(
+              Provider.of<EntityModification>(context, listen: false)
+                  .accounts
+                  .where((element) => element.id == widget.accountId)
+                  .first);
+        }
+        Navigator.pop(context);
+      });
+      // Save our form now.
 // Save our form now.
     }
   }
@@ -36,10 +78,15 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
   @override
   void initState() {
     try {
-      if (widget.item != null) _data = widget.item!;
+      if (widget.item != null) {
+        _data = widget.item!;
+        //  _getUser();
+      }
     }
     // ignore: empty_catches
-    catch (e) {}
+    catch (e) {
+      print(e);
+    }
     super.initState();
   }
 
@@ -110,7 +157,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
         locale: const Locale("he", "HE"),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         home: DefaultTabController(
-          length: 5,
+          length: 2,
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.indigo.shade300,
@@ -119,19 +166,16 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                   Navigator.pop(context);
                 },
               ),
-              title:
-                  Text(widget.item == null ? "" : widget.item!.name.toString()),
+              title: widget.item == null
+                  ? Text('חדש')
+                  : Text(widget.item!.first_name.toString() +
+                      ' ' +
+                      widget.item!.last_name.toString()),
               bottom: const TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
-                  Tab(icon: Icon(Icons.info_outline)),
+                  Tab(icon: Icon(Icons.person_add)),
                   Tab(icon: Icon(Icons.people)),
-                  Tab(
-                      icon: Icon(
-                    Icons.shopping_cart,
-                  )),
-                  Tab(icon: Icon(Icons.shopping_basket)),
-                  Tab(icon: Icon(Icons.attach_file)),
                 ],
               ),
             ),
@@ -144,7 +188,31 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                       child: ListView(
                         children: <Widget>[
                           TextFormField(
-                            initialValue: _data.name ?? "",
+                            initialValue: _data.first_name ?? "",
+                            onSaved: (String? value) {
+                              setState(() {
+                                if (_data.id == null || _data.id == 0) {
+                                  _data.id = 0;
+                                  _data.active = true;
+                                  if (widget.accountId != null) {
+                                    _data.accountId = widget.accountId;
+                                  }
+
+                                  _data.created_by =
+                                      Provider.of<GetCurrentUser>(context,
+                                              listen: false)
+                                          .currentUser
+                                          ?.id;
+                                }
+                                _data.first_name = value;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                                hintText: 'first name',
+                                labelText: 'First Name'),
+                          ),
+                          TextFormField(
+                            initialValue: _data.last_name ?? "",
                             onSaved: (String? value) {
                               setState(() {
                                 if (_data.id == null || _data.id == 0) {
@@ -157,11 +225,11 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                           .currentUser
                                           ?.id;
                                 }
-                                _data.name = value;
+                                _data.last_name = value;
                               });
                             },
                             decoration: const InputDecoration(
-                                hintText: 'name', labelText: 'Name'),
+                                hintText: 'last name', labelText: 'Last Name'),
                           ),
                           TextFormField(
                             initialValue: _data.phone ?? "",
@@ -192,10 +260,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                 ? _data.pobox.toString()
                                 : "",
                             onSaved: (String? value) {
-                              if (value != "")
-                                _data.pobox = int.parse(value!);
-                              else
-                                _data.pobox = null;
+                              if (value != "") _data.pobox = int.parse(value!);
                             },
                             decoration: const InputDecoration(
                                 hintText: 'pobox', labelText: 'POBox'),
@@ -204,10 +269,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                             initialValue:
                                 _data.zip != null ? _data.zip.toString() : "",
                             onSaved: (String? value) {
-                              if (value != "")
-                                _data.zip = int.parse(value!);
-                              else
-                                _data.pobox = null;
+                              if (value != "") _data.zip = int.parse(value!);
                             },
                             decoration: const InputDecoration(
                                 hintText: 'zip', labelText: 'ZIP'),
@@ -225,6 +287,42 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                               onSaved: (String? value) {
                                 _data.email = value;
                               }),
+                          FutureBuilder<List<User>?>(
+                            future: Repository().getUserByLogin(
+                                (widget.item == null ||
+                                        widget.item!.phone.toString() == '')
+                                    ? '-0'
+                                    : widget.item!.phone.toString()),
+                            builder: (context, data) {
+                              if (data.connectionState ==
+                                  ConnectionState.waiting) return Container();
+                              return Switch(
+                                activeColor: Colors.green,
+                                value: data.data!.isNotEmpty
+                                    ? data.data!.first.active!
+                                    : false,
+                                onChanged: (value) {
+                                  if (widget.item?.phone == null ||
+                                      widget.item?.phone.toString() == '')
+                                    return;
+                                  setState(() {
+                                    User user;
+                                    if (data.data!.isNotEmpty) {
+                                      user = data.data!.first;
+                                    } else {
+                                      user = User(
+                                          active: value,
+                                          contactId: widget.item?.id,
+                                          uid: widget.item!.phone,
+                                          token: 'TBD');
+                                    }
+                                    user.active = value;
+                                    Repository().upsertUser(user);
+                                  });
+                                },
+                              );
+                            },
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0),
                             child: Row(
@@ -232,7 +330,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Card(
-                                    color: Colors.green,
+                                    color: Colors.teal,
                                     elevation: 5,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(150),
@@ -257,10 +355,10 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                         ],
                       ),
                     )),
-                AccountContactsList(account: widget.item),
-                AccountOrdersList(account: widget.item),
-                AccountQuotesList(account: widget.item),
-                AccountLegalFormsList(account: widget.item),
+                // ContactContactsList(contact: widget.item),
+                // ContactOrdersList(contact: widget.item),
+                // ContactQuotesList(contact: widget.item),
+                AccountContactsList()
               ],
             ),
           ),

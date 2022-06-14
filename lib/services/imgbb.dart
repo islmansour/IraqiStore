@@ -30,7 +30,6 @@ class _ImgBBState extends State<ImgBB> {
   final picker = ImagePicker();
 
   Future getImage() async {
-    print('testing');
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
