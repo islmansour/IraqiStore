@@ -12,13 +12,13 @@ class Delivery {
   String? status;
   String? wazeLink;
   String? approvalLink;
-  String? date;
+  DateTime? date;
   int? orderId;
 
   Delivery(
       {this.id,
-      this.orderId,
       this.accountId,
+      this.orderId,
       this.contactId,
       this.approvalLink,
       this.date,

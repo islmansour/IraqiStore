@@ -4,7 +4,7 @@ import 'package:hardwarestore/widgets/quote_mini_admin.dart';
 
 import '../../models/quote.dart';
 import '../../widgets/admin_bubble_quote.dart';
-//import '../../widgets/admin_bubble_quote.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuoteDetailAdmin extends StatefulWidget {
   final Quote item;
@@ -34,7 +34,9 @@ class _QuoteDetailAdminState extends State<QuoteDetailAdmin> {
         ),
       ])),
       appBar: AppBar(
-        title: Text('הצעה מס ' + widget.item.quote_number.toString()),
+        title: Text(AppLocalizations.of(context)!.quoteNum +
+            " " +
+            widget.item.quote_number.toString()),
       ),
       // bottomNavigationBar: const AdminBottomNav(1),
     );

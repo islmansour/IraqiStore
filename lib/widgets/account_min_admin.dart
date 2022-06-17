@@ -4,7 +4,9 @@ import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/screens/admin/new_account.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountMiniAdmin extends StatefulWidget {
   final Account item;
@@ -20,6 +22,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     if (widget.item.contactId != null &&
         Provider.of<EntityModification>(context).contacts != null &&
         Provider.of<EntityModification>(context).contacts.isNotEmpty &&
@@ -32,7 +35,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
           .where((element) => element.id == widget.item.contactId)
           .first;
     }
-
+    var format = NumberFormat.simpleCurrency(locale: 'he');
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -86,43 +89,71 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Flexible(
                       flex: 60,
                       child: Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 8, left: 4),
-                                height: 20,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.indigo.shade300,
-                                  size: 18,
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        right: 8, left: 4),
+                                    height: 20,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.indigo.shade300,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    child: accountContact?.id == null ||
+                                            accountContact?.id == 0
+                                        ? Text(
+                                            translation!.na,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall,
+                                          )
+                                        : Text(
+                                            accountContact!.last_name
+                                                    .toString() +
+                                                ' ' +
+                                                accountContact!.first_name
+                                                    .toString(),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium,
+                                          ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: accountContact?.id == null ||
-                                        accountContact?.id == 0
-                                    ? Text(
-                                        'אין',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall,
-                                      )
-                                    : Text(
-                                        accountContact!.last_name.toString() +
-                                            ' ' +
-                                            accountContact!.first_name
-                                                .toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium,
-                                      ),
+                                width: 50,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      Provider.of<EntityModification>(context)
+                                          .getLovValue(
+                                              'ACCOUNT_TYPE',
+                                              widget.item.type.toString(),
+                                              AppLocalizations.of(context)!
+                                                  .localeName)
+                                          .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -130,6 +161,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                             height: 10,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +197,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                         child: widget.item.street == null ||
                                                 widget.item.street == ""
                                             ? Text(
-                                                'אין רחוב',
+                                                translation!.na,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodySmall,
@@ -190,7 +222,7 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                                     .bodySmall,
                                               )
                                             : Text(
-                                                'ת.ד ' +
+                                                ',' +
                                                     widget.item.pobox
                                                         .toString(),
                                                 style: Theme.of(context)

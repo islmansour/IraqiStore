@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/account.dart';
-import 'package:hardwarestore/components/contact.dart';
+
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import '../components/admin/lov.dart';
 import '../models/account.dart';
 import '../screens/admin/order_details_admin.dart';
 import '../services/tools.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrderMiniAdmin extends StatefulWidget {
   final Order item;
@@ -26,7 +26,8 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
     String _status = "";
     try {
       _status = Provider.of<CurrentListOfValuesUpdates>(context)
-          .getListOfValue('ORDER_STATUS', format.locale)
+          .getListOfValue(
+              'ORDER_STATUS', AppLocalizations.of(context)!.localeName)
           .where((element) => element.name == widget.item.status)
           .first
           .value!;
@@ -103,7 +104,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                 Padding(
                   padding: const EdgeInsets.only(right: 4.0),
                   child: widget.item.created == null
-                      ? Text('Now',
+                      ? Text(AppLocalizations.of(context)!.na,
                           style: Theme.of(context).textTheme.labelSmall)
                       : Text(
                           DateFormat('dd/MM/yy hh:mm')
@@ -187,7 +188,9 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.25,
-                                    child: Text(orderAccount.phone ?? "אין",
+                                    child: Text(
+                                        orderAccount.phone ??
+                                            AppLocalizations.of(context)!.na,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -207,7 +210,7 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
                                         orderContact != null &&
                                                 orderContact.phone != null
                                             ? orderContact.phone!
-                                            : "אין",
+                                            : AppLocalizations.of(context)!.na,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -326,10 +329,12 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
+    var translation = AppLocalizations.of(context);
     String _status = "";
     try {
       _status = Provider.of<CurrentListOfValuesUpdates>(context)
-          .getListOfValue('ORDER_STATUS', format.locale)
+          .getListOfValue(
+              'ORDER_STATUS', AppLocalizations.of(context)!.localeName)
           .where((element) => element.name == widget.item.status)
           .first
           .value!;
@@ -395,7 +400,8 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
                 child: widget.item.created == null
-                    ? Text('Now', style: Theme.of(context).textTheme.labelSmall)
+                    ? Text(translation!.now,
+                        style: Theme.of(context).textTheme.labelSmall)
                     : Text(
                         DateFormat('dd/MM/yy hh:mm')
                             .format(widget.item.created!),
@@ -477,7 +483,8 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
-                                  child: Text(orderAccount.phone ?? "אין",
+                                  child: Text(
+                                      orderAccount.phone ?? translation!.na,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),
@@ -497,7 +504,7 @@ class _OrderDetaulsNoInkWellState extends State<OrderDetaulsNoInkWell> {
                                       orderContact != null &&
                                               orderContact.phone != null
                                           ? orderContact.phone!
-                                          : "אין",
+                                          : translation!.na,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),

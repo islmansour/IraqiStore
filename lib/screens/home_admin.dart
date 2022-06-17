@@ -14,6 +14,7 @@ import '../components/order.dart';
 import '../models/account.dart';
 import '../models/contact.dart';
 import '../widgets/admin_bubble_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class _HomeAdminState extends State<HomeAdmin> {
       _loadUsers(context);
       _loadProductss(context);
       _loadOrders(context);
-
+      _loadLovs(context);
       _loadQuotes(context);
     });
   }
@@ -67,6 +68,10 @@ class _HomeAdminState extends State<HomeAdmin> {
       _loadQuotes(context);
     }
 
+    if (Provider.of<EntityModification>(context, listen: false).lov.isEmpty) {
+      _loadLovs(context);
+    }
+
     return Scaffold(
       floatingActionButton: const AdminBubbleButtons(),
       body: RefreshIndicator(
@@ -92,17 +97,17 @@ class _HomeAdminState extends State<HomeAdmin> {
                           _newSearch = value;
                         });
                       },
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
+                      decoration: InputDecoration(
+                        enabledBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 200, 200, 200)),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Color.fromARGB(255, 200, 200, 200)),
                         ),
-                        hintText: "חפש...",
-                        hintStyle: TextStyle(
+                        hintText: AppLocalizations.of(context)!.search,
+                        hintStyle: const TextStyle(
                           color: Color.fromARGB(255, 191, 190, 190),
                           fontSize: 18,
                           fontStyle: FontStyle.italic,
@@ -178,7 +183,7 @@ class _HomeAdminState extends State<HomeAdmin> {
         ),
       ),
       appBar: AppBar(
-        title: const Text('עיראקי'),
+        title: Text(AppLocalizations.of(context)!.business),
       ),
       bottomNavigationBar: const AdminBottomNav(0),
     );
@@ -216,4 +221,9 @@ void _loadQuotes(BuildContext context) async {
 void _loadUsers(BuildContext context) async {
   await Provider.of<EntityModification>(context, listen: false)
       .refreshUsersFromDB();
+}
+
+void _loadLovs(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshLOVFromDB();
 }

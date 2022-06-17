@@ -5,7 +5,6 @@ import '../../models/account.dart';
 import '../../models/contact.dart';
 
 import '../../screens/admin/new_account_contact.dart';
-import '../../screens/admin/new_contact.dart';
 import '../../services/tools.dart';
 import '../../widgets/contact_mini_admin.dart';
 
@@ -79,7 +78,7 @@ class _AccountContactsListState extends State<AccountContactsList> {
                       MaterialPageRoute(
                           builder: (context) => CreateAccountContactForm(
                                 // CreateNewContactForm(
-                                accountId: widget.account?.id,
+                                account: widget.account,
                               )),
                     );
                   },

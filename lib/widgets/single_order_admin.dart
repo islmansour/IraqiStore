@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../components/account.dart';
 import '../models/account.dart';
 import '../models/orders.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SingleOrderAdmin extends StatelessWidget {
   final Order item;
@@ -12,6 +13,7 @@ class SingleOrderAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     Account? currentAccount;
 
     currentAccount = Provider.of<EntityModification>(context)
@@ -32,7 +34,8 @@ class SingleOrderAdmin extends StatelessWidget {
                     item.id.toString(),
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  Text('date', style: Theme.of(context).textTheme.subtitle1),
+                  Text(translation!.date,
+                      style: Theme.of(context).textTheme.subtitle1),
                 ],
               ),
             ]),
@@ -46,7 +49,7 @@ class SingleOrderAdmin extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text('contact name',
+                    Text(translation!.contact,
                         style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),

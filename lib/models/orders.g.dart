@@ -23,6 +23,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
           ? null
           : DateTime.parse(json['orderDate'] as String),
       quoteId: json['quoteId'] as int?,
+      deliveryId: json['deliveryId'] as int?,
       status: json['status'] as String? ?? "",
       street: json['street'] as String? ?? "",
       street2: json['street2'] as String? ?? "",
@@ -43,6 +44,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
     'wazeLink': instance.wazeLink,
     'notes': instance.notes,
     'quoteId': instance.quoteId,
+    'deliveryId': instance.deliveryId,
     'created_by': instance.created_by,
     'created': instance.created?.toIso8601String(),
   };

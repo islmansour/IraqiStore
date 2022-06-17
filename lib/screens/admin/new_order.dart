@@ -6,6 +6,7 @@ import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../components/add_items_to_orders.dart';
 import '../../components/user.dart';
@@ -62,8 +63,9 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
         // Save our form now.
       }
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
-          const SnackBar(content: Text("התרחשה תקלה במעבר למסך מוצרים.")));
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content:
+              Text(AppLocalizations.of(context)!.errorCreatingProductScreen)));
     }
   }
 
@@ -72,10 +74,11 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
     var format = NumberFormat.simpleCurrency(locale: 'he');
 
     final Size screenSize = MediaQuery.of(context).size;
+    var translation = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Order'),
+        title: Text(translation!.newOrder),
       ),
       body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -119,9 +122,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                               ?.id;
                         });
                       } catch (e) {
-                        Scaffold.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                "התרחשה תקלה בהכנת רשימת הלקוחות לבחירה.")));
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(translation.errorDisplayAccount)));
                       }
                     },
                     decoration: const InputDecoration(
@@ -158,9 +160,9 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                               _data.contactId = int.parse(newValue.toString());
                             });
                           } catch (e) {
-                            Scaffold.of(context).showSnackBar(const SnackBar(
-                                content: Text(
-                                    "התרחשה תקלה בבחירת איש קשר להזמנה.")));
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text(translation.errorDisplayContact)));
                           }
                         },
                         decoration: const InputDecoration(
@@ -170,12 +172,14 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                   onSaved: (String? value) {
                     _data.notes = value!;
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'notes', labelText: 'Notes'),
+                  decoration: InputDecoration(
+                      hintText: translation.notes,
+                      labelText: translation.notes),
                 ),
                 DropdownButtonFormField(
                     items: Provider.of<CurrentListOfValuesUpdates>(context)
-                        .getListOfValue('ORDER_STATUS', format.locale)
+                        .getListOfValue('ORDER_STATUS',
+                            AppLocalizations.of(context)!.localeName)
                         .map((ListOfValues status) {
                       return DropdownMenuItem(
                           value: status.name,
@@ -191,39 +195,48 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                         // do other stuff with _category
                         setState(() => _data.status = newValue.toString());
                       } catch (e) {
-                        Scaffold.of(context).showSnackBar(const SnackBar(
-                            content: Text("התרחשה תקלה בבחירת ססטוס ההסמנה.")));
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(translation.errorDisplayStatus)));
                       }
                     },
                     value: _data.status == "" || _data.status == null
                         ? Provider.of<CurrentListOfValuesUpdates>(context)
                             .activeListOfValues
                             .where((element) =>
-                                element.language == format.locale &&
+                                element.language ==
+                                    AppLocalizations.of(context)!.localeName &&
                                 element.name == 'new' &&
                                 element.type == 'ORDER_STATUS')
                             .first
                             .name
-                        : _data.status,
+                        : Provider.of<CurrentListOfValuesUpdates>(context)
+                            .activeListOfValues
+                            .where((element) =>
+                                element.language ==
+                                    AppLocalizations.of(context)!.localeName &&
+                                element.name == _data.status &&
+                                element.type == 'ORDER_STATUS')
+                            .first,
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(right: 8))),
                 TextFormField(
                   onSaved: (String? value) {
                     if (value != "") _data.street = value!;
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'street', labelText: 'Street'),
+                  decoration: InputDecoration(
+                      hintText: translation.street,
+                      labelText: translation.street),
                 ),
+                // TextFormField(
+                //     // Use email input type for emails.
+                //     decoration: const InputDecoration(labelText: 'Street 2'),
+                //     // validator: _validateEmail,
+                //     onSaved: (String? value) {
+                //       _data.street2 = value!;
+                //     }),
                 TextFormField(
                     // Use email input type for emails.
-                    decoration: const InputDecoration(labelText: 'Street 2'),
-                    // validator: _validateEmail,
-                    onSaved: (String? value) {
-                      _data.street2 = value!;
-                    }),
-                TextFormField(
-                    // Use email input type for emails.
-                    decoration: const InputDecoration(labelText: 'town'),
+                    decoration: InputDecoration(labelText: translation.town),
                     // validator: _validateEmail,
                     onSaved: (String? value) {
                       _data.town = value!;
@@ -233,8 +246,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                     Container(
                       width: screenSize.width,
                       child: ElevatedButton(
-                        child: const Text(
-                          'Add Products',
+                        child: Text(
+                          translation.addProduct,
                           style: TextStyle(color: Colors.green),
                         ),
                         onPressed: submitProducts,
@@ -244,8 +257,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                     Container(
                       width: screenSize.width,
                       child: ElevatedButton(
-                        child: const Text(
-                          'Save',
+                        child: Text(
+                          translation.save,
                           style: TextStyle(color: Colors.green),
                         ),
                         onPressed: submit,

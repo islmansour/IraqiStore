@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../widgets/product_pick.dart';
 import '../services/search.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddItemToOrder extends StatefulWidget {
   final int? orderId;
@@ -81,19 +82,19 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                   _newSearch = value;
                                 });
                               },
-                              decoration: const InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
+                              decoration: InputDecoration(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
                                           Color.fromARGB(255, 200, 200, 200)),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
                                           Color.fromARGB(255, 200, 200, 200)),
                                 ),
-                                hintText: "חפש...",
-                                hintStyle: TextStyle(
+                                hintText: AppLocalizations.of(context)!.search,
+                                hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 191, 190, 190),
                                   fontSize: 18,
                                   fontStyle: FontStyle.italic,
@@ -168,6 +169,7 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                   }))),
                     TextButton(
                         onPressed: () {
+                          if (_order.isReadOnly) return null;
                           Provider.of<EntityModification>(context,
                                   listen: false)
                               .order
@@ -202,7 +204,7 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                           });
                           Navigator.pop(context);
                         },
-                        child: Text('אישור'))
+                        child: Text(AppLocalizations.of(context)!.confirm))
                   ],
                 );
               }),

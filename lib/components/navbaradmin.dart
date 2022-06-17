@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/navigation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminBottomNav extends StatelessWidget {
   final int activeButtonIndex;
@@ -9,6 +10,7 @@ class AdminBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     NavigationController navigation =
         Provider.of<NavigationController>(context, listen: false);
     return BottomNavigationBar(
@@ -34,11 +36,15 @@ class AdminBottomNav extends StatelessWidget {
             break;
         }
       },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Products'),
-        BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Manage'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+      items: [
+        BottomNavigationBarItem(
+            icon: Icon(Icons.home), label: translation!.home),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.category), label: translation.products),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.apps), label: translation.manage),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.chat), label: translation.chat),
       ],
     );
   }

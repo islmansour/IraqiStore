@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
@@ -234,9 +234,11 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                         children: [
                                           if (widget.item.active != null &&
                                               widget.item.active == true)
-                                            Text('פעיל')
+                                            Text(AppLocalizations.of(context)!
+                                                .active)
                                           else
-                                            Text('לא פעיל')
+                                            Text(AppLocalizations.of(context)!
+                                                .inactive)
                                         ],
                                       ),
                                     )

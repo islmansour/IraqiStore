@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/quote.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuoteItemAdmin extends StatefulWidget {
   final QuoteItem item;
@@ -38,6 +39,8 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
+
     var format = NumberFormat.simpleCurrency(locale: 'he');
     Product? _product;
 
@@ -158,7 +161,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                                           border: InputBorder.none,
 
                                           // border: OutlineInputBorder(),0
-                                          labelText: '% הנחה',
+                                          labelText: '%',
                                         ),
                                       ),
                                     )
@@ -208,16 +211,16 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
 
                                       labelStyle: TextStyle(fontSize: 12),
                                       // border: OutlineInputBorder(),0
-                                      labelText: 'כמות',
+                                      labelText: '#',
                                     ),
                                   )),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'סה״כ ',
-                                    style: TextStyle(
+                                  Text(
+                                    translation!.totalAmount + ' ',
+                                    style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -264,7 +267,7 @@ class _QuoteItemAdminState extends State<QuoteItemAdmin> {
                               color: Colors.white,
                               size: 34,
                             ),
-                            tooltip: 'עדכון',
+                            //       tooltip: 'עדכון',
                             onPressed: recordChanged
                                 ? () {
                                     setState(() {

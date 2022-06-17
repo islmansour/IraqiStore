@@ -8,6 +8,7 @@ import '../models/account.dart';
 import '../models/quote.dart';
 import '../screens/admin/quote_details_admin.dart';
 import '../services/tools.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuoteMiniAdmin extends StatefulWidget {
   final Quote item;
@@ -21,11 +22,13 @@ class QuoteMiniAdmin extends StatefulWidget {
 class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     var format = NumberFormat.simpleCurrency(locale: 'he');
     String _status = "";
     try {
       _status = Provider.of<CurrentListOfValuesUpdates>(context)
-          .getListOfValue('QUOTE_STATUS', format.locale)
+          .getListOfValue(
+              'QUOTE_STATUS', AppLocalizations.of(context)!.localeName)
           .where((element) => element.name == widget.item.status)
           .first
           .value!;
@@ -102,7 +105,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                 Padding(
                   padding: const EdgeInsets.only(right: 4.0),
                   child: widget.item.created == null
-                      ? Text('Now',
+                      ? Text(translation!.now,
                           style: Theme.of(context).textTheme.labelSmall)
                       : Text(
                           DateFormat('dd/MM/yy hh:mm')
@@ -185,7 +188,8 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.25,
-                                    child: Text(quoteAccount.phone ?? "אין",
+                                    child: Text(
+                                        quoteAccount.phone ?? translation!.na,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -205,7 +209,7 @@ class _QuoteMiniAdminState extends State<QuoteMiniAdmin> {
                                         quoteContact != null &&
                                                 quoteContact.phone != null
                                             ? quoteContact.phone!
-                                            : "אין",
+                                            : translation!.na,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -284,11 +288,13 @@ class QuoteDetaulsNoInkWell extends StatefulWidget {
 class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     var format = NumberFormat.simpleCurrency(locale: 'he');
     String _status = "";
     try {
       _status = Provider.of<CurrentListOfValuesUpdates>(context)
-          .getListOfValue('ORDER_STATUS', format.locale)
+          .getListOfValue(
+              'ORDER_STATUS', AppLocalizations.of(context)!.localeName)
           .where((element) => element.name == widget.item.status)
           .first
           .value!;
@@ -354,7 +360,8 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
                 child: widget.item.created == null
-                    ? Text('Now', style: Theme.of(context).textTheme.labelSmall)
+                    ? Text(translation!.now,
+                        style: Theme.of(context).textTheme.labelSmall)
                     : Text(
                         DateFormat('dd/MM/yy hh:mm')
                             .format(widget.item.created!),
@@ -436,7 +443,8 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
-                                  child: Text(quoteAccount.phone ?? "אין",
+                                  child: Text(
+                                      quoteAccount.phone ?? translation!.na,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),
@@ -456,7 +464,7 @@ class _QuoteDetaulsNoInkWellState extends State<QuoteDetaulsNoInkWell> {
                                       quoteContact != null &&
                                               quoteContact.phone != null
                                           ? quoteContact.phone!
-                                          : "אין",
+                                          : translation!.na,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),

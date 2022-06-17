@@ -67,34 +67,6 @@ class AccountDetailedAdmin extends StatelessWidget {
                       ],
                     ),
                   )),
-
-              //
-              // Expanded(
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //         color: Colors.grey.shade200,
-              //         borderRadius:
-              //             const BorderRadius.all(Radius.circular(10))),
-              //     padding: const EdgeInsets.only(right: 8),
-              //     height: 30,
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         Text(
-              //           item.account_number.toString(),
-              //           style: Theme.of(context).textTheme.displayMedium,
-              //         ),
-              //         Padding(
-              //           padding: const EdgeInsets.all(5.0),
-              //           child: Text(item.name.toString(),
-              //               style: Theme.of(context).textTheme.displayMedium),
-              //         ),
-              //         //  Text('date', style: Theme.of(context).textTheme.subtitle1),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ]),
             Padding(
               padding: const EdgeInsets.only(top: 4.0, right: 12),
@@ -129,13 +101,6 @@ class AccountDetailedAdmin extends StatelessWidget {
                           ],
                         ),
                       )),
-
-                  // Column(
-                  //   children: [
-                  //     Text('contact name',
-                  //         style: Theme.of(context).textTheme.displayMedium),
-                  //   ],
-                  // ),
                   Column(
                     children: [],
                   )

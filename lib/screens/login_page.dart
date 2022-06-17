@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/controllers/navigation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/user.dart';
 import '../services/api.dart';
-import 'home_admin.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -65,6 +65,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -117,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                                     if (value.length == 10) {
                                       phoneNo = ("+972" +
                                           value.substring(1, value.length));
-                                      print('phone is: ' + phoneNo);
                                     }
                                   },
                                   style: const TextStyle(
@@ -134,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                       border: InputBorder.none,
-                                      hintText: 'טלפון',
                                       hintStyle: const TextStyle(
                                           color: Colors.white60,
                                           fontSize: 14.5),
@@ -185,7 +185,6 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                       border: InputBorder.none,
-                                      hintText: 'מה הקוד שקבלת',
                                       hintStyle: const TextStyle(
                                           color: Colors.white60,
                                           fontSize: 14.5),
@@ -259,14 +258,14 @@ class _LoginPageState extends State<LoginPage> {
                               isPasswordVisible = true;
                             });
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.only(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
                               top: 10,
                               bottom: 10,
                             ),
                             child: Text(
-                              'בקש קוד',
-                              style: TextStyle(
+                              translation!.requestCode,
+                              style: const TextStyle(
                                   fontSize: 18,
                                   // fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -355,13 +354,13 @@ class _LoginPageState extends State<LoginPage> {
                               });
                             }
                           },
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.only(
                               top: 10,
                               bottom: 10,
                             ),
                             child: Text(
-                              'כניסה',
+                              translation!.login,
                               style: TextStyle(
                                   fontSize: 18,
                                   // fontWeight: FontWeight.w700,

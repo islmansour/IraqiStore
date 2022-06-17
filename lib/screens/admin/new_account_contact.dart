@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/contact.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -8,12 +7,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../components/admin/account_contacts_component.dart';
 import '../../components/user.dart';
+import '../../models/account.dart';
 import '../../models/user.dart';
 
 class CreateAccountContactForm extends StatefulWidget {
   final Contact? item;
-  final int? accountId;
-  CreateAccountContactForm({Key? key, this.item, this.accountId})
+  final Account? account;
+  CreateAccountContactForm({Key? key, this.item, this.account})
       : super(key: key);
 
   @override
@@ -46,26 +46,26 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
             .updateContact(_data);
         Provider.of<EntityModification>(context, listen: false)
             .accounts
-            .where((element) => element.id == widget.accountId)
+            .where((element) => element.id == widget.account?.id)
             .first
             .accountContacts
             ?.add(_data);
 
         if (Provider.of<EntityModification>(context, listen: false)
                 .accounts
-                .where((element) => element.id == widget.accountId)
+                .where((element) => element.id == widget.account?.id)
                 .first
                 .contactId ==
             null) {
           Provider.of<EntityModification>(context, listen: false)
               .accounts
-              .where((element) => element.id == widget.accountId)
+              .where((element) => element.id == widget.account?.id)
               .first
               .contactId = value;
           Repository().upsertAccount(
               Provider.of<EntityModification>(context, listen: false)
                   .accounts
-                  .where((element) => element.id == widget.accountId)
+                  .where((element) => element.id == widget.account?.id)
                   .first);
         }
         Navigator.pop(context);
@@ -194,8 +194,8 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                 if (_data.id == null || _data.id == 0) {
                                   _data.id = 0;
                                   _data.active = true;
-                                  if (widget.accountId != null) {
-                                    _data.accountId = widget.accountId;
+                                  if (widget.account != null) {
+                                    _data.accountId = widget.account?.id;
                                   }
 
                                   _data.created_by =
@@ -358,7 +358,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                 // ContactContactsList(contact: widget.item),
                 // ContactOrdersList(contact: widget.item),
                 // ContactQuotesList(contact: widget.item),
-                AccountContactsList()
+                AccountContactsList(account: widget.account)
               ],
             ),
           ),

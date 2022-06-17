@@ -3,14 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class OTPLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
+
     return MaterialApp(
-      title: 'Phone Authentication',
+      //  title: 'Phone Authentication',
       routes: <String, WidgetBuilder>{
         '/homepage': (BuildContext context) => HomeAdmin(),
         '/loginpage': (BuildContext context) => OTPLogin(),
@@ -18,7 +20,7 @@ class OTPLogin extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const OTPLoginPage(title: 'Phone Authentication'),
+      home: OTPLoginPage(title: translation!.phoneAuthentication),
     );
   }
 }
@@ -63,12 +65,14 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
           // Handle other errors
         },
         codeSent: (String verificationId, [int? forceResendingToken]) {
+          var translation = AppLocalizations.of(context);
+
           //show dialog to take input from the user
           showDialog(
               context: context,
               barrierDismissible: false,
               builder: (context) => AlertDialog(
-                    title: const Text("Enter SMS Code"),
+                    title: Text(translation!.enterSMSCode),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -80,7 +84,7 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                     ),
                     actions: <Widget>[
                       FlatButton(
-                        child: const Text("Done"),
+                        child: Text(translation.done),
                         textColor: Colors.white,
                         color: Colors.redAccent,
                         onPressed: () {
@@ -130,6 +134,8 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -146,7 +152,6 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                 onChanged: (value) {
                   if (value.length == 10) {
                     phoneNo = ("+972" + value.substring(1, value.length));
-                    print('phone is: ' + phoneNo);
                   }
                 },
               ),
@@ -167,13 +172,12 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                 } else {
                   (e) {
                     setState(() {
-                      print('phone: ' + phoneNo);
                       _status = "phone is correct";
                     });
                   };
                 }
               },
-              child: const Text('Lgin'),
+              child: Text(translation!.login),
             ),
             Text(_status),
           ],

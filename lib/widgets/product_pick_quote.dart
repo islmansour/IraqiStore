@@ -5,6 +5,7 @@ import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/quote.dart';
 
@@ -180,8 +181,8 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
                                             .textTheme
                                             .bodyMedium),
                                     Text(
-                                        "הנחה:" +
-                                            ' ' +
+                                        AppLocalizations.of(context)!.discount +
+                                            ': ' +
                                             widget.item.discount.toString() +
                                             ' %',
                                         style: Theme.of(context)
@@ -239,7 +240,7 @@ class _QuoteProductPickState extends State<QuoteProductPick> {
                                 decoration: const InputDecoration(
                                   labelStyle: TextStyle(fontSize: 12),
                                   // border: OutlineInputBorder(),0
-                                  labelText: 'כמות',
+                                  labelText: '#',
                                 ),
                               ))
                         ],

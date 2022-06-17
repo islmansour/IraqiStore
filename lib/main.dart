@@ -9,13 +9,15 @@ import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/screens/login_page.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
-import 'package:hardwarestore/widgets/legal_form.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
 import './controllers/navigation.dart';
 import 'components/news.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:hardwarestore/l10n/l10n.dart';
 
 void main() {
   runApp(
@@ -54,6 +56,7 @@ class IraqiStoreApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<CurrentListOfValuesUpdates>(context, listen: false).loadLovs();
+
     NavigationController navigation =
         Provider.of<NavigationController>(context);
 
@@ -71,9 +74,12 @@ class IraqiStoreApp extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-              localizationsDelegates:
-                  AppLocalizations.localizationsDelegates, // <- here
-              //s  supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
               theme: ThemeData(
                 // Define the default brightness and colors.
                 //brightness: Brightness.dark,
@@ -132,14 +138,11 @@ class IraqiStoreApp extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              supportedLocales: const [
-                Locale(
-                    "he", "HE"), // OR Locale('ar', 'AE') OR Other RTL locales
-              ],
-              locale: const Locale("he", "HE"),
+              supportedLocales: L10n.all,
+              locale: const Locale("ar", "Ar"),
               home: Navigator(
                 pages: [
-                  MaterialPage(child: HomeAdmin()),
+                  const MaterialPage(child: HomeAdmin()),
                   if (navigation.screenName == '/orders')
                     const MaterialPage(child: Orders()),
                   if (navigation.screenName == '/products')

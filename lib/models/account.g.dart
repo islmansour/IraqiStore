@@ -9,6 +9,7 @@ part of 'account.dart';
 Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       active: json['active'] as bool?,
       contactId: json['contactId'] as int?,
+      type: json['type'] as String?,
       created_by: json['created_by'] as int?,
       account_number: json['account_number'] as String?,
       email: json['email'] as String?,
@@ -31,6 +32,7 @@ Map<String, dynamic> _$AccountToJson(Account instance) {
     'street2': instance.street2,
     'pobox': instance.pobox,
     'zip': instance.zip,
+    'type': instance.type,
     'town': instance.town,
     'email': instance.email,
     'phone': instance.phone,

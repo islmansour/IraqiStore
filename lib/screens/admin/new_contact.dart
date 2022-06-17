@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../components/user.dart';
+import '../../l10n/l10n.dart';
 import '../../models/user.dart';
 import '../opt_login.dart';
 
@@ -94,7 +96,14 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     return MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         theme: ThemeData(
           // Define the default brightness and colors.
           //brightness: Brightness.dark,
@@ -153,11 +162,8 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        supportedLocales: const [
-          Locale("he", "HE"), // OR Locale('ar', 'AE') OR Other RTL locales
-        ],
-        locale: const Locale("he", "HE"),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: L10n.all,
+        locale: const Locale("ar", "Ar"),
         home: DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -209,9 +215,9 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                                 _data.first_name = value;
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'first name',
-                                labelText: 'First Name'),
+                            decoration: InputDecoration(
+                                hintText: translation!.firstName,
+                                labelText: translation.firstName),
                           ),
                           TextFormField(
                             initialValue: _data.last_name ?? "",
@@ -230,32 +236,36 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                                 _data.last_name = value;
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'last name', labelText: 'Last Name'),
+                            decoration: InputDecoration(
+                                hintText: translation.lastName,
+                                labelText: translation.lastName),
                           ),
                           TextFormField(
                             initialValue: _data.phone ?? "",
                             onSaved: (String? value) {
                               _data.phone = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'phone', labelText: 'Phone'),
+                            decoration: InputDecoration(
+                                hintText: translation.phone,
+                                labelText: translation.phone),
                           ),
                           TextFormField(
                             initialValue: _data.street ?? "",
                             onSaved: (String? value) {
                               _data.street = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'street', labelText: 'Street'),
+                            decoration: InputDecoration(
+                                hintText: translation.street,
+                                labelText: translation.street),
                           ),
                           TextFormField(
                             initialValue: _data.town ?? "",
                             onSaved: (String? value) {
                               _data.town = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'town', labelText: 'Town'),
+                            decoration: InputDecoration(
+                                hintText: translation.town,
+                                labelText: translation.town),
                           ),
                           TextFormField(
                             initialValue: _data.pobox != null
@@ -282,9 +292,9 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                                   : "",
                               keyboardType: TextInputType
                                   .emailAddress, // Use email input type for emails.
-                              decoration: const InputDecoration(
-                                  hintText: 'you@example.com',
-                                  labelText: 'E-mail Address'),
+                              decoration: InputDecoration(
+                                  hintText: translation.email,
+                                  labelText: translation.email),
                               // validator: _validateEmail,
                               onSaved: (String? value) {
                                 _data.email = value;

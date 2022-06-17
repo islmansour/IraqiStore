@@ -4,6 +4,7 @@ import '../../components/order.dart';
 import '../../models/orders.dart';
 import '../../services/search.dart';
 import '../../widgets/order_mini_admin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AllOrdersScreen extends StatefulWidget {
   const AllOrdersScreen({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                             _newSearch = value;
                           });
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
@@ -52,7 +53,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          hintText: "חפש...",
+                          hintText: AppLocalizations.of(context)!.search,
                           hintStyle: TextStyle(
                             color: Color.fromARGB(255, 191, 190, 190),
                             fontSize: 18,

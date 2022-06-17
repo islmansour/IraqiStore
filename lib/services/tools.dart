@@ -1,11 +1,15 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 
 import '../models/contact.dart';
+import '../models/delivery.dart';
+
+import '../models/lov.dart';
 import '../models/order_item.dart';
 import '../models/orders.dart';
 import '../models/products.dart';
@@ -29,6 +33,7 @@ class EntityModification extends ChangeNotifier {
     _order.removeWhere((element) => element.id == update.id);
 
     _order.add(update);
+    _order.sort((a, b) => a.order_number!.compareTo(b.order_number!));
 
     notifyListeners();
   }
@@ -56,6 +61,7 @@ class EntityModification extends ChangeNotifier {
     _quotes.removeWhere((element) => element.id == update.id);
 
     _quotes.add(update);
+    _quotes.sort((a, b) => a.quote_number!.compareTo(b.quote_number!));
 
     notifyListeners();
   }
@@ -86,6 +92,7 @@ class EntityModification extends ChangeNotifier {
     _products.removeWhere((element) => element.id == update.id);
 
     _products.add(update);
+    _products.sort((a, b) => a.product_number!.compareTo(b.product_number!));
 
     notifyListeners();
   }
@@ -110,6 +117,7 @@ class EntityModification extends ChangeNotifier {
     _accounts.removeWhere((element) => element.id == update.id);
 
     _accounts.add(update);
+    _accounts.sort((a, b) => a.account_number!.compareTo(b.account_number!));
 
     notifyListeners();
   }
@@ -147,5 +155,58 @@ class EntityModification extends ChangeNotifier {
   refreshUsersFromDB() async {
     _users = (await Repository().getUsers())!;
     notifyListeners();
+  }
+  ///////////////////////////////////////////////////////////////////////////////////
+  /// Delivery
+
+  List<Delivery> _deliveries = <Delivery>[];
+  List<Delivery> get deliveries =>
+      _deliveries; // just a getter to access the local list of orders
+
+  set deliveries(List<Delivery> initDeliviries) {
+    // a setter to set the list of global orders.
+    _deliveries = initDeliviries;
+  }
+
+  void updateDelivery(Delivery update) {
+    _deliveries.removeWhere((element) => element.id == update.id);
+
+    _deliveries.add(update);
+
+    notifyListeners();
+  }
+
+  refreshDeliveriesFromDB() async {
+    _deliveries = (await Repository().getDeliverys())!;
+    notifyListeners();
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  /// LOV
+  List<ListOfValues> _activeListOfValues = [];
+  List<ListOfValues> get lov => _activeListOfValues;
+  set lov(List<ListOfValues> initLOV) {
+    // a setter to set the list of global orders.
+    _activeListOfValues = initLOV;
+  }
+
+  refreshLOVFromDB() async {
+    _activeListOfValues = (await Repository().getLOVs())!;
+    notifyListeners();
+  }
+
+  String? getLovValue(String type, String name, String locale) {
+    if (name == null || name.isEmpty || type == null || locale == null) {
+      return '';
+    } else {
+      var _lovRecord = lov.where((element) => (element.type == type &&
+          element.name == name &&
+          element.language == locale &&
+          element.active == true));
+      if (_lovRecord != null && _lovRecord.isNotEmpty) {
+        return _lovRecord.first.value;
+      }
+      return '';
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/add_item_to_quote.dart';
 
@@ -32,12 +33,14 @@ class _QuoteBubbleButtonsState extends State<QuoteBubbleButtons>
 
   @override
   Widget build(BuildContext context) {
+    var translate = AppLocalizations.of(context);
+
     return FloatingActionBubble(
       // Menu items
       items: <Bubble>[
         // Floating action menu item
         Bubble(
-          title: 'הוספת מוצר',
+          title: translate!.addProduct,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.add,
@@ -53,7 +56,7 @@ class _QuoteBubbleButtonsState extends State<QuoteBubbleButtons>
         ),
         // Floating action menu item
         Bubble(
-          title: "מוכנה",
+          title: translate.confirm,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.category,
@@ -68,7 +71,7 @@ class _QuoteBubbleButtonsState extends State<QuoteBubbleButtons>
         ),
         //Floating action menu item
         Bubble(
-          title: "מבוטלת",
+          title: translate.cancelled,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.shopping_cart,
@@ -81,20 +84,20 @@ class _QuoteBubbleButtonsState extends State<QuoteBubbleButtons>
             // _animationController.reverse();
           },
         ),
-        Bubble(
-          title: "הובלה",
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.shopping_basket,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => CreateNewQuoteForm()));
-            // _animationController.reverse();
-          },
-        ),
+        // Bubble(
+        //   title: translate.,
+        //   iconColor: Colors.white,
+        //   bubbleColor: Colors.blue,
+        //   icon: Icons.shopping_basket,
+        //   titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+        //   onPress: () {
+        //     // Navigator.push(
+        //     //     context,
+        //     //     MaterialPageRoute(
+        //     //         builder: (BuildContext context) => CreateNewQuoteForm()));
+        //     // _animationController.reverse();
+        //   },
+        // ),
       ],
 
       // animation controller
@@ -111,7 +114,7 @@ class _QuoteBubbleButtonsState extends State<QuoteBubbleButtons>
       iconColor: Colors.blue,
 
       // Flaoting Action button Icon
-      iconData: Icons.ac_unit,
+      iconData: Icons.add,
       backGroundColor: Colors.white,
     );
   }

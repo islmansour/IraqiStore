@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../services/tools.dart';
 import '../../widgets/product_mini_admin.dart';
@@ -55,7 +55,7 @@ class _ProductsListState extends State<ProductsList> {
                             _newSearch = value;
                           });
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
@@ -64,7 +64,7 @@ class _ProductsListState extends State<ProductsList> {
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          hintText: "חפש...",
+                          hintText: AppLocalizations.of(context)!.search,
                           hintStyle: TextStyle(
                             color: Color.fromARGB(255, 191, 190, 190),
                             fontSize: 18,

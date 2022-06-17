@@ -5,6 +5,8 @@ import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../services/search.dart';
 import '../widgets/product_pick_quote.dart';
@@ -71,7 +73,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                                   _newSearch = value;
                                 });
                               },
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
@@ -82,7 +84,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                                       color:
                                           Color.fromARGB(255, 200, 200, 200)),
                                 ),
-                                hintText: "חפש...",
+                                hintText: AppLocalizations.of(context)!.search,
                                 hintStyle: TextStyle(
                                   color: Color.fromARGB(255, 191, 190, 190),
                                   fontSize: 18,
@@ -188,7 +190,7 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                         });
                         Navigator.pop(context);
                       },
-                      child: Text('Confirm'),
+                      child: Text(AppLocalizations.of(context)!.confirm),
                     )
                   ],
                 );

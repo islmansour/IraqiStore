@@ -8,7 +8,7 @@ class Products extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('מוצרים'),
+        title: Text('מוצרים'),
       ),
       bottomNavigationBar: const BottomNav(1),
     );

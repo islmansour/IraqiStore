@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/orders.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProductPick extends StatefulWidget {
   final Product item;
@@ -100,8 +101,8 @@ class _ProductPickState extends State<ProductPick> {
         }
       });
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
-          const SnackBar(content: Text("התרחשה תקלה בהכנת מסך מוצרים.")));
+      String err = AppLocalizations.of(context)!.errorCreatingProductScreen;
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
     }
   }
 
@@ -125,8 +126,9 @@ class _ProductPickState extends State<ProductPick> {
         },
       );
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
-          const SnackBar(content: Text("התרחשה תקלה בהכנת מסך מוצרים.")));
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content:
+              Text(AppLocalizations.of(context)!.errorCreatingProductScreen)));
     }
 
     return Padding(
@@ -193,7 +195,7 @@ class _ProductPickState extends State<ProductPick> {
                                             .textTheme
                                             .bodyMedium),
                                     Text(
-                                        "הנחה:" +
+                                        AppLocalizations.of(context)!.discount +
                                             ' ' +
                                             widget.item.discount.toString() +
                                             ' %',
@@ -256,10 +258,10 @@ class _ProductPickState extends State<ProductPick> {
                                     });
                                     addToOrderItem(order!, orderItem);
                                   } catch (e) {
-                                    Scaffold.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "פעולה נכשלה,הערך שבחרת לא תקין.")));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .errorChoosen)));
                                   }
                                 },
                                 keyboardType:
@@ -267,7 +269,7 @@ class _ProductPickState extends State<ProductPick> {
                                 decoration: const InputDecoration(
                                   labelStyle: TextStyle(fontSize: 12),
                                   // border: OutlineInputBorder(),0
-                                  labelText: 'כמות',
+                                  labelText: '#',
                                 ),
                               ))
                         ],

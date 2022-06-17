@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 
-import '../models/imgbb_model.dart';
 import '../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserMiniAdmin extends StatefulWidget {
   final User item;
@@ -19,6 +18,7 @@ class _UserMiniAdminState extends State<UserMiniAdmin> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(locale: 'he');
+    var translation = AppLocalizations.of(context);
 
     return InkWell(
       onTap: () {
@@ -140,9 +140,9 @@ class _UserMiniAdminState extends State<UserMiniAdmin> {
                                         children: [
                                           if (widget.item.active != null &&
                                               widget.item.active == true)
-                                            Text('פעיל')
+                                            Text(translation!.active)
                                           else
-                                            Text('לא פעיל')
+                                            Text(translation!.inactive)
                                         ],
                                       ),
                                     )

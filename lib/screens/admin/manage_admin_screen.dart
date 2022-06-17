@@ -3,7 +3,9 @@ import 'package:hardwarestore/components/navbaradmin.dart';
 import 'package:hardwarestore/screens/admin/accounts_screen.dart';
 import 'package:hardwarestore/screens/admin/all_quotes_screen.dart';
 import 'package:hardwarestore/screens/admin/users_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'all_deliveries.dart';
 import 'all_orders_screen.dart';
 import 'contacts_screen.dart';
 
@@ -175,7 +177,14 @@ class ManageAdminScreen extends StatelessWidget {
                           color: Colors.blue,
                           size: 50,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const AllDeliveriesScreen()),
+                          );
+                        },
                       ),
                       width: 80,
                       height: 80,
@@ -235,7 +244,7 @@ class ManageAdminScreen extends StatelessWidget {
         ],
       ),
       appBar: AppBar(
-        title: const Text('ניהול'),
+        title: Text(AppLocalizations.of(context)!.manage),
       ),
       bottomNavigationBar: const AdminBottomNav(2),
     );

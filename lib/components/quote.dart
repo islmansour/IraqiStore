@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/quote.dart';
 import '../services/tools.dart';
 import '../widgets/quote_mini_admin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuotesList extends StatefulWidget {
   const QuotesList({Key? key}) : super(key: key);
@@ -61,22 +62,19 @@ class QuotesListHome extends StatefulWidget {
 class _QuotesListHomeState extends State<QuotesListHome> {
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     return Consumer<EntityModification>(builder: (context, repo, _) {
       if (repo.quotes
           .where((element) => element.status != 'closed')
           .isNotEmpty) {
         return ExpansionTile(
             initiallyExpanded: false,
-            title: const Text('הצעות מחיר'),
+            title: Text(translation!.quotes),
             leading: const Icon(Icons.shopping_cart),
-            subtitle: Text(
-              repo.quotes
-                      .where((element) => element.status != 'closed')
-                      .length
-                      .toString() +
-                  ' ' +
-                  'פתוחות',
-            ),
+            subtitle: Text(repo.quotes
+                .where((element) => element.status != 'closed')
+                .length
+                .toString()),
             iconColor: Colors.green,
             textColor: Colors.green,
             collapsedIconColor: Colors.green.shade300,

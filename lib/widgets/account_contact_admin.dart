@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/contact.dart';
+import 'package:hardwarestore/services/api.dart';
+import 'package:hardwarestore/services/tools.dart';
+import 'package:provider/provider.dart';
 
+import '../models/account.dart';
 import '../screens/admin/new_contact.dart';
 
 class AccountContactFrom extends StatefulWidget {
   final Contact item;
+  final Account? account;
 
-  const AccountContactFrom({Key? key, required this.item}) : super(key: key);
+  const AccountContactFrom({
+    Key? key,
+    required this.item,
+    this.account,
+  }) : super(key: key);
 
   @override
   State<AccountContactFrom> createState() => _AccountContactFromState();
@@ -14,9 +24,18 @@ class AccountContactFrom extends StatefulWidget {
 
 class _AccountContactFromState extends State<AccountContactFrom> {
   Contact? contactContact = Contact();
+  bool isRelated = false;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.account != null) {
+      if (widget.account?.accountContacts != null &&
+          widget.account?.accountContacts?.isNotEmpty == true &&
+          widget.account?.accountContacts
+                  ?.where((element) => element.id == widget.item.id)
+                  .isNotEmpty ==
+              true) isRelated = true;
+    }
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -70,130 +89,61 @@ class _AccountContactFromState extends State<AccountContactFrom> {
                 ),
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(right: 8, left: 4),
-                      //width: 65,
-                      child: const Icon(
-                        Icons.home_work,
-                        color: Colors.teal,
-                        size: 16,
-                      ),
-                    ),
-                    Flexible(
-                      flex: 60,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: widget.item.street == null ||
-                                        widget.item.street == ""
-                                    ? 50
-                                    : widget.item.street!.length > 30
-                                        ? MediaQuery.of(context).size.width *
-                                            0.3
-                                        : widget.item.street!.length * 5 +
-                                            5, //MediaQuery.of(context).size.width * 0.3,
-                                child: widget.item.street == null ||
-                                        widget.item.street == ""
-                                    ? Text(
-                                        'אין רחוב',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        widget.item.street.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 8, left: 4),
-                                child: widget.item.pobox == null ||
-                                        widget.item.pobox == ""
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        'ת.ד ' + widget.item.pobox.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(right: 0, left: 4),
-                                child: widget.item.town == null ||
-                                        widget.item.town == ""
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        widget.item.town.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(right: 2),
-                                child: widget.item.zip == null ||
-                                        widget.item.zip == ""
-                                    ? Text(
-                                        '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      )
-                                    : Text(
-                                        widget.item.zip.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Row(
+                    Column(
                       children: [
-                        Container(
-                          // color: Colors.blue.shade400,
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(right: 0.0),
-                                  child: IconButton(
-                                    color: Colors.teal,
-                                    icon: const Icon(Icons.phone),
-                                    onPressed: () {
-                                      setState(() {});
-                                    },
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          widget.item.phone.toString(),
-                          style: Theme.of(context).textTheme.bodySmall,
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: isRelated ? Colors.red : Colors.teal),
+                            onPressed: () {
+                              if (isRelated) {
+                                widget.account!.accountContacts!.removeWhere(
+                                    (element) => element.id == widget.item.id);
+                                Provider.of<EntityModification>(context,
+                                        listen: false)
+                                    .updateAccount(widget.account!);
+                                Repository().deleteAccountContact(
+                                    widget.account?.id, widget.item.id!);
+                                isRelated = false;
+                              } else {
+                                widget.account?.accountContacts!
+                                    .add(widget.item);
+                                AccountContact ac = AccountContact(
+                                    accountId: widget.account?.id,
+                                    contactId: widget.item.id);
+                                Repository().insertAccountContact(ac);
+                                isRelated = true;
+                              }
+                              Provider.of<EntityModification>(context,
+                                      listen: false)
+                                  .updateAccount(widget.account!);
+                            },
+                            child: isRelated
+                                ? Icon(Icons.remove)
+                                : Icon(Icons.add)),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            if (widget.item != null &&
+                                widget.item.phone != null &&
+                                widget.item.phone.toString() != "")
+                              const Icon(
+                                Icons.phone,
+                                color: Colors.teal,
+                              ),
+                            if (widget.item != null &&
+                                widget.item.phone != null &&
+                                widget.item.phone.toString() != "")
+                              Text(
+                                widget.item.phone.toString(),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                          ],
                         ),
                       ],
                     )

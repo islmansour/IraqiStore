@@ -1,10 +1,17 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/add_items_to_orders.dart';
+import 'package:hardwarestore/models/delivery.dart';
+import 'package:hardwarestore/models/orders.dart';
+import 'package:hardwarestore/services/api.dart';
+import 'package:hardwarestore/services/tools.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrderBubbleButtons extends StatefulWidget {
-  final int orderId;
-  const OrderBubbleButtons({Key? key, required this.orderId}) : super(key: key);
+  final Order order;
+  const OrderBubbleButtons({Key? key, required this.order}) : super(key: key);
 
   @override
   State<OrderBubbleButtons> createState() => _OrderBubbleButtonsState();
@@ -31,87 +38,110 @@ class _OrderBubbleButtonsState extends State<OrderBubbleButtons>
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionBubble(
-      // Menu items
-      items: <Bubble>[
-        // Floating action menu item
-        Bubble(
-          title: 'הוספת מוצר',
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.add,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        AddItemToOrder(orderId: widget.orderId)));
-            _animationController.reverse();
-          },
-        ),
-        // Floating action menu item
-        Bubble(
-          title: "מוכנה",
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.category,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => CreateNewProductForm()));
-            // _animationController.reverse();
-          },
-        ),
-        //Floating action menu item
-        Bubble(
-          title: "מבוטלת",
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.shopping_cart,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => CreateNewOrderForm()));
-            // _animationController.reverse();
-          },
-        ),
-        Bubble(
-          title: "הובלה",
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.shopping_basket,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => CreateNewQuoteForm()));
-            // _animationController.reverse();
-          },
-        ),
-      ],
+    var format = NumberFormat.simpleCurrency(locale: 'he');
+    var translate = AppLocalizations.of(context);
 
-      // animation controller
-      animation: _animation,
+    return widget.order.isReadOnly
+        ? Container()
+        : FloatingActionBubble(
+            // Menu items
+            items: <Bubble>[
+              // Floating action menu item
+              Bubble(
+                title: translate!.addProduct,
+                iconColor: Colors.white,
+                bubbleColor: Colors.blue,
+                icon: Icons.add,
+                titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              AddItemToOrder(orderId: widget.order.id)));
+                  _animationController.reverse();
+                },
+              ),
+              // Floating action menu item
+              Bubble(
+                title: translate.loading,
+                iconColor: Colors.white,
+                bubbleColor: Colors.blue,
+                icon: Icons.category,
+                titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+                onPress: () {
+                  widget.order.status = 'loading';
 
-      // On pressed change animation state
-      onPress: () {
-        _animationController.isCompleted
-            ? _animationController.reverse()
-            : _animationController.forward();
-      },
+                  Delivery delivery = Delivery(
+                      id: 0,
+                      accountId: widget.order.accountId,
+                      contactId: widget.order.contactId,
+                      date: DateTime.now(),
+                      orderId: widget.order.id,
+                      status: 'xXx');
+                  Repository().upsertDelivery(delivery)!.then((value) {
+                    widget.order.deliveryId = value;
 
-      // Floating Action button Icon color
-      iconColor: Colors.blue,
+                    Repository().upsertOrder(widget.order);
+                    Provider.of<EntityModification>(context, listen: false)
+                        .update(widget.order);
+                    setState(() {});
+                  });
 
-      // Flaoting Action button Icon
-      iconData: Icons.ac_unit,
-      backGroundColor: Colors.white,
-    );
+                  _animationController.reverse();
+                },
+              ),
+              //Floating action menu item
+              Bubble(
+                title: translate.cancelled,
+                iconColor: Colors.white,
+                bubbleColor: Colors.blue,
+                icon: Icons.shopping_cart,
+                titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+                onPress: () {
+                  widget.order.status = 'cancelled';
+                  Repository().upsertOrder(widget.order);
+                  Provider.of<EntityModification>(context, listen: false)
+                      .update(widget.order);
+                  _animationController.reverse();
+                },
+              ),
+              Bubble(
+                title: translate.delivered,
+                iconColor: Colors.white,
+                bubbleColor: Colors.blue,
+                icon: Icons.shopping_basket,
+                titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+                onPress: () {
+                  widget.order.status = 'delivered';
+                  Repository().upsertOrder(widget.order);
+                  Provider.of<EntityModification>(context, listen: false)
+                      .update(widget.order);
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) => CreateNewQuoteForm()));
+                  _animationController.reverse();
+                },
+              ),
+            ],
+
+            // animation controller
+            animation: _animation,
+
+            // On pressed change animation state
+            onPress: () {
+              _animationController.isCompleted
+                  ? _animationController.reverse()
+                  : _animationController.forward();
+            },
+
+            // Floating Action button Icon color
+            iconColor: Colors.blue,
+
+            // Flaoting Action button Icon
+            iconData: Icons.add,
+            backGroundColor: Colors.white,
+          );
   }
 }

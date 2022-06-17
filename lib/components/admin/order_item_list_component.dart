@@ -34,13 +34,13 @@ class _OrderItemListState extends State<OrderItemList> {
         .isEmpty) {
       Provider.of<EntityModification>(context).refreshOrdersFromDB();
     }
-    List<OrderItem>? _items = Provider.of<EntityModification>(context)
+    Order order = Provider.of<EntityModification>(context)
         .order
         .where(
           (element) => element.id == widget.orderId,
         )
-        .first
-        .orderItems;
+        .first;
+    List<OrderItem>? _items = order.orderItems;
     return SizedBox(
         height: MediaQuery.of(context).size.height * 0.75,
         child: Scrollbar(
@@ -54,58 +54,71 @@ class _OrderItemListState extends State<OrderItemList> {
                 Provider.of<CurrentOrderItemUpdate>(context).orderItems =
                     _items;
 
-                return Dismissible(
-                  key: Key(_items![index].id.toString()),
-                  background: Container(color: Colors.red),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) {
-                    OrderItem _currentItem = _items[index];
+                return order.isReadOnly
+                    ? Container(
+                        child: OrderItemAdmin(
+                          item: _items![index],
+                          orderId: widget.orderId,
+                        ),
+                      )
+                    : Dismissible(
+                        key: Key(_items![index].id.toString()),
+                        background: Container(color: Colors.red),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          if (order.isReadOnly) return;
+                          OrderItem _currentItem = _items[index];
 
-                    //DjangoServices().deleteOrderItem(_items[index].id!);
-                    Repository().deleteOrderItem(_items[index].id!);
+                          //DjangoServices().deleteOrderItem(_items[index].id!);
+                          Repository().deleteOrderItem(_items[index].id!);
 
-                    Provider.of<EntityModification>(context, listen: false)
-                        .order
-                        .where((element) => element.id == widget.orderId)
-                        .first
-                        .orderItems!
-                        .forEach((item) {
-                      if (item.id == _currentItem.id!) {
-                        Provider.of<EntityModification>(context, listen: false)
-                            .order
-                            .where((element) => element.id == widget.orderId)
-                            .first
-                            .orderItems
-                            ?.forEach(
-                          (itemElement) {
-                            if (itemElement.id == _currentItem.id) {
-                              itemElement = OrderItem();
+                          Provider.of<EntityModification>(context,
+                                  listen: false)
+                              .order
+                              .where((element) => element.id == widget.orderId)
+                              .first
+                              .orderItems!
+                              .forEach((item) {
+                            if (item.id == _currentItem.id!) {
+                              Provider.of<EntityModification>(context,
+                                      listen: false)
+                                  .order
+                                  .where(
+                                      (element) => element.id == widget.orderId)
+                                  .first
+                                  .orderItems
+                                  ?.forEach(
+                                (itemElement) {
+                                  if (itemElement.id == _currentItem.id) {
+                                    itemElement = OrderItem();
+                                  }
+                                },
+                              );
                             }
-                          },
-                        );
-                      }
 
-                      Order x = Provider.of<EntityModification>(context,
-                              listen: false)
-                          .order
-                          .where((element) => element.id == widget.orderId)
-                          .first;
+                            Order x = Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .order
+                                .where(
+                                    (element) => element.id == widget.orderId)
+                                .first;
 
-                      Provider.of<EntityModification>(context, listen: false)
-                          .update(x);
-                    });
+                            Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .update(x);
+                          });
 
-                    setState(() {
-                      _items.removeAt(index);
-                    });
-                    Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("הוסר בהצלה")));
-                  },
-                  child: OrderItemAdmin(
-                    item: _items[index],
-                    orderId: widget.orderId,
-                  ),
-                );
+                          setState(() {
+                            _items.removeAt(index);
+                          });
+                          Scaffold.of(context).showSnackBar(
+                              const SnackBar(content: Text("הוסר בהצלה")));
+                        },
+                        child: OrderItemAdmin(
+                          item: _items[index],
+                          orderId: widget.orderId,
+                        ),
+                      );
               }),
         )));
   }
@@ -116,6 +129,15 @@ class _OrderItemListState extends State<OrderItemList> {
       //    words = freshWords;
     });
     // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
+  }
+}
+
+class _dismis extends StatelessWidget {
+  const _dismis({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/orders.dart';
 import '../../widgets/admin_bubble_order.dart';
@@ -22,7 +23,7 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: OrderBubbleButtons(orderId: widget.item.id),
+      floatingActionButton: OrderBubbleButtons(order: widget.item),
       body: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.max, children: [
         OrderDetaulsNoInkWell(
@@ -33,7 +34,9 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
         ),
       ])),
       appBar: AppBar(
-        title: Text('הזמנה מס ' + widget.item.order_number.toString()),
+        title: Text(AppLocalizations.of(context)!.orderNum +
+            " " +
+            widget.item.order_number.toString()),
       ),
       // bottomNavigationBar: const AdminBottomNav(1),
     );

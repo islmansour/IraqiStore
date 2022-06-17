@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hardwarestore/l10n/l10n.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/services/api.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -8,7 +11,9 @@ import '../../components/admin/account_contact.dart';
 import '../../components/admin/account_forms.dart';
 import '../../components/admin/account_orders.dart';
 import '../../components/admin/account_quotes.dart';
+import '../../components/admin/lov.dart';
 import '../../components/user.dart';
+import '../../models/lov.dart';
 
 class CreateNewAccountForm extends StatefulWidget {
   final Account? item;
@@ -45,7 +50,15 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
 
   @override
   Widget build(BuildContext context) {
+    var format = NumberFormat.simpleCurrency(locale: 'he');
+    var translation = AppLocalizations.of(context);
     return MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         theme: ThemeData(
           // Define the default brightness and colors.
           //brightness: Brightness.dark,
@@ -104,11 +117,8 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        supportedLocales: const [
-          Locale("he", "HE"), // OR Locale('ar', 'AE') OR Other RTL locales
-        ],
-        locale: const Locale("he", "HE"),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: L10n.all,
+        locale: const Locale("ar", "Ar"),
         home: DefaultTabController(
           length: 5,
           child: Scaffold(
@@ -160,32 +170,82 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                 _data.name = value;
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'name', labelText: 'Name'),
+                            decoration: InputDecoration(
+                                hintText: translation!.name,
+                                labelText: translation.name),
                           ),
+                          DropdownButtonFormField(
+                              items: Provider.of<CurrentListOfValuesUpdates>(context)
+                                  .getListOfValue('ACCOUNT_TYPE',
+                                      AppLocalizations.of(context)!.localeName)
+                                  .map((ListOfValues status) {
+                                return DropdownMenuItem(
+                                    value: status.name,
+                                    child: Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.star),
+                                        Text(status.value!),
+                                      ],
+                                    ));
+                              }).toList(),
+                              onChanged: (newValue) {
+                                try {
+                                  // do other stuff with _category
+                                  setState(
+                                      () => _data.type = newValue.toString());
+                                } catch (e) {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                          translation.errorDisplayStatus)));
+                                }
+                              },
+                              value: _data.type == "" || _data.type == null
+                                  ? Provider.of<CurrentListOfValuesUpdates>(context)
+                                      .activeListOfValues
+                                      .where((element) =>
+                                          element.language ==
+                                              AppLocalizations.of(context)!
+                                                  .localeName &&
+                                          element.name == 'private' &&
+                                          element.type == 'ACCOUNT_TYPE')
+                                      .first
+                                      .name
+                                  : Provider.of<CurrentListOfValuesUpdates>(context)
+                                      .activeListOfValues
+                                      .where((element) =>
+                                          element.language ==
+                                              AppLocalizations.of(context)!.localeName &&
+                                          element.name == _data.type &&
+                                          element.type == 'ACCOUNT_TYPE')
+                                      .first
+                                      .name,
+                              decoration: const InputDecoration(contentPadding: EdgeInsets.only(right: 8))),
                           TextFormField(
                             initialValue: _data.phone ?? "",
                             onSaved: (String? value) {
                               _data.phone = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'phone', labelText: 'Phone'),
+                            decoration: InputDecoration(
+                                hintText: translation.phone,
+                                labelText: translation.phone),
                           ),
                           TextFormField(
                             initialValue: _data.street ?? "",
                             onSaved: (String? value) {
                               _data.street = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'street', labelText: 'Street'),
+                            decoration: InputDecoration(
+                                hintText: translation.street,
+                                labelText: translation.street),
                           ),
                           TextFormField(
                             initialValue: _data.town ?? "",
                             onSaved: (String? value) {
                               _data.town = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'town', labelText: 'Town'),
+                            decoration: InputDecoration(
+                                hintText: translation.town,
+                                labelText: translation.town),
                           ),
                           TextFormField(
                             initialValue: _data.pobox != null
@@ -218,9 +278,9 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                   : "",
                               keyboardType: TextInputType
                                   .emailAddress, // Use email input type for emails.
-                              decoration: const InputDecoration(
-                                  hintText: 'you@example.com',
-                                  labelText: 'E-mail Address'),
+                              decoration: InputDecoration(
+                                  hintText: translation.email,
+                                  labelText: translation.email),
                               // validator: _validateEmail,
                               onSaved: (String? value) {
                                 _data.email = value;

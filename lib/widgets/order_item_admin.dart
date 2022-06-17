@@ -6,6 +6,7 @@ import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/orders.dart';
 
@@ -153,12 +154,15 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                         },
                                         keyboardType: const TextInputType
                                             .numberWithOptions(),
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           labelStyle: TextStyle(fontSize: 12),
                                           border: InputBorder.none,
 
                                           // border: OutlineInputBorder(),0
-                                          labelText: '% הנחה',
+                                          labelText:
+                                              AppLocalizations.of(context)!
+                                                      .discount +
+                                                  '% ',
                                         ),
                                       ),
                                     )
@@ -208,7 +212,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
 
                                       labelStyle: TextStyle(fontSize: 12),
                                       // border: OutlineInputBorder(),0
-                                      labelText: 'כמות',
+                                      labelText: '#',
                                     ),
                                   )),
                               Column(

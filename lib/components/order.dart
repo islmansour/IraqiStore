@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/models/orders.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../services/tools.dart';
 import '../widgets/order_mini_admin.dart';
@@ -61,22 +60,19 @@ class OrdersListHome extends StatefulWidget {
 class _OrdersListHomeState extends State<OrdersListHome> {
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     return Consumer<EntityModification>(builder: (context, repo, _) {
       if (repo.order
           .where((element) => element.status != 'closed')
           .isNotEmpty) {
         return ExpansionTile(
             initiallyExpanded: false,
-            title: const Text('הזמנות '),
+            title: Text(translation!.orders),
             leading: const Icon(Icons.shopping_cart),
-            subtitle: Text(
-              repo.order
-                      .where((element) => element.status != 'closed')
-                      .length
-                      .toString() +
-                  ' ' +
-                  'פתוחות',
-            ),
+            subtitle: Text(repo.order
+                .where((element) => element.status != 'closed')
+                .length
+                .toString()),
             iconColor: Colors.blue,
             textColor: Colors.blue,
             collapsedIconColor: Colors.blue.shade300,

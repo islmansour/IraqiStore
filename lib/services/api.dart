@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
@@ -138,7 +139,7 @@ class Repository {
   }
 
   Future<bool> deleteQuoteItem(int quoteItem) async {
-    await _helper.post('/IraqiStore/upsert_quote_item/' + quoteItem.toString());
+    await _helper.post('/IraqiStore/delete_quote_item/' + quoteItem.toString());
     return true;
   }
 
@@ -265,6 +266,19 @@ class Repository {
     return contactFromJson(response);
   }
 
+  Future<int>? insertAccountContact(AccountContact ac) async {
+    final response = await _helper.post('/IraqiStore/insert_account_contact/',
+        body: ac.toJson());
+
+    return int.parse(response.toString());
+  }
+
+  Future<bool> deleteAccountContact(int? accountId, int? contactId) async {
+    await _helper.post(
+        '/IraqiStore/delete_account_contact/${accountId.toString()}/${contactId.toString()}');
+    return true;
+  }
+
   Future<List<Order>?> getAccountOrders(String _account) async {
     final response =
         await _helper.get("/IraqiStore/order_list_by_account/" + _account);
@@ -333,7 +347,15 @@ class Repository {
 
   /////////////////////////// END USERS
   Future<List<Delivery>?> getDeliverys() async {
-    final response = await _helper.get("/IraqiStore/news_delivery");
+    final response = await _helper.get("/IraqiStore/delivery_list");
     return deliveryFromJson(response);
+  }
+
+  Future<int>? upsertDelivery(Delivery delivery) async {
+    final response = await _helper.post(
+        '/IraqiStore/upsert_delivery/' + delivery.id.toString(),
+        body: delivery.toJson());
+
+    return int.parse(response.toString());
   }
 }

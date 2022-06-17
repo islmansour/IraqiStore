@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../components/quote.dart';
 import '../../models/quote.dart';
@@ -43,17 +44,17 @@ class _AllQuotesScreenState extends State<AllQuotesScreen> {
                             _newSearch = value;
                           });
                         },
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
+                        decoration: InputDecoration(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          hintText: "חפש...",
-                          hintStyle: TextStyle(
+                          hintText: AppLocalizations.of(context)!.search,
+                          hintStyle: const TextStyle(
                             color: Color.fromARGB(255, 191, 190, 190),
                             fontSize: 18,
                             fontStyle: FontStyle.italic,

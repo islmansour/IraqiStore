@@ -3,8 +3,7 @@ import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
-
-import '../models/forms.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LegalFormMiniAdmin extends StatefulWidget {
   final LegalDocument item;
@@ -103,7 +102,7 @@ class _LegalFormMiniAdminState extends State<LegalFormMiniAdmin> {
                             width: MediaQuery.of(context).size.width * 0.3,
                             child: legalFormContact?.id == null ||
                                     legalFormContact?.id == 0
-                                ? Text('אין')
+                                ? Text(AppLocalizations.of(context)!.na)
                                 : Text(
                                     legalFormContact!.last_name.toString() +
                                         ' ' +

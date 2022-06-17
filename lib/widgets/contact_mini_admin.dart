@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/contact.dart';
 
 import '../screens/admin/new_contact.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContactMiniAdmin extends StatefulWidget {
   final Contact item;
@@ -103,7 +104,7 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                                 child: widget.item.street == null ||
                                         widget.item.street == ""
                                     ? Text(
-                                        'אין רחוב',
+                                        AppLocalizations.of(context)!.na,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall,
@@ -128,7 +129,7 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                                             .bodySmall,
                                       )
                                     : Text(
-                                        'ת.ד ' + widget.item.pobox.toString(),
+                                        ',' + widget.item.pobox.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall,

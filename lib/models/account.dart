@@ -18,6 +18,7 @@ class Account {
   String? street2;
   int? pobox;
   int? zip;
+  String? type;
   String? town;
   String? email;
   String? phone;
@@ -41,6 +42,7 @@ class Account {
   Account(
       {this.active,
       this.contactId,
+      this.type,
       // ignore: non_constant_identifier_names
       this.created_by,
       // ignore: non_constant_identifier_names

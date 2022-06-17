@@ -5,6 +5,7 @@ import '../screens/admin/new_account.dart';
 import '../screens/admin/new_order.dart';
 import '../screens/admin/new_product.dart';
 import '../screens/admin/new_quote.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminBubbleButtons extends StatefulWidget {
   const AdminBubbleButtons({Key? key}) : super(key: key);
@@ -34,12 +35,14 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
 
   @override
   Widget build(BuildContext context) {
+    var translate = AppLocalizations.of(context);
+
     return FloatingActionBubble(
       // Menu items
       items: <Bubble>[
         // Floating action menu item
         Bubble(
-          title: 'לקוח',
+          title: translate!.account,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.person_add,
@@ -54,7 +57,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
         ),
         // Floating action menu item
         Bubble(
-          title: "מוצר",
+          title: translate.product,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.category,
@@ -69,7 +72,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
         ),
         //Floating action menu item
         Bubble(
-          title: "הזמנה",
+          title: translate.order,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.shopping_cart,
@@ -83,7 +86,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
           },
         ),
         Bubble(
-          title: "הצעת מחיר ",
+          title: translate.quote,
           iconColor: Colors.white,
           bubbleColor: Colors.blue,
           icon: Icons.shopping_basket,
@@ -110,7 +113,7 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
       iconColor: Colors.blue,
 
       // Flaoting Action button Icon
-      iconData: Icons.ac_unit,
+      iconData: Icons.add,
       backGroundColor: Colors.white,
     );
   }

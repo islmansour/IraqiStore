@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/order_item.dart';
-import 'package:hardwarestore/services/django_services.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
-
 part 'orders.g.dart';
 
+//    'orderDate': DateFormat('yyyy-MM-dd – kk:mm').format(instance.orderDate!),
+
 @JsonSerializable()
-class Order extends ChangeNotifier {
+class Order {
   int id;
   DateTime? orderDate;
   int? accountId;
@@ -20,6 +20,7 @@ class Order extends ChangeNotifier {
   String wazeLink;
   String notes;
   int? quoteId;
+  int? deliveryId;
   // ignore: non_constant_identifier_names
   int? created_by;
   DateTime? created;
@@ -28,6 +29,9 @@ class Order extends ChangeNotifier {
   String? order_number;
   @JsonKey(toJson: toNull, includeIfNull: false)
   List<OrderItem>? orderItems;
+
+  @JsonKey(ignore: true)
+  bool get isReadOnly => status == 'delivered' || status == 'loading';
 
 // used in ProductPick to allow adding product to order, but user can cancel the changes by hitting back. If the order is confirmed , these are moving to orderItem variable.
   @JsonKey(ignore: true)
@@ -64,6 +68,7 @@ class Order extends ChangeNotifier {
       this.notes = "",
       this.orderDate,
       this.quoteId,
+      this.deliveryId,
       this.status = "",
       this.street = "",
       this.street2 = "",
