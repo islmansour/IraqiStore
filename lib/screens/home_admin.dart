@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/quote.dart';
+import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/services/search.dart';
@@ -9,6 +10,7 @@ import 'package:hardwarestore/widgets/contact_mini_admin.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
 import 'package:hardwarestore/widgets/quote_mini_admin.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/navbaradmin.dart';
 import '../components/order.dart';
 import '../models/account.dart';
@@ -33,6 +35,25 @@ class _HomeAdminState extends State<HomeAdmin> {
   }
 
   Future<void> _pullRefresh() async {
+    var pref = await SharedPreferences.getInstance();
+    print(Provider.of<GetCurrentUser>(context, listen: false)
+        .currentUser!
+        .userType
+        .toString());
+    switch (Provider.of<GetCurrentUser>(context, listen: false)
+        .currentUser!
+        .userType
+        .toString()) {
+      case 'dev':
+        pref.setString('ipAddress', 'http://127.0.0.1:8000');
+        break;
+      case 'test':
+        pref.setString('ipAddress', 'http://139.162.139.161:8000');
+        break;
+      default:
+        pref.setString('ipAddress', 'http://www.arabapps.biz:8000');
+    }
+
     setState(() {
       _loadAccounts(context);
 
@@ -47,31 +68,34 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<EntityModification>(context, listen: false)
-        .accounts
-        .isEmpty) _loadAccounts(context);
-    if (Provider.of<EntityModification>(context, listen: false)
-        .contacts
-        .isEmpty) {
-      _loadContacts(context);
-      _loadUsers(context);
-    }
-    if (Provider.of<EntityModification>(context, listen: false)
-        .products
-        .isEmpty) _loadProductss(context);
-    if (Provider.of<EntityModification>(context, listen: false).order.isEmpty) {
-      _loadOrders(context);
-    }
-    if (Provider.of<EntityModification>(context, listen: false)
-        .quotes
-        .isEmpty) {
-      _loadQuotes(context);
-    }
+    if (Provider.of<GetCurrentUser>(context).currentUser != null) {
+      if (Provider.of<EntityModification>(context, listen: false)
+          .accounts
+          .isEmpty) _loadAccounts(context);
+      if (Provider.of<EntityModification>(context, listen: false)
+          .contacts
+          .isEmpty) {
+        _loadContacts(context);
+        _loadUsers(context);
+      }
+      if (Provider.of<EntityModification>(context, listen: false)
+          .products
+          .isEmpty) _loadProductss(context);
+      if (Provider.of<EntityModification>(context, listen: false)
+          .order
+          .isEmpty) {
+        _loadOrders(context);
+      }
+      if (Provider.of<EntityModification>(context, listen: false)
+          .quotes
+          .isEmpty) {
+        _loadQuotes(context);
+      }
 
-    if (Provider.of<EntityModification>(context, listen: false).lov.isEmpty) {
-      _loadLovs(context);
+      if (Provider.of<EntityModification>(context, listen: false).lov.isEmpty) {
+        _loadLovs(context);
+      }
     }
-
     return Scaffold(
       floatingActionButton: const AdminBubbleButtons(),
       body: RefreshIndicator(

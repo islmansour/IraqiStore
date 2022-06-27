@@ -17,7 +17,7 @@ class _OrdersListState extends State<OrdersList> {
   Widget build(BuildContext context) {
     return Consumer<EntityModification>(builder: (context, repo, _) {
       if (repo.order
-          .where((element) => element.status != 'closed')
+          .where((element) => element.status != 'delivered')
           .isNotEmpty) {
         return SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -26,7 +26,7 @@ class _OrdersListState extends State<OrdersList> {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: repo.order
-                        .where((element) => element.status != 'closed')
+                        .where((element) => element.status != 'delivered')
                         .length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -36,8 +36,8 @@ class _OrdersListState extends State<OrdersList> {
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: OrderMiniAdmin(
                                 item: repo.order
-                                    .where(
-                                        (element) => element.status != 'closed')
+                                    .where((element) =>
+                                        element.status != 'delivered')
                                     .toList()[index]),
                           ),
                         ],
@@ -63,14 +63,14 @@ class _OrdersListHomeState extends State<OrdersListHome> {
     var translation = AppLocalizations.of(context);
     return Consumer<EntityModification>(builder: (context, repo, _) {
       if (repo.order
-          .where((element) => element.status != 'closed')
+          .where((element) => element.status != 'delivered')
           .isNotEmpty) {
         return ExpansionTile(
             initiallyExpanded: false,
             title: Text(translation!.orders),
             leading: const Icon(Icons.shopping_cart),
             subtitle: Text(repo.order
-                .where((element) => element.status != 'closed')
+                .where((element) => element.status != 'delivered')
                 .length
                 .toString()),
             iconColor: Colors.blue,
@@ -86,8 +86,8 @@ class _OrdersListHomeState extends State<OrdersListHome> {
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               itemCount: repo.order
-                                  .where(
-                                      (element) => element.status != 'closed')
+                                  .where((element) =>
+                                      element.status != 'delivered')
                                   .length,
                               itemBuilder: (context, index) {
                                 return Column(
@@ -99,7 +99,7 @@ class _OrdersListHomeState extends State<OrdersListHome> {
                                       child: OrderMiniAdmin(
                                           item: repo.order
                                               .where((element) =>
-                                                  element.status != 'closed')
+                                                  element.status != 'delivered')
                                               .toList()[index]),
                                     ),
                                   ],

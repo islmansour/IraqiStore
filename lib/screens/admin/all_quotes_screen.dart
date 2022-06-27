@@ -20,7 +20,8 @@ class _AllQuotesScreenState extends State<AllQuotesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.green,
+          title: Text(AppLocalizations.of(context)!.quote),
         ),
         body: SingleChildScrollView(
           child: Column(

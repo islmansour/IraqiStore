@@ -234,11 +234,20 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                         children: [
                                           if (widget.item.active != null &&
                                               widget.item.active == true)
-                                            Text(AppLocalizations.of(context)!
-                                                .active)
+                                            Text(
+                                                AppLocalizations.of(context)!
+                                                    .active,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall)
                                           else
-                                            Text(AppLocalizations.of(context)!
-                                                .inactive)
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .inactive,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall,
+                                            )
                                         ],
                                       ),
                                     )

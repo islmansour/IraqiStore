@@ -6,12 +6,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import '../../components/admin/product_admin_list_component.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../components/user.dart';
 import '../../models/imgbb_model.dart';
 import '../../models/products.dart';
@@ -135,6 +133,8 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
+
     final Size screenSize = MediaQuery.of(context).size;
     String? currentImg = widget.item?.img;
     // Provider.of<CurrentProductsUpdate>(context, listen: false)
@@ -144,7 +144,7 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     //     .img;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product'),
+        title: Text(translation!.product),
       ),
       body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -166,16 +166,20 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                     }
                     _data.name = value;
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'name', labelText: 'Name'),
+                  decoration: InputDecoration(
+                    hintText: translation.name,
+                    labelText: translation.name,
+                  ),
                 ),
                 TextFormField(
                   initialValue: _data.category ?? "",
                   onSaved: (String? value) {
                     _data.category = value;
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'category', labelText: 'Category'),
+                  decoration: InputDecoration(
+                    hintText: translation.category,
+                    labelText: translation.category,
+                  ),
                 ),
                 TextFormField(
                   initialValue:
@@ -186,8 +190,9 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                       _data.discount = double.parse(value!);
                     }
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'discount', labelText: 'discount'),
+                  decoration: InputDecoration(
+                      hintText: translation.discount,
+                      labelText: translation.discount),
                 ),
                 TextFormField(
                   initialValue:
@@ -195,8 +200,9 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                   onSaved: (String? value) {
                     _data.price = double.parse(value!);
                   },
-                  decoration: const InputDecoration(
-                      hintText: 'price', labelText: 'Price'),
+                  decoration: InputDecoration(
+                      hintText: translation.price,
+                      labelText: translation.price),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
@@ -207,13 +213,13 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                     onSaved: (String? value) {
                       _data.desc = value;
                     },
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
+                    decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Colors.grey, width: 1.0),
                         ),
-                        hintText: 'description',
-                        labelText: 'Description'),
+                        hintText: translation.description,
+                        labelText: translation.description),
                   ),
                 ),
                 Container(
@@ -255,7 +261,7 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                   width: screenSize.width,
                   child: TextButton(
                     child: Text(
-                      'Save',
+                      translation.save,
                       style: _data.id == null ||
                               _data.name == null ||
                               _data.name == ""

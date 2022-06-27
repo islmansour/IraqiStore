@@ -20,6 +20,7 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.users),
           backgroundColor: Colors.teal,
         ),
         body: SingleChildScrollView(
@@ -45,16 +46,16 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
                           });
                         },
                         decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
                           hintText: AppLocalizations.of(context)!.search,
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Color.fromARGB(255, 191, 190, 190),
                             fontSize: 18,
                             fontStyle: FontStyle.italic,
@@ -99,7 +100,7 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
                                       case "User":
                                         output = UserMiniAdmin(
                                             item: searchSnap.data![index].item
-                                                as User);
+                                                as AppUser);
                                         break;
                                     }
                                   }

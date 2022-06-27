@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'account.dart';
-import 'contact.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'legal_document.g.dart';
@@ -11,15 +9,19 @@ class LegalDocument {
   int? accountId;
   int? id;
   int? contactId;
-  String? documentName;
+  String? name;
+  String? documentLink;
   DateTime? created;
+  DateTime? signatureDate;
   bool? active;
   LegalDocument(
       {this.accountId,
       this.contactId,
       this.active,
+      this.documentLink,
+      this.signatureDate,
       this.created,
-      this.documentName,
+      this.name,
       this.id});
   factory LegalDocument.fromJson(Map<String, dynamic> json) =>
       _$LegalDocumentFromJson(json);

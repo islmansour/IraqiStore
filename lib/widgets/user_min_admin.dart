@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:intl/intl.dart';
-
 import '../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserMiniAdmin extends StatefulWidget {
-  final User item;
+  final AppUser item;
 
   const UserMiniAdmin({Key? key, required this.item}) : super(key: key);
 
@@ -17,7 +14,6 @@ class UserMiniAdmin extends StatefulWidget {
 class _UserMiniAdminState extends State<UserMiniAdmin> {
   @override
   Widget build(BuildContext context) {
-    var format = NumberFormat.simpleCurrency(locale: 'he');
     var translation = AppLocalizations.of(context);
 
     return InkWell(
@@ -124,12 +120,12 @@ class _UserMiniAdminState extends State<UserMiniAdmin> {
                                   ],
                                 ),
                               ),
-                              Flexible(
-                                flex: 60,
-                                child: Column(
-                                  children: [],
-                                ),
-                              ),
+                              // Flexible(
+                              //   flex: 60,
+                              //   child: Column(
+                              //     children: [],
+                              //   ),
+                              // ),
                               Flexible(
                                 flex: 10,
                                 child: Column(
@@ -140,9 +136,15 @@ class _UserMiniAdminState extends State<UserMiniAdmin> {
                                         children: [
                                           if (widget.item.active != null &&
                                               widget.item.active == true)
-                                            Text(translation!.active)
+                                            Text(translation!.active,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall)
                                           else
-                                            Text(translation!.inactive)
+                                            Text(translation!.inactive,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall)
                                         ],
                                       ),
                                     )

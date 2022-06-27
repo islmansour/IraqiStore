@@ -12,6 +12,8 @@ class OTPLogin extends StatelessWidget {
     var translation = AppLocalizations.of(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
       //  title: 'Phone Authentication',
       routes: <String, WidgetBuilder>{
         '/homepage': (BuildContext context) => HomeAdmin(),

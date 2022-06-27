@@ -49,7 +49,7 @@ class SingleOrderAdmin extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(translation!.contact,
+                    Text(translation.contact,
                         style: Theme.of(context).textTheme.displayMedium),
                   ],
                 ),

@@ -11,19 +11,23 @@ import 'package:provider/provider.dart';
 part 'user.g.dart';
 
 @JsonSerializable()
-class User {
+class AppUser {
   int? id;
   String? uid;
   String? token;
   bool? active;
   int? contactId;
   int? created_by;
+  String? userType;
+  String? language;
 
   @JsonKey(ignore: true)
   Contact? contact;
 
-  User({
+  AppUser({
     this.active,
+    this.language,
+    this.userType = "",
     //  this.contact,
     this.token,
     this.contactId,
@@ -47,14 +51,15 @@ class User {
         .first;
   }
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory AppUser.fromJson(Map<String, dynamic> json) =>
+      _$AppUserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  Map<String, dynamic> toJson() => _$AppUserToJson(this);
 }
 
-List<User> userFromJson(String str) {
-  return List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+List<AppUser> userFromJson(String str) {
+  return List<AppUser>.from(json.decode(str).map((x) => AppUser.fromJson(x)));
 }
 
-String userToJson(List<User> data) =>
+String userToJson(List<AppUser> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/controllers/navigation.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -8,6 +9,8 @@ import '../components/user.dart';
 import '../services/api.dart';
 
 class LoginPage extends StatefulWidget {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   LoginPage({Key? key}) : super(key: key);
   String phoneNumber = "548004990"; //enter your 10 digit number
   int minNumber = 1000;
@@ -24,37 +27,46 @@ class _LoginPageState extends State<LoginPage> {
   String? smsOTP;
   String? verificationId;
   String errorMessage = '';
-  FirebaseAuth auth = FirebaseAuth.instance;
   String _status = "";
   final _codeController = TextEditingController();
 
   bool isPasswordVisible = false;
 
   Future<void> verifyPhone() async {
+    print('starting to  verifyPhone ');
+
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
+              print('starting to  verifyPhone verificationCompleted ');
+
           // ANDROID ONLY!
           // Sign the user in (or link) with the auto-generated credential
-          await auth.signInWithCredential(credential).then(
+          await widget.auth.signInWithCredential(credential).then(
                 (value) => print(value.user?.phoneNumber),
               );
         },
         verificationFailed: (FirebaseAuthException e) {
+                        print('starting to  verifyPhone verificationFailed ');
+
           if (e.code == 'invalid-phone-number') {
             setState(() {
               _status = "Incorrect code, please try again.";
             });
           }
+          print('verificationFailed verifyPhone ${e.message}');
 
           // Handle other errors
         },
         codeSent: (String verificationId, [int? forceResendingToken]) {
+          print('codeSent verifyPhone $verificationId');
+
           widget.authCodeVerId = verificationId;
         },
         codeAutoRetrievalTimeout: (String verificationId) {
+          print('timeout verifyPhone');
           // Auto-resolution timed out...
         },
       );
@@ -340,12 +352,15 @@ class _LoginPageState extends State<LoginPage> {
                                       'יש תקלה בהתחברות, יש לצור קשר עם גסאן';
                                 });
                               } catch (e) {
+                                print(e.toString());
                                 setState(() {
                                   errorMessage =
                                       'יש תקלה בהתחברות, יש לצור קשר עם גסאן';
                                 });
                               }
                             } catch (e) {
+                              print(e.toString());
+
                               setState(() {
                                 setState(() {
                                   errorMessage =
@@ -355,13 +370,13 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               top: 10,
                               bottom: 10,
                             ),
                             child: Text(
                               translation!.login,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   // fontWeight: FontWeight.w700,
                                   color: Colors.white,

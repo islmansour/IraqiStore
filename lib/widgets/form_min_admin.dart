@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/widgets/legal_form.dart';
+import 'package:hardwarestore/widgets/show_pdf.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -34,13 +36,15 @@ class _LegalFormMiniAdminState extends State<LegalFormMiniAdmin> {
 
     return InkWell(
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => CreateNewLegalFormForm(
-          //             item: widget.item,
-          //           )),
-          // );
+          if (widget.item.documentLink == null ||
+              widget.item.documentLink == "") return null;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ShowPDF(
+                      link: widget.item.documentLink,
+                    )),
+          );
         },
         child: Card(
             child: SizedBox(
@@ -64,17 +68,29 @@ class _LegalFormMiniAdminState extends State<LegalFormMiniAdmin> {
                       children: [
                         Container(
                           padding: const EdgeInsets.only(right: 8),
-                          width: 65,
+                          width: MediaQuery.of(context).size.width * 0.7,
                           child: Text(
-                            widget.item.id.toString(),
+                            widget.item.name == 'supply'
+                                ? AppLocalizations.of(context)!
+                                    .supplyLegalAgreement
+                                : AppLocalizations.of(context)!
+                                    .guaranteeLegalAgreement,
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: Text(widget.item.active.toString(),
+                          child: Text(
+                              widget.item.documentLink != null &&
+                                      widget.item.documentLink != ""
+                                  ? AppLocalizations.of(context)!.signed
+                                  : AppLocalizations.of(context)!.notSigned,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.displaySmall),
+                              style: TextStyle(
+                                  color: widget.item.documentLink != null
+                                      ? Colors.white
+                                      : Colors.orange.shade300,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14)),
                         ),
                       ],
                     ),

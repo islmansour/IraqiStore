@@ -14,6 +14,10 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class FormDeliveryAgreement extends StatefulWidget {
+  final LegalDocument? document;
+
+  const FormDeliveryAgreement({Key? key, required this.document})
+      : super(key: key);
   @override
   _FormDeliveryAgreementState createState() => _FormDeliveryAgreementState();
 }
@@ -1004,18 +1008,32 @@ class _FormDeliveryAgreementState extends State<FormDeliveryAgreement> {
       int? conId = Provider.of<GetCurrentUser>(context, listen: false)
           .currentUser!
           .contactId;
-      file = File("$documentPath/$conId-$id.pdf");
+      String fileName = '$conId-$id';
+      fileName = fileName
+          .replaceAll(" ", "")
+          .replaceAll(':', '')
+          .replaceAll('.', '')
+          .replaceAll('-', '');
+      fileName = fileName + ".pdf";
+
+      file = File("$documentPath/$fileName");
 
       file?.writeAsBytesSync(await pdf.save());
       uploadFile(file!);
 
-      LegalDocument doc = LegalDocument(
-        id: 0,
-        active: true,
-        contactId: conId,
-        documentName: '/pdfs/$conId-$id.pdf',
-      );
-      Repository().upsertLegalDocument(doc);
+      if (widget.document!.id != null && widget.document!.id != 0) {
+        widget.document!.contactId = conId;
+        widget.document!.documentLink = fileName;
+        Repository().upsertLegalDocument(widget.document!);
+      } else {
+        LegalDocument doc = LegalDocument(
+            id: 0,
+            active: true,
+            contactId: conId,
+            documentLink: fileName,
+            name: 'supply');
+        Repository().upsertLegalDocument(doc);
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -1028,7 +1046,7 @@ class _FormDeliveryAgreementState extends State<FormDeliveryAgreement> {
 }
 
 uploadFile(File imageFile) async {
-  var postUri = Uri.parse("http://127.0.0.1:8000/IraqiStore/upload/file/");
+  var postUri = Uri.parse("${ApiBaseHelper().apiURL}/IraqiStore/upload/file/");
   var request = http.MultipartRequest("POST", postUri);
   request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
   var response = await request.send();

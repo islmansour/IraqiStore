@@ -185,7 +185,6 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                           value: status.name,
                           child: Row(
                             children: <Widget>[
-                              const Icon(Icons.star),
                               Text(status.value!),
                             ],
                           ));

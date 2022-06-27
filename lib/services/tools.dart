@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/quote_item.dart';
@@ -16,6 +18,8 @@ import '../models/products.dart';
 import '../models/quote.dart';
 
 class EntityModification extends ChangeNotifier {
+  String? environmentIp;
+
   // a global orders
   List<Order> _order = <Order>[];
   List<Order> get order =>
@@ -151,7 +155,7 @@ class EntityModification extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<User> _users = <User>[];
+  List<AppUser> _users = <AppUser>[];
   refreshUsersFromDB() async {
     _users = (await Repository().getUsers())!;
     notifyListeners();
@@ -209,4 +213,25 @@ class EntityModification extends ChangeNotifier {
       return '';
     }
   }
+}
+
+class Environment extends ChangeNotifier {
+  String? production;
+  String? test;
+  String? dev;
+
+  Environment({this.dev, this.production, this.test});
+
+  factory Environment.fromJson(Map<String, dynamic> json) {
+    return Environment(
+      test: json['test'] as String?,
+      production: json['production'] as String?,
+      dev: json['test'] as String?,
+    );
+  }
+}
+
+List<Environment> envFromJson(String str) {
+  return List<Environment>.from(
+      json.decode(str).map((x) => Environment.fromJson(x)));
 }

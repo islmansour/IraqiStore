@@ -1,18 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/widgets/order_item_admin.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show jsonEncode, utf8;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' show json, jsonEncode, utf8;
 import 'dart:async';
 
 import '../models/account.dart';
 import '../models/contact.dart';
 import '../models/delivery.dart';
-import '../models/forms.dart';
 import '../models/lov.dart';
 import '../models/order_item.dart';
 import '../models/quote.dart';
@@ -20,18 +22,23 @@ import '../models/quote_item.dart';
 import '../models/user.dart';
 
 class ApiBaseHelper {
+  late String? _baseUrl;
   static const headers = {
     'content-type': 'application/json',
   };
 
+  String get apiURL => _baseUrl!;
+
   //String ipaddress = '139.162.139.161';
-  final String _baseUrl = 'http://127.0.0.1:8000';
+  //final String _baseUrl = 'http://127.0.0.1:8000';
   //final String _baseUrl = 'http://139.162.139.161:8000';
 
   Future<dynamic> get(String url) async {
+    var _pref = await SharedPreferences.getInstance();
+    _baseUrl = _pref.get('ipAddress').toString();
     var responseJson;
     try {
-      final response = await http.get(Uri.parse(_baseUrl + url));
+      final response = await http.get(Uri.parse(_baseUrl! + url));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -40,9 +47,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> post(String url, {Object? body}) async {
+    var _pref = await SharedPreferences.getInstance();
+    _baseUrl = _pref.get('ipAddress').toString();
     var responseJson;
     try {
-      final response = await http.post(Uri.parse(_baseUrl + url),
+      final response = await http.post(Uri.parse(_baseUrl! + url),
           headers: headers, body: jsonEncode(body));
       // final response = await http.get(Uri.parse(_baseUrl + url));
       responseJson = _returnResponse(response);
@@ -310,7 +319,6 @@ class Repository {
     final response = await _helper.post(
         '/IraqiStore/upsert_legal_document/' + doc.id.toString(),
         body: doc.toJson());
-
     return int.parse(response.toString());
   }
 
@@ -322,22 +330,22 @@ class Repository {
   /////////////////////////// END RELATED LIST OF VALUES
 
   /////////////////////////// START USERS
-  Future<List<User>?> getUser(String id) async {
+  Future<List<AppUser>?> getUser(String id) async {
     final response = await _helper.get("/IraqiStore/get_single_user/" + id);
     return userFromJson(response);
   }
 
-  Future<List<User>?> getUsers() async {
+  Future<List<AppUser>?> getUsers() async {
     final response = await _helper.get("/IraqiStore/get_users");
     return userFromJson(response);
   }
 
-  Future<List<User>?> getUserByLogin(String login) async {
+  Future<List<AppUser>?> getUserByLogin(String login) async {
     final response = await _helper.get("/IraqiStore/get_user_by_uid/" + login);
     return userFromJson(response);
   }
 
-  Future<int>? upsertUser(User user) async {
+  Future<int>? upsertUser(AppUser user) async {
     final response = await _helper.post(
         '/IraqiStore/upsert_user/' + user.id.toString(),
         body: user.toJson());

@@ -15,7 +15,7 @@ class UsersList extends StatefulWidget {
 }
 
 class _UsersListState extends State<UsersList> {
-  List<User>? myUsers;
+  List<AppUser>? myUsers;
   var isLoaded = false;
   @override
   void initState() {
@@ -24,9 +24,9 @@ class _UsersListState extends State<UsersList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<User>?>(
+    return FutureBuilder<List<AppUser>?>(
         future: Repository().getUsers(),
-        builder: (context, AsyncSnapshot<List<User>?> userSnap) {
+        builder: (context, AsyncSnapshot<List<AppUser>?> userSnap) {
           if (userSnap.connectionState == ConnectionState.none &&
               userSnap.hasData == null) {
             return Container();

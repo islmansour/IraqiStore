@@ -87,6 +87,5 @@ class _AccountContactsListState extends State<AccountContactsList> {
         )
       ],
     );
-    ;
   }
 }

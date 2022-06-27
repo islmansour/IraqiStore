@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/widgets/order_item_admin.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../services/tools.dart';
 
@@ -111,8 +111,9 @@ class _OrderItemListState extends State<OrderItemList> {
                           setState(() {
                             _items.removeAt(index);
                           });
-                          Scaffold.of(context).showSnackBar(
-                              const SnackBar(content: Text("הוסר בהצלה")));
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .removedSuccessfuly)));
                         },
                         child: OrderItemAdmin(
                           item: _items[index],

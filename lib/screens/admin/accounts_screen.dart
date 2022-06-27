@@ -20,6 +20,7 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.accounts),
           backgroundColor: Colors.indigo.shade300,
         ),
         body: SingleChildScrollView(
@@ -45,16 +46,16 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                           });
                         },
                         decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 200, 200, 200)),
                           ),
                           hintText: AppLocalizations.of(context)!.search,
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Color.fromARGB(255, 191, 190, 190),
                             fontSize: 18,
                             fontStyle: FontStyle.italic,

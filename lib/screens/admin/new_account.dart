@@ -53,6 +53,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
     var format = NumberFormat.simpleCurrency(locale: 'he');
     var translation = AppLocalizations.of(context);
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -118,7 +119,12 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
           ),
         ),
         supportedLocales: L10n.all,
-        locale: const Locale("ar", "Ar"),
+        locale: Provider.of<GetCurrentUser>(context).currentUser!.language ==
+                "ar"
+            ? const Locale('ar', 'AR')
+            : Provider.of<GetCurrentUser>(context).currentUser!.language == "he"
+                ? const Locale('he', 'HE')
+                : const Locale('en', 'EN'),
         home: DefaultTabController(
           length: 5,
           child: Scaffold(
@@ -131,17 +137,31 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
               ),
               title:
                   Text(widget.item == null ? "" : widget.item!.name.toString()),
-              bottom: const TabBar(
+              bottom: TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
-                  Tab(icon: Icon(Icons.info_outline)),
-                  Tab(icon: Icon(Icons.people)),
                   Tab(
-                      icon: Icon(
-                    Icons.shopping_cart,
-                  )),
-                  Tab(icon: Icon(Icons.shopping_basket)),
-                  Tab(icon: Icon(Icons.attach_file)),
+                    icon: const Icon(Icons.info_outline),
+                    text: translation!.details,
+                  ),
+                  Tab(
+                    icon: Icon(Icons.people),
+                    text: translation.contacts,
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.shopping_cart,
+                    ),
+                    text: translation.orders,
+                  ),
+                  Tab(
+                    icon: const Icon(Icons.shopping_basket),
+                    text: translation.quotes,
+                  ),
+                  Tab(
+                    icon: Icon(Icons.attach_file),
+                    text: translation.files,
+                  ),
                 ],
               ),
             ),
@@ -171,7 +191,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                               });
                             },
                             decoration: InputDecoration(
-                                hintText: translation!.name,
+                                hintText: translation.name,
                                 labelText: translation.name),
                           ),
                           DropdownButtonFormField(
@@ -183,7 +203,6 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                     value: status.name,
                                     child: Row(
                                       children: <Widget>[
-                                        const Icon(Icons.star),
                                         Text(status.value!),
                                       ],
                                     ));
@@ -257,8 +276,9 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                               else
                                 _data.pobox = null;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'pobox', labelText: 'POBox'),
+                            decoration: InputDecoration(
+                                hintText: translation.pobox,
+                                labelText: translation.pobox),
                           ),
                           TextFormField(
                             initialValue:
@@ -269,8 +289,9 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                               else
                                 _data.pobox = null;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'zip', labelText: 'ZIP'),
+                            decoration: InputDecoration(
+                                hintText: translation.zip,
+                                labelText: translation.zip),
                           ),
                           TextFormField(
                               initialValue: _data.email != null

@@ -98,6 +98,7 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
   Widget build(BuildContext context) {
     var translation = AppLocalizations.of(context);
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -163,7 +164,12 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
           ),
         ),
         supportedLocales: L10n.all,
-        locale: const Locale("ar", "Ar"),
+        locale: Provider.of<GetCurrentUser>(context).currentUser!.language ==
+                "ar"
+            ? const Locale('ar', 'AR')
+            : Provider.of<GetCurrentUser>(context).currentUser!.language == "he"
+                ? const Locale('he', 'HE')
+                : const Locale('en', 'EN'),
         home: DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -175,15 +181,20 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                 },
               ),
               title: widget.item == null
-                  ? Text('חדש')
+                  ? Text(translation!.newTitle)
                   : Text(widget.item!.first_name.toString() +
                       ' ' +
                       widget.item!.last_name.toString()),
-              bottom: const TabBar(
+              bottom: TabBar(
                 indicatorColor: Colors.white,
                 tabs: [
-                  Tab(icon: Icon(Icons.info_outline)),
-                  Tab(icon: Icon(Icons.attach_file)),
+                  Tab(
+                    icon: const Icon(Icons.info_outline),
+                    text: translation!.details,
+                  ),
+                  Tab(
+                      icon: const Icon(Icons.attach_file),
+                      text: translation.files),
                 ],
               ),
             ),
@@ -216,7 +227,7 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                               });
                             },
                             decoration: InputDecoration(
-                                hintText: translation!.firstName,
+                                hintText: translation.firstName,
                                 labelText: translation.firstName),
                           ),
                           TextFormField(
@@ -299,7 +310,7 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                               onSaved: (String? value) {
                                 _data.email = value;
                               }),
-                          FutureBuilder<List<User>?>(
+                          FutureBuilder<List<AppUser>?>(
                             future: Repository().getUserByLogin(
                                 (widget.item == null ||
                                         widget.item!.phone.toString() == '')
@@ -318,11 +329,11 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                                       widget.item?.phone.toString() == '')
                                     return;
                                   setState(() {
-                                    User user;
+                                    AppUser user;
                                     if (data.data!.isNotEmpty) {
                                       user = data.data!.first;
                                     } else {
-                                      user = User(
+                                      user = AppUser(
                                           active: value,
                                           contactId: widget.item?.id,
                                           uid: widget.item!.phone,

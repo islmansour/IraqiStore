@@ -11,10 +11,14 @@ LegalDocument _$LegalDocumentFromJson(Map<String, dynamic> json) =>
       accountId: json['accountId'] as int?,
       contactId: json['contactId'] as int?,
       active: json['active'] as bool?,
+      documentLink: json['documentLink'] as String?,
+      signatureDate: json['signatureDate'] == null
+          ? null
+          : DateTime.parse(json['signatureDate'] as String),
       created: json['created'] == null
           ? null
           : DateTime.parse(json['created'] as String),
-      documentName: json['documentName'] as String?,
+      name: json['name'] as String?,
       id: json['id'] as int?,
     );
 
@@ -23,7 +27,9 @@ Map<String, dynamic> _$LegalDocumentToJson(LegalDocument instance) =>
       'accountId': instance.accountId,
       'id': instance.id,
       'contactId': instance.contactId,
-      'documentName': instance.documentName,
+      'name': instance.name,
+      'documentLink': instance.documentLink,
       'created': instance.created?.toIso8601String(),
+      'signatureDate': instance.signatureDate?.toIso8601String(),
       'active': instance.active,
     };

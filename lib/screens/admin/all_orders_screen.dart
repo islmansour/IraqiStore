@@ -21,6 +21,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
+          title: Text(AppLocalizations.of(context)!.orders),
         ),
         body: SingleChildScrollView(
           child: Column(

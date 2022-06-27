@@ -61,5 +61,20 @@
   "discount": "Discount",
   "quantity": "Quantity",
   "errorChoosen": "Error while choosing",
-  "errorCreatingProductScreen": "Error creating products screen."
+  "errorCreatingProductScreen": "Error creating products screen.",
+  "supplyLegalAgreement": "Supply Agreement",
+  "guaranteeLegalAgreement": "Guarantee Agreement",
+  "allLegalAgrements": "All Legal Documents",
+  "signed": "Signed",
+  "notSigned": "Not Signed",
+  "settings": "settings",
+  "users": "Users",
+  "deliveries": "Deliveries",
+  "details": "Details",
+  "appLanguage": "Language",
+  "category": "Category",
+  "price": "Price",
+  "description": "Description",
+  "files": "Files",
+  "newTitle": "New"
 }

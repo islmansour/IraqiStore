@@ -69,7 +69,10 @@ class DeliveryMiniAdmin extends StatelessWidget {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.35,
-                                  child: Text(account!.name ?? "",
+                                  child: Text(
+                                      account != null && account.name != null
+                                          ? account.name!
+                                          : "",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium,
@@ -119,7 +122,7 @@ class DeliveryMiniAdmin extends StatelessWidget {
                                   width:
                                       MediaQuery.of(context).size.width * 0.25,
                                   child: Text(
-                                      account.phone ??
+                                      account?.phone ??
                                           AppLocalizations.of(context)!.na,
                                       style: Theme.of(context)
                                           .textTheme

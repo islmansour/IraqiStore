@@ -61,5 +61,20 @@
   "quantity": "كمية",
   "errorChoosen": "خطء في عملية الاختيار",
   "totalAmount": "اجمالي",
-  "errorCreatingProductScreen": "خطء في بناء شاشة المنتجات"
+  "errorCreatingProductScreen": "خطء في بناء شاشة المنتجات",
+  "supplyLegalAgreement": "اتفاقية تزويد مواد بناء",
+  "guaranteeLegalAgreement": "اتفاقية ضمان",
+  "allLegalAgrements": "كل الاتفاقيات",
+  "signed": "تم التوقيع",
+  "notSigned": "بإنتظار التوقيع",
+  "settings": "اعدادات",
+  "users": "مستخدمين",
+  "deliveries": "طلبيات",
+  "details": "تفاصيل",
+  "appLanguage": "لغة",
+  "category": "تصنيف",
+  "price": "سعر",
+  "description": "وصف",
+  "files": "ملفات",
+  "newTitle": "جديد"
 }

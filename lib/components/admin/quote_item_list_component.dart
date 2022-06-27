@@ -5,6 +5,7 @@ import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/widgets/quote_item_admin.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../services/tools.dart';
 
@@ -97,8 +98,9 @@ class _QuoteItemListState extends State<QuoteItemList> {
                     setState(() {
                       _items.removeAt(index);
                     });
-                    Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("הוסר בהצלה")));
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            AppLocalizations.of(context)!.removedSuccessfuly)));
                   },
                   child: QuoteItemAdmin(
                     item: _items[index],

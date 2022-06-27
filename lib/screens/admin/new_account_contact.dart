@@ -93,6 +93,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // Define the default brightness and colors.
           //brightness: Brightness.dark,
@@ -154,7 +155,12 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
         supportedLocales: const [
           Locale("he", "HE"), // OR Locale('ar', 'AE') OR Other RTL locales
         ],
-        locale: const Locale("he", "HE"),
+        locale: Provider.of<GetCurrentUser>(context).currentUser!.language ==
+                "ar"
+            ? const Locale('ar', 'AR')
+            : Provider.of<GetCurrentUser>(context).currentUser!.language == "he"
+                ? const Locale('he', 'HE')
+                : const Locale('en', 'EN'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         home: DefaultTabController(
           length: 2,
@@ -287,7 +293,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                               onSaved: (String? value) {
                                 _data.email = value;
                               }),
-                          FutureBuilder<List<User>?>(
+                          FutureBuilder<List<AppUser>?>(
                             future: Repository().getUserByLogin(
                                 (widget.item == null ||
                                         widget.item!.phone.toString() == '')
@@ -306,11 +312,11 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                       widget.item?.phone.toString() == '')
                                     return;
                                   setState(() {
-                                    User user;
+                                    AppUser user;
                                     if (data.data!.isNotEmpty) {
                                       user = data.data!.first;
                                     } else {
-                                      user = User(
+                                      user = AppUser(
                                           active: value,
                                           contactId: widget.item?.id,
                                           uid: widget.item!.phone,

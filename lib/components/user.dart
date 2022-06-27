@@ -24,9 +24,9 @@ class _CurrentUserState extends State<CurrentUser> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<User>?>(
+    return FutureBuilder<List<AppUser>?>(
         future: Repository().getUser(widget.userId),
-        builder: (context, AsyncSnapshot<List<User>?> userSnap) {
+        builder: (context, AsyncSnapshot<List<AppUser>?> userSnap) {
           if (userSnap.connectionState == ConnectionState.none &&
               // ignore: unnecessary_null_comparison
               userSnap.hasData == null) {
@@ -41,16 +41,22 @@ class _CurrentUserState extends State<CurrentUser> {
 }
 
 class GetCurrentUser extends ChangeNotifier {
-  User? currentUser;
+  AppUser? currentUser;
   Uint8List? exportSignature;
 
-  void updateUser(User user) {
+  void updateUser(AppUser user) {
     currentUser = user;
+    notifyListeners();
+  }
+
+  void setLocale(String lang) {
+    currentUser!.language = lang;
     notifyListeners();
   }
 
   storeSignature(Uint8List? sig) {
     exportSignature = sig;
+    // notifyListeners();
   }
 
   void usersLoaded() {
