@@ -62,35 +62,6 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
             child: Column(
               children: [
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  // Flexible(
-                  //     flex: 30, // 15%
-                  //     child: Container(
-                  //       decoration: const BoxDecoration(
-                  //           color: Colors.lightBlue,
-                  //           borderRadius: BorderRadius.only(
-                  //               bottomRight: Radius.circular(10),
-                  //               bottomLeft: Radius.circular(10),
-                  //               topLeft: Radius.circular(10),
-                  //               topRight: Radius.circular(10))),
-                  //       height: 75,
-                  //       alignment: Alignment.center,
-                  //       child: Column(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           if (currentImg == 'http://localhost.com' ||
-                  //               currentImg == "" ||
-                  //               currentImg == null)
-                  //             const Icon(Icons.image_not_supported,
-                  //                 size: 65, color: Colors.white)
-                  //           else
-                  //             Expanded(
-                  //               child: Image.network(
-                  //                 currentImg,
-                  //               ),
-                  //             ),
-                  //         ],
-                  //       ),
-                  //     )),
                   Flexible(
                       flex: 70, // 60%
                       child: Column(
@@ -209,7 +180,7 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                         children: [
                                           Icon(
                                             Icons.description_rounded,
-                                            size: 20,
+                                            size: 14,
                                             color: Colors.amber.shade500,
                                           ),
                                           Text(widget.item.desc!,
@@ -232,22 +203,53 @@ class _ProductMiniAdminState extends State<ProductMiniAdmin> {
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Row(
                                         children: [
-                                          if (widget.item.active != null &&
-                                              widget.item.active == true)
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .active,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall)
-                                          else
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .inactive,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            )
+                                          // if (widget.item.active != null &&
+                                          //     widget.item.active == true)
+                                          SizedBox(
+                                              width: 30,
+                                              //  height: 30,
+                                              child: FittedBox(
+                                                fit: BoxFit.fill,
+                                                child: Switch(
+                                                  onChanged: null,
+                                                  value: (widget.item.active !=
+                                                              null &&
+                                                          widget.item.active ==
+                                                              true)
+                                                      ? true
+                                                      : false,
+                                                  inactiveTrackColor: (widget
+                                                                  .item
+                                                                  .active !=
+                                                              null &&
+                                                          widget.item.active ==
+                                                              true)
+                                                      ? Colors.green
+                                                      : Colors.redAccent,
+                                                  inactiveThumbColor: (widget
+                                                                  .item
+                                                                  .active !=
+                                                              null &&
+                                                          widget.item.active ==
+                                                              true)
+                                                      ? Colors.lightGreenAccent
+                                                      : Colors.red,
+                                                ),
+                                              )),
+                                          //   Text(
+                                          //       AppLocalizations.of(context)!
+                                          //           .active,
+                                          //       style: Theme.of(context)
+                                          //           .textTheme
+                                          //           .bodySmall)
+                                          // else
+                                          //   Text(
+                                          //     AppLocalizations.of(context)!
+                                          //         .inactive,
+                                          //     style: Theme.of(context)
+                                          //         .textTheme
+                                          //         .bodySmall,
+                                          //   )
                                         ],
                                       ),
                                     )

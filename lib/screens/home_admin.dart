@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/quote.dart';
+import 'package:hardwarestore/models/user.dart';
+import 'package:hardwarestore/screens/settings.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:hardwarestore/widgets/account_min_admin.dart';
@@ -17,6 +21,7 @@ import '../models/account.dart';
 import '../models/contact.dart';
 import '../widgets/admin_bubble_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:io' show Platform;
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({Key? key}) : super(key: key);
@@ -36,16 +41,34 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   Future<void> _pullRefresh() async {
     var pref = await SharedPreferences.getInstance();
-    print(Provider.of<GetCurrentUser>(context, listen: false)
-        .currentUser!
-        .userType
-        .toString());
-    switch (Provider.of<GetCurrentUser>(context, listen: false)
-        .currentUser!
-        .userType
-        .toString()) {
+    User? user = await FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      List<AppUser>? users = await Repository()
+          .getUserByLogin("0" + user.phoneNumber!.substring(4));
+      if (users!.isNotEmpty) {
+        Provider.of<GetCurrentUser>(context, listen: false)
+            .updateUser(users.first);
+      }
+    }
+    String _env = 'production';
+    if (Provider.of<GetCurrentUser>(context, listen: false).currentUser !=
+            null &&
+        Provider.of<GetCurrentUser>(context, listen: false)
+                .currentUser!
+                .userType !=
+            null) {
+      _env = Provider.of<GetCurrentUser>(context, listen: false)
+          .currentUser!
+          .userType
+          .toString();
+    }
+    switch (_env) {
       case 'dev':
-        pref.setString('ipAddress', 'http://127.0.0.1:8000');
+        if (Platform.isIOS)
+          pref.setString('ipAddress', 'http://127.0.0.1:8000');
+        else
+          pref.setString('ipAddress', 'http://10.0.2.2:8000');
         break;
       case 'test':
         pref.setString('ipAddress', 'http://139.162.139.161:8000');
@@ -207,6 +230,17 @@ class _HomeAdminState extends State<HomeAdmin> {
         ),
       ),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.portrait_outlined),
+          onPressed: () {
+            try {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            } catch (e) {}
+          },
+        ),
         title: Text(AppLocalizations.of(context)!.business),
       ),
       bottomNavigationBar: const AdminBottomNav(0),

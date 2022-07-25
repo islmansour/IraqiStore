@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/user.dart';
+
 import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
-import 'package:hardwarestore/services/tools.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' show json, jsonEncode, utf8;
 import 'dart:async';
@@ -23,7 +20,7 @@ import '../models/user.dart';
 
 class ApiBaseHelper {
   late String? _baseUrl;
-  static const headers = {
+  Map<String, String> headers = {
     'content-type': 'application/json',
   };
 
@@ -36,9 +33,20 @@ class ApiBaseHelper {
   Future<dynamic> get(String url) async {
     var _pref = await SharedPreferences.getInstance();
     _baseUrl = _pref.get('ipAddress').toString();
+
+    try {
+      if (!url.contains('get_user_by_uid')) {
+        final String? userId = _pref.getString('username');
+        headers['UID'] = userId!;
+      } else {}
+    } catch (e) {
+      print('API 001 error: $e');
+    }
+
     var responseJson;
     try {
-      final response = await http.get(Uri.parse(_baseUrl! + url));
+      final response =
+          await http.get(Uri.parse(_baseUrl! + url), headers: headers);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -173,6 +181,20 @@ class Repository {
     return int.parse(response.toString());
   }
 
+  Future<int>? upsertOrderV2(Order order) async {
+    final response = await _helper.post(
+        '/IraqiStore/upsert_order/' + order.id.toString(),
+        body: order.toJson());
+
+    if (order.orderItems != null)
+      order.orderItems!.forEach((element) {
+        element.orderId = int.parse(response.toString());
+        upsertOrderItem(element);
+      });
+
+    return int.parse(response.toString());
+  }
+
   Future<int>? upsertOrderItem(OrderItem orderItem) async {
     var response = await _helper.post(
         '/IraqiStore/upsert_order_item/' + orderItem.id.toString(),
@@ -210,6 +232,25 @@ class Repository {
   /////////////////////////// END PRODUCT
 
   /////////////////////////// START ACCOUNT
+  Future<List<Account>?> getAccountByUser(String contactId) async {
+    try {
+      final response =
+          await _helper.get("/IraqiStore/get_accounts_by_user/$contactId");
+
+      List<Account> _results = accountFromJson(response);
+      _results.forEach((element) async {
+        element.accountContacts = <Contact>[];
+        element.accountContacts =
+            await getAccountContact(element.id.toString());
+
+        element.accountOrders = await getAccountOrders(element.id.toString());
+        element.accountQuotes = await getAccountQuotes(element.id.toString());
+      });
+
+      return _results;
+    } catch (e) {}
+    return <Account>[];
+  }
 
   Future<List<Account>?> getAccounts() async {
     final response = await _helper.get("/IraqiStore/account_list");
@@ -248,13 +289,16 @@ class Repository {
   }
 
   Future<Contact?> getSingleContact(String contactId) async {
-    final response =
-        await _helper.get("/IraqiStore/single_contact/" + contactId);
+    try {
+      final response =
+          await _helper.get("/IraqiStore/single_contact/" + contactId);
 
-    if (contactFromJson(response).isNotEmpty)
-      return contactFromJson(response).first;
-    else
-      return null;
+      if (contactFromJson(response).isNotEmpty)
+        return contactFromJson(response).first;
+      else
+        return null;
+    } catch (e) {}
+    return null;
   }
 
   Future<int>? upsertContact(Contact contact) async {
@@ -331,7 +375,18 @@ class Repository {
 
   /////////////////////////// START USERS
   Future<List<AppUser>?> getUser(String id) async {
+    String _ip = "";
+    SharedPreferences.getInstance().then((value) {
+      _ip = value.get('ipAddress').toString();
+      value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+    });
     final response = await _helper.get("/IraqiStore/get_single_user/" + id);
+    SharedPreferences.getInstance().then((value) {
+      if (_ip == null || _ip == "") {
+        value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+      } else
+        value.setString('ipAddress', _ip);
+    });
     return userFromJson(response);
   }
 
@@ -341,14 +396,30 @@ class Repository {
   }
 
   Future<List<AppUser>?> getUserByLogin(String login) async {
+    String _ip = "";
+    SharedPreferences.getInstance().then((value) {
+      _ip = value.get('ipAddress').toString();
+      value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+    });
     final response = await _helper.get("/IraqiStore/get_user_by_uid/" + login);
+
+    SharedPreferences.getInstance().then((value) {
+      if (_ip == null || _ip == "") {
+        value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+      } else
+        value.setString('ipAddress', _ip);
+    });
     return userFromJson(response);
   }
 
   Future<int>? upsertUser(AppUser user) async {
+    var _pref = await SharedPreferences.getInstance();
+    var _baseUrl = _pref.get('ipAddress').toString();
+    _pref.setString('ipAddress', 'http://arabapps.biz:8000');
     final response = await _helper.post(
         '/IraqiStore/upsert_user/' + user.id.toString(),
         body: user.toJson());
+    _pref.setString('ipAddress', _baseUrl);
 
     return int.parse(response.toString());
   }

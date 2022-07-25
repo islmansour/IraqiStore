@@ -231,7 +231,7 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                                 (widget.item.discount! *
                                                     _product.price! /
                                                     100)))
-                                        .toString(),
+                                        .toStringAsFixed(2),
                                     style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold),

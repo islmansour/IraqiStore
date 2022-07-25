@@ -7,6 +7,7 @@ import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountMiniAdmin extends StatefulWidget {
   final Account item;
@@ -290,8 +291,21 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                   child: IconButton(
                                     color: Colors.blueGrey,
                                     icon: const Icon(Icons.email),
-                                    onPressed: () {
-                                      setState(() {});
+                                    onPressed: () async {
+                                      if (widget.item == null ||
+                                          widget.item.email == null ||
+                                          widget.item.email == "") return;
+
+                                      var url = Uri.parse(
+                                          "mailto:${widget.item.email}");
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      } else {
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'Could not launch $url')));
+                                      }
                                     },
                                   )),
                             ],
@@ -307,8 +321,21 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                   child: IconButton(
                                     color: Colors.brown,
                                     icon: const Icon(Icons.phone),
-                                    onPressed: () {
-                                      setState(() {});
+                                    onPressed: () async {
+                                      if (widget.item == null ||
+                                          widget.item.phone == null ||
+                                          widget.item.phone == "") return;
+
+                                      var url =
+                                          Uri.parse("tel:${widget.item.phone}");
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      } else {
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'Could not launch $url')));
+                                      }
                                     },
                                   )),
                             ],
@@ -327,8 +354,21 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                   child: IconButton(
                                     color: Colors.orange,
                                     icon: const Icon(Icons.message),
-                                    onPressed: () {
-                                      setState(() {});
+                                    onPressed: () async {
+                                      if (widget.item == null ||
+                                          widget.item.phone == null ||
+                                          widget.item.phone == "") return;
+
+                                      var url =
+                                          Uri.parse("sms:${widget.item.phone}");
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      } else {
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'Could not launch $url')));
+                                      }
                                     },
                                   )),
                             ],

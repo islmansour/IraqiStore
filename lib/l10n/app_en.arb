@@ -76,5 +76,7 @@
   "price": "Price",
   "description": "Description",
   "files": "Files",
-  "newTitle": "New"
+  "newTitle": "New",
+  "continue": "Continue",
+  "back": "Back"
 }

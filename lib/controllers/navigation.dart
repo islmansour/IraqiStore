@@ -6,4 +6,8 @@ class NavigationController extends ChangeNotifier {
     screenName = newScreenName;
     notifyListeners();
   }
+
+  void gotoLoginPage() {
+    screenName = '/login';
+  }
 }

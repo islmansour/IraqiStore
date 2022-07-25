@@ -1,14 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
 import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
+import 'package:hardwarestore/components/client/categories_filter.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
+import 'package:hardwarestore/screens/client/client_home.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/screens/login_page.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/notification_management.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -21,30 +26,34 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
-
+import 'dart:io' show Platform;
 import 'package:hardwarestore/l10n/l10n.dart';
+import 'dart:io' show Platform;
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => EntityModification()),
       ListenableProvider<NavigationController>(
         create: (_) => NavigationController(),
       ),
+      ListenableProvider<ClientEnvironment>(create: (_) => ClientEnvironment()),
       ListenableProvider<CurrentNewsUpdates>(
         create: (_) => CurrentNewsUpdates(),
       ),
-
       ListenableProvider<Environment>(
         create: (_) => Environment(),
       ),
-
-      // ListenableProvider<CurrentDeliverysUpdate>(
-      //   create: (_) => CurrentDeliverysUpdate(),
-      // ),
+      ListenableProvider<CategoryFilterNotifier>(
+        create: (_) => CategoryFilterNotifier(),
+      ),
       ListenableProvider<CurrentOrderItemUpdate>(
         create: (_) => CurrentOrderItemUpdate(),
       ),
@@ -72,9 +81,10 @@ class IraqiStoreApp extends StatefulWidget {
 }
 
 class _IraqiStoreAppState extends State<IraqiStoreApp> {
+  NavigationController? navigation;
   late final FirebaseMessaging _messaging;
   // late int _totalNotifications;
-  // PushNotification? _notificationInfo;
+  PushNotification? _notificationInfo;
 
   // For handling notification when the app is in terminated state
   checkForInitialMessage() async {
@@ -88,7 +98,7 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
         body: initialMessage.notification?.body,
       );
       setState(() {
-        // _notificationInfo = notification;
+        _notificationInfo = notification;
         // _totalNotifications++;
       });
     }
@@ -96,32 +106,108 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
 
   @override
   void initState() {
-    // _totalNotifications = 0;
-    registerNotification();
-    checkForInitialMessage();
-
-    // For handling notification when the app is in background
-    // but not terminated
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
-        dataTitle: message.data['title'],
-        dataBody: message.data['body'],
-      );
-
-      setState(() {
-        // _notificationInfo = notification;
-        // _totalNotifications++;
-      });
+    SharedPreferences.getInstance().then((value) {
+      value.clear();
+      value.setString('ipAddress', 'http://www.arabapps.biz:8000');
     });
+    try {
+      autoLogIn();
 
+      // _totalNotifications = 0;
+      registerNotification();
+      checkForInitialMessage();
+
+      // For handling notification when the app is in background
+      // but not terminated
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        PushNotification notification = PushNotification(
+          title: message.notification?.title,
+          body: message.notification?.body,
+          dataTitle: message.data['title'],
+          dataBody: message.data['body'],
+        );
+
+        setState(() {
+          _notificationInfo = notification;
+          // _totalNotifications++;
+        });
+      });
+    } catch (e) {}
     super.initState();
   }
 
-  Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
+  bool isLoggedIn = false;
+  String name = '';
+
+  void autoLogIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString('username');
+
+    if (userId != null) {
+      setState(() {
+        isLoggedIn = true;
+        name = userId;
+      });
+      return;
+    }
   }
+
+  Future<Null> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', "");
+
+    setState(() {
+      name = '';
+      isLoggedIn = false;
+    });
+  }
+
+  Future<Null> loginUser() async {
+    User? user = await FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Provider.of<NavigationController>(context, listen: false)
+          .changeScreen('/login');
+    } else {
+      List<AppUser>? users = await Repository()
+          .getUserByLogin("0" + user.phoneNumber!.substring(4));
+      if (users!.isNotEmpty) {
+        Provider.of<GetCurrentUser>(context, listen: false)
+            .updateUser(users.first);
+
+        SharedPreferences.getInstance().then((value) {
+          switch (Provider.of<GetCurrentUser>(context, listen: false)
+              .currentUser!
+              .userType
+              .toString()) {
+            case 'dev':
+              if (Platform.isIOS)
+                value.setString('ipAddress', 'http://127.0.0.1:8000');
+              else
+                value.setString('ipAddress', 'http://10.0.2.2:8000');
+              break;
+            case 'test':
+              value.setString('ipAddress', 'http://139.162.139.161:8000');
+              break;
+            default:
+              value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+          }
+        });
+
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('username', "0" + user.phoneNumber!.substring(4));
+
+        setState(() {
+          name = "0" + user.phoneNumber!.substring(4);
+          isLoggedIn = true;
+        });
+      }
+    }
+  }
+
+  // Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  //   print("Handling a background message: ${message.messageId}");
+  // }
 
   void registerNotification() async {
     // 1. Initialize the Firebase app
@@ -129,65 +215,66 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
 
     // 2. Instantiate Firebase Messaging
     _messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // 3. On iOS, this helps to take the user permissions
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      provisional: false,
-      sound: true,
-    );
+    if (!Platform.isAndroid) {
+      NotificationSettings settings = await _messaging.requestPermission(
+        alert: true,
+        badge: true,
+        provisional: false,
+        sound: true,
+      );
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('message: ${message.notification?.body}');
-        // Parse the message received
-        PushNotification notification = PushNotification(
-          title: message.notification?.title,
-          body: message.notification?.body,
-        );
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        print('User granted permission');
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          print('message: ${message.notification?.body}');
+          // Parse the message received
+          PushNotification notification = PushNotification(
+            title: message.notification?.title,
+            body: message.notification?.body,
+          );
 
-        setState(() {
-          // _notificationInfo = notification;
-          // _totalNotifications++;
+          setState(() {
+            _notificationInfo = notification;
+            // _totalNotifications++;
+          });
         });
-      });
-    } else {
-      print('User declined or has not accepted permission');
+      } else {
+        print('User declined or has not accepted permission');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    bool? isAdmin = false;
     NavigationController navigation =
         Provider.of<NavigationController>(context);
+    print('1: $isAdmin');
 
-    if (Provider.of<GetCurrentUser>(context).currentUser == null) {
-      SharedPreferences.getInstance().then((value) {
-        value.setString('ipAddress', 'http://www.arabapps.biz:8000');
-      });
-      navigation.screenName = '/login';
+    if (Provider.of<GetCurrentUser>(context, listen: false).currentUser ==
+        null) {
+      Provider.of<NavigationController>(context, listen: false).gotoLoginPage();
     } else {
-// Obtain shared preferences.
-      SharedPreferences.getInstance().then((value) {
-        switch (Provider.of<GetCurrentUser>(context, listen: false)
+      print('2: $isAdmin');
+
+      try {
+        isAdmin = Provider.of<GetCurrentUser>(context, listen: false)
             .currentUser!
-            .userType
-            .toString()) {
-          case 'dev':
-            value.setString('ipAddress', 'http://127.0.0.1:8000');
-            break;
-          case 'test':
-            value.setString('ipAddress', 'http://139.162.139.161:8000');
-            break;
-          default:
-            value.setString('ipAddress', 'http://www.arabapps.biz:8000');
-        }
-      });
+            .admin;
+        print('3: $isAdmin');
+      } catch (e) {}
+      if (Provider.of<CurrentListOfValuesUpdates>(context, listen: false)
+          .activeListOfValues
+          .isEmpty)
+        Provider.of<CurrentListOfValuesUpdates>(context, listen: false)
+            .loadLovs();
     }
-    Provider.of<CurrentListOfValuesUpdates>(context, listen: false).loadLovs();
+
+    SharedPreferences.getInstance().then((value) {
+      print(value.get('ipAddress').toString());
+    });
     return FutureBuilder(
       // Initialize FlutterFire
       future: Firebase.initializeApp(),
@@ -282,7 +369,18 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                             : const Locale('en', 'EN'),
                 home: Navigator(
                   pages: [
-                    const MaterialPage(child: HomeAdmin()),
+                    MaterialPage(
+                        child:
+                            Provider.of<GetCurrentUser>(context, listen: false)
+                                        .currentUser ==
+                                    null
+                                ? CircularProgressIndicator()
+                                : Provider.of<GetCurrentUser>(context,
+                                            listen: false)
+                                        .currentUser!
+                                        .admin!
+                                    ? HomeAdmin()
+                                    : ClientHome()),
                     if (navigation.screenName == '/orders')
                       const MaterialPage(child: Orders()),
                     if (navigation.screenName == '/products')

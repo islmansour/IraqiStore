@@ -76,5 +76,7 @@
   "price": "سعر",
   "description": "وصف",
   "files": "ملفات",
-  "newTitle": "جديد"
+  "newTitle": "جديد",
+  "continue": "التالي",
+  "back": "رجوع"
 }

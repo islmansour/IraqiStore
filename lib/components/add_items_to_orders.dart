@@ -30,23 +30,25 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
 
   @override
   Widget build(BuildContext context) {
-    Order? _order = Provider.of<EntityModification>(context)
-        .order
-        .where(
-          (order) => order.id == widget.orderId,
-        )
-        .first;
+    Order? _order = Order();
+    try {
+      _order = Provider.of<EntityModification>(context)
+          .order
+          .where(
+            (order) => order.id == widget.orderId,
+          )
+          .first;
 
 // prepare tmpItems for modifications. This variable will allow user cancel the operation and not have it confirmed when working with widget ProductPick.
 // In this file, right at the end, there is a confirm button. This buttom will take the tmpItems , merge them with the current orderitems then updade the db.
-    Provider.of<EntityModification>(context)
-        .order
-        .where(
-          (order) => order.id == widget.orderId,
-        )
-        .first
-        .initOrderItems();
-
+      Provider.of<EntityModification>(context)
+          .order
+          .where(
+            (order) => order.id == widget.orderId,
+          )
+          .first
+          .initOrderItems();
+    } catch (e) {}
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -169,39 +171,44 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                   }))),
                     TextButton(
                         onPressed: () {
-                          if (_order.isReadOnly) return null;
-                          Provider.of<EntityModification>(context,
-                                  listen: false)
-                              .order
-                              .where((element) => element.id == widget.orderId)
-                              .first
-                              .confirmOrder();
-
-                          Provider.of<EntityModification>(context,
-                                  listen: false)
-                              .order
-                              .where((element) => element.id == widget.orderId)
-                              .first
-                              .orderItems
-                              ?.forEach((item) {
-                            Order? x = Provider.of<EntityModification>(context,
+                          try {
+                            if (_order!.isReadOnly) return null;
+                            Provider.of<EntityModification>(context,
                                     listen: false)
                                 .order
                                 .where(
                                     (element) => element.id == widget.orderId)
-                                .first;
-                            // DjangoServices()
-                            Repository().upsertOrderItem(item)?.then((value) {
-                              item.id = value;
+                                .first
+                                .confirmOrder();
+
+                            Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .order
+                                .where(
+                                    (element) => element.id == widget.orderId)
+                                .first
+                                .orderItems
+                                ?.forEach((item) {
+                              Order? x = Provider.of<EntityModification>(
+                                      context,
+                                      listen: false)
+                                  .order
+                                  .where(
+                                      (element) => element.id == widget.orderId)
+                                  .first;
+                              // DjangoServices()
+                              Repository().upsertOrderItem(item)?.then((value) {
+                                item.id = value;
+                                Provider.of<EntityModification>(context,
+                                        listen: false)
+                                    .update(x);
+                              });
+
                               Provider.of<EntityModification>(context,
                                       listen: false)
                                   .update(x);
                             });
-
-                            Provider.of<EntityModification>(context,
-                                    listen: false)
-                                .update(x);
-                          });
+                          } catch (e) {}
                           Navigator.pop(context);
                         },
                         child: Text(AppLocalizations.of(context)!.confirm))

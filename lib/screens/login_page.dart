@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/controllers/navigation.dart';
-import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/models/user.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io' show Platform;
 
 import '../components/user.dart';
 import '../services/api.dart';
@@ -31,6 +34,44 @@ class _LoginPageState extends State<LoginPage> {
   final _codeController = TextEditingController();
 
   bool isPasswordVisible = false;
+  Future<Null> loginUser(User user) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', "0" + user.phoneNumber!.substring(4));
+
+      List<AppUser>? users = await Repository()
+          .getUserByLogin("0" + user.phoneNumber!.substring(4));
+
+      if (users!.isNotEmpty) {
+        Provider.of<GetCurrentUser>(context, listen: false)
+            .updateUser(users.first);
+
+        SharedPreferences.getInstance().then((value) {
+          switch (Provider.of<GetCurrentUser>(context, listen: false)
+              .currentUser!
+              .userType
+              .toString()) {
+            case 'dev':
+              if (Platform.isIOS)
+                value.setString('ipAddress', 'http://127.0.0.1:8000');
+              else
+                value.setString('ipAddress', 'http://10.0.2.2:8000');
+              break;
+            case 'test':
+              value.setString('ipAddress', 'http://139.162.139.161:8000');
+              break;
+            default:
+              value.setString('ipAddress', 'http://www.arabapps.biz:8000');
+          }
+        });
+
+        Provider.of<NavigationController>(context, listen: false)
+            .changeScreen('/');
+      }
+    } catch (e) {
+      print('loginUser: $e');
+    }
+  }
 
   Future<void> verifyPhone() async {
     print('starting to  verifyPhone ');
@@ -40,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
-              print('starting to  verifyPhone verificationCompleted ');
+          print('starting to  verifyPhone verificationCompleted ');
 
           // ANDROID ONLY!
           // Sign the user in (or link) with the auto-generated credential
@@ -49,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
               );
         },
         verificationFailed: (FirebaseAuthException e) {
-                        print('starting to  verifyPhone verificationFailed ');
+          print('starting to  verifyPhone verificationFailed ');
 
           if (e.code == 'invalid-phone-number') {
             setState(() {
@@ -146,10 +187,12 @@ class _LoginPageState extends State<LoginPage> {
                                           size: 22,
                                         ),
                                       ),
+                                      hintText:
+                                          'Enter Phone Number e.g 0548004990',
                                       border: InputBorder.none,
                                       hintStyle: const TextStyle(
                                           color: Colors.white60,
-                                          fontSize: 14.5),
+                                          fontSize: 10.5),
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(100)
                                               .copyWith(
@@ -196,10 +239,12 @@ class _LoginPageState extends State<LoginPage> {
                                           size: 22,
                                         ),
                                       ),
+                                      hintText:
+                                          'Enter 6 digits code, e.g 123456',
                                       border: InputBorder.none,
                                       hintStyle: const TextStyle(
                                           color: Colors.white60,
-                                          fontSize: 14.5),
+                                          fontSize: 10.5),
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(100)
                                               .copyWith(
@@ -329,19 +374,22 @@ class _LoginPageState extends State<LoginPage> {
                                     .then((UserCredential result) {
                                   // There is a provider that hold current user
                                   // Once a user is authenticated, call django send the uid and get the user object back.
-                                  Repository()
-                                      .getUserByLogin("0" +
-                                          result.user!.phoneNumber!
-                                              .substring(4))
-                                      .then((value) {
-                                    Provider.of<GetCurrentUser>(context,
-                                            listen: false)
-                                        .currentUser = value?.first;
+                                  // Repository()
+                                  //     .getUserByLogin("0" +
+                                  //         result.user!.phoneNumber!
+                                  //             .substring(4))
+                                  //     .then((value) {
+                                  //   Provider.of<GetCurrentUser>(context,
+                                  //           listen: false)
+                                  //       .currentUser = value?.first;
 
-                                    Provider.of<NavigationController>(context,
-                                            listen: false)
-                                        .changeScreen('/');
-                                  });
+                                  //   Provider.of<NavigationController>(context,
+                                  //           listen: false)
+                                  //       .changeScreen('/');
+
+                                  // });
+
+                                  loginUser(result.user!);
                                 });
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'invalid-verification-code') {

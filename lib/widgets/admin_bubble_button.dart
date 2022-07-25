@@ -85,20 +85,20 @@ class _AdminBubbleButtonsState extends State<AdminBubbleButtons>
             _animationController.reverse();
           },
         ),
-        Bubble(
-          title: translate.quote,
-          iconColor: Colors.white,
-          bubbleColor: Colors.blue,
-          icon: Icons.shopping_basket,
-          titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
-          onPress: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => CreateNewQuoteForm()));
-            _animationController.reverse();
-          },
-        ),
+        // Bubble(
+        //   title: translate.quote,
+        //   iconColor: Colors.white,
+        //   bubbleColor: Colors.blue,
+        //   icon: Icons.shopping_basket,
+        //   titleStyle: const TextStyle(fontSize: 16, color: Colors.white),
+        //   onPress: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (BuildContext context) => CreateNewQuoteForm()));
+        //     _animationController.reverse();
+        //   },
+        // ),
       ],
 
       // animation controller

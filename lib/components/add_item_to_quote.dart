@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../services/search.dart';
 import '../widgets/product_pick_quote.dart';
@@ -31,12 +29,16 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
 
   @override
   Widget build(BuildContext context) {
-    Quote? _quote = Provider.of<EntityModification>(context)
-        .quotes
-        .where(
-          (quote) => quote.id == widget.quoteId,
-        )
-        .first;
+    try {
+      Quote? _quote = Provider.of<EntityModification>(context)
+          .quotes
+          .where(
+            (quote) => quote.id == widget.quoteId,
+          )
+          .first;
+    } catch (e) {
+      return Container();
+    }
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -160,34 +162,39 @@ class _AddItemToQuoteState extends State<AddItemToQuote> {
                                   }))),
                     TextButton(
                       onPressed: () {
-                        Provider.of<EntityModification>(context, listen: false)
-                            .quotes
-                            .where((element) => element.id == widget.quoteId)
-                            .first
-                            .confirmQuote();
-
-                        Provider.of<EntityModification>(context, listen: false)
-                            .quotes
-                            .where((element) => element.id == widget.quoteId)
-                            .first
-                            .quoteItems
-                            ?.forEach((item) {
-                          Quote? x = Provider.of<EntityModification>(context,
+                        try {
+                          Provider.of<EntityModification>(context,
                                   listen: false)
                               .quotes
                               .where((element) => element.id == widget.quoteId)
-                              .first;
-                          Repository().upsertQuoteItem(item)?.then((value) {
-                            item.id = value;
+                              .first
+                              .confirmQuote();
+
+                          Provider.of<EntityModification>(context,
+                                  listen: false)
+                              .quotes
+                              .where((element) => element.id == widget.quoteId)
+                              .first
+                              .quoteItems
+                              ?.forEach((item) {
+                            Quote? x = Provider.of<EntityModification>(context,
+                                    listen: false)
+                                .quotes
+                                .where(
+                                    (element) => element.id == widget.quoteId)
+                                .first;
+                            Repository().upsertQuoteItem(item)?.then((value) {
+                              item.id = value;
+                              Provider.of<EntityModification>(context,
+                                      listen: false)
+                                  .updateQuote(x);
+                            });
+
                             Provider.of<EntityModification>(context,
                                     listen: false)
                                 .updateQuote(x);
                           });
-
-                          Provider.of<EntityModification>(context,
-                                  listen: false)
-                              .updateQuote(x);
-                        });
+                        } catch (e) {}
                         Navigator.pop(context);
                       },
                       child: Text(AppLocalizations.of(context)!.confirm),

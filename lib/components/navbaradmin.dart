@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../controllers/navigation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//ClientBottomNav
 class AdminBottomNav extends StatelessWidget {
   final int activeButtonIndex;
 

@@ -6,11 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/tools.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../components/user.dart';
 import '../../models/imgbb_model.dart';
 import '../../models/products.dart';
 import '../../services/imgbb.dart';
@@ -44,31 +41,6 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     });
   }
 
-  void uploadingImageViaImageUrl() async {
-    setState(() {
-      loading = true;
-    });
-    FormData formData =
-        FormData.fromMap({"key": imgBBkey, "image": imageString});
-
-    Response response =
-        await dio.post("https://api.imgbb.com/1/upload", data: formData);
-    if (response.statusCode != 400) {
-      imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      widget.item?.img = imgbbResponse.data?.displayUrl;
-
-      setState(() {
-        delay = false;
-        loading = false;
-      });
-    } else {
-      txt = 'Error Upload';
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
   void uploadImageFile(File _image, Product product) async {
     setState(() {
       loading = true;
@@ -86,17 +58,14 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     );
     if (response.statusCode != 400) {
       imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-      Provider.of<EntityModification>(context, listen: false)
-          .products
-          .where((element) => element.id == widget.item?.id)
-          .first
-          .img = imgbbResponse.data?.displayUrl;
-      Product? _p = Provider.of<EntityModification>(context, listen: false)
-          .products
-          .where((element) => element.id == widget.item?.id)
-          .first;
 
-      Repository().upsertProduct(_p);
+      _data.img = imgbbResponse.data?.displayUrl;
+      ;
+      // Repository().upsertProduct(product)!.then((value) {
+      //   setState(() {
+      //     _data.id = value;
+      //   });
+      // });
       setState(() {
         delay = false;
         loading = false;
@@ -124,7 +93,11 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
   @override
   void initState() {
     try {
-      if (widget.item != null) _data = widget.item!;
+      if (widget.item != null)
+        _data = widget.item!;
+      else {
+        _data = Product(id: 0, active: true);
+      }
     }
     // ignore: empty_catches
     catch (e) {}
@@ -136,7 +109,7 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     var translation = AppLocalizations.of(context);
 
     final Size screenSize = MediaQuery.of(context).size;
-    String? currentImg = widget.item?.img;
+    String? currentImg = _data.img;
     // Provider.of<CurrentProductsUpdate>(context, listen: false)
     //     .products
     //     ?.where((element) => element.id == widget.item?.id)
@@ -153,18 +126,28 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
             child: ListView(
               children: <Widget>[
                 TextFormField(
+                  onChanged: (value) {
+                    if (value != null && value != "") {
+                      setState(() {
+                        _data.name = value;
+                      });
+                    }
+                  },
                   initialValue: _data.name ?? "",
                   onSaved: (String? value) {
                     // ignore: unrelated_type_equality_checks
                     if (_data.id == null || _data.id == 0) {
-                      _data.id = 0;
-                      _data.active = true;
-                      _data.created_by =
-                          Provider.of<GetCurrentUser>(context, listen: false)
-                              .currentUser
-                              ?.id;
+                      setState(() {
+                        _data.id = 0;
+                        _data.active = true;
+                        _data.name = value;
+                      });
+
+                      // _data.created_by =
+                      //     Provider.of<GetCurrentUser>(context, listen: false)
+                      //         .currentUser
+                      //         ?.id;
                     }
-                    _data.name = value;
                   },
                   decoration: InputDecoration(
                     hintText: translation.name,
@@ -246,7 +229,11 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                 TextButton(
                   onPressed: () async {
                     await getImage();
-                    if (_image != null) uploadImageFile(_image!, widget.item!);
+                    if (_image != null) {
+                      setState(() {
+                        uploadImageFile(_image!, _data);
+                      });
+                    }
                   },
                   child: currentImg == 'http://localhost.com' ||
                           currentImg == null ||
@@ -262,15 +249,17 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
                   child: TextButton(
                     child: Text(
                       translation.save,
-                      style: _data.id == null ||
+                      style: (_data.id == null ||
                               _data.name == null ||
-                              _data.name == ""
+                              _data.name == "" ||
+                              loading == true)
                           ? const TextStyle(color: Colors.grey)
                           : const TextStyle(color: Colors.green),
                     ),
-                    onPressed: _data.id == null ||
+                    onPressed: (_data.id == null ||
                             _data.name == null ||
-                            _data.name == ""
+                            _data.name == "" ||
+                            loading == true)
                         ? null
                         : submit,
                   ),

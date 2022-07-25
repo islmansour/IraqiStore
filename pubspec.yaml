@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+10
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -97,7 +97,14 @@ flutter:
         - asset: assets/fonts/Arimo-Regular.ttf
         - asset: assets/fonts/Arimo-Bold.ttf
         - asset: assets/fonts/Arimo-SemiBold.ttf
-         # style: italic
+    - family: Assistant
+      fonts:
+        - asset: assets/fonts/Assistant-Bold.ttf
+        - asset: assets/fonts/Assistant-ExtraBold.ttf
+          weight: 600
+        - asset: assets/fonts/Assistant-Medium.ttf
+          weight: 300
+        - asset: assets/fonts/Assistant-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

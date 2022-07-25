@@ -20,12 +20,14 @@ class AppUser {
   int? created_by;
   String? userType;
   String? language;
+  bool? admin;
 
   @JsonKey(ignore: true)
   Contact? contact;
 
   AppUser({
     this.active,
+    this.admin,
     this.language,
     this.userType = "",
     //  this.contact,

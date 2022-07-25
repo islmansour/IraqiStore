@@ -17,6 +17,13 @@ import '../models/orders.dart';
 import '../models/products.dart';
 import '../models/quote.dart';
 
+class ClientEnvironment extends ChangeNotifier {
+  Order? _currentOrder = Order();
+
+  set currentOrder(Order? order) => _currentOrder = order;
+  Order? get currentOrder => _currentOrder;
+}
+
 class EntityModification extends ChangeNotifier {
   String? environmentIp;
 
@@ -34,11 +41,12 @@ class EntityModification extends ChangeNotifier {
 // update the global oders list, and notify the listeners in the app, for example
 // places were we display total amount of the order.
   void update(Order update) {
-    _order.removeWhere((element) => element.id == update.id);
+    try {
+      _order.removeWhere((element) => element.id == update.id);
 
-    _order.add(update);
-    _order.sort((a, b) => a.order_number!.compareTo(b.order_number!));
-
+      _order.add(update);
+      _order.sort((a, b) => a.order_number!.compareTo(b.order_number!));
+    } catch (e) {}
     notifyListeners();
   }
 
@@ -62,11 +70,12 @@ class EntityModification extends ChangeNotifier {
   }
 
   void updateQuote(Quote update) {
-    _quotes.removeWhere((element) => element.id == update.id);
+    try {
+      _quotes.removeWhere((element) => element.id == update.id);
 
-    _quotes.add(update);
-    _quotes.sort((a, b) => a.quote_number!.compareTo(b.quote_number!));
-
+      _quotes.add(update);
+      _quotes.sort((a, b) => a.quote_number!.compareTo(b.quote_number!));
+    } catch (e) {}
     notifyListeners();
   }
 
@@ -93,11 +102,12 @@ class EntityModification extends ChangeNotifier {
   }
 
   void updateProduct(Product update) {
-    _products.removeWhere((element) => element.id == update.id);
+    try {
+      _products.removeWhere((element) => element.id == update.id);
 
-    _products.add(update);
-    _products.sort((a, b) => a.product_number!.compareTo(b.product_number!));
-
+      _products.add(update);
+      _products.sort((a, b) => a.product_number!.compareTo(b.product_number!));
+    } catch (e) {}
     notifyListeners();
   }
 
@@ -129,6 +139,14 @@ class EntityModification extends ChangeNotifier {
   refreshAccountsFromDB() async {
     _accounts = (await Repository().getAccounts())!;
     notifyListeners();
+  }
+
+  refreshAccountsByUserFromDB(AppUser currUser) async {
+    try {
+      _accounts =
+          (await Repository().getAccountByUser(currUser.contactId.toString()))!;
+      notifyListeners();
+    } catch (e) {}
   }
 
   ///////////////////////////////////////////////////////////////////////////////////

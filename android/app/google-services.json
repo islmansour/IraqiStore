@@ -7,9 +7,61 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:509978242235:android:aca787d48bdd5977b6cd9e",
+        "android_client_info": {
+          "package_name": "biz.arabapps.hardwareStore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509978242235-810upcf8j8tv08o3htjgsb4jstdk0akk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "biz.arabapps.hardwareStore",
+            "certificate_hash": "6dbc202d3058d06a53161a7dc52e7f100808398b"
+          }
+        },
+        {
+          "client_id": "509978242235-muq4h919g3siiv3699nf682qdl5vpmso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "biz.arabapps.hardwareStore",
+            "certificate_hash": "03b0f4b97fe4b0e0d6846be970061e8a03c775e7"
+          }
+        },
+        {
+          "client_id": "509978242235-20se4udbfprh4ukq1m49nesmeur5s04q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsLC95LcoNTOwEwEk3a6z4fPMEyD_GHcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509978242235-20se4udbfprh4ukq1m49nesmeur5s04q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "509978242235-mneppohi99fsdip7bnutt1nfbfmbe76o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "biz.arabapps.hardwareStore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:509978242235:android:56e58a3dbe146e52b6cd9e",
         "android_client_info": {
-          "package_name": "com.iraqi.hardwarestore"
+          "package_name": "biz.arabapps.hardwareStore"
         }
       },
       "oauth_client": [
@@ -34,7 +86,7 @@
               "client_id": "509978242235-mneppohi99fsdip7bnutt1nfbfmbe76o.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.iraqi.hardwarestore"
+                "bundle_id": "biz.arabapps.hardwareStore"
               }
             }
           ]

@@ -287,12 +287,14 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                               size: 40,
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsScreen()),
-                              );
+                              try {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsScreen()),
+                                );
+                              } catch (e) {}
                             },
                           ),
                           width: 80,

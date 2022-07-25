@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>app-1-509978242235-ios-f3edf1b65d127d71b6cd9e</string>
+				<string>app-1-509978242235-ios-afbf73cc26167298b6cd9e</string>
 			</array>
 		</dict>
 		<dict>
@@ -37,16 +37,26 @@
 			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-509978242235-ios-afbf73cc26167298b6cd9e</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>GoogleUtilitiesAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow access to photo library</string>
+	<string>Allow access to photo library in order to be able to provide a photo of your product.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

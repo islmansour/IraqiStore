@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/controllers/navigation.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -18,11 +20,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String? _lang = AppLocalizations.of(context)!.localeName;
-    if (_data!.id == null)
-      _data = Provider.of<GetCurrentUser>(context).currentUser?.contact!;
+    String? _lang = "";
     var translation = AppLocalizations.of(context);
-
+    try {
+      _lang = AppLocalizations.of(context)!.localeName;
+      if (_data!.id == null)
+        _data = Provider.of<GetCurrentUser>(context).currentUser?.contact!;
+    } catch (e) {}
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settings),
@@ -141,6 +145,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _lang = value;
                     Provider.of<GetCurrentUser>(context, listen: false)
                         .setLocale(value!);
+                    Repository().upsertUser(
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser!);
 
                     //           AppLocalizations.of(context)!.localeName = value;
                   });
@@ -160,6 +167,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     Provider.of<GetCurrentUser>(context, listen: false)
                         .setLocale(value!);
+                    Repository().upsertUser(
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser!);
                   });
                 },
               ),
@@ -177,10 +187,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     Provider.of<GetCurrentUser>(context, listen: false)
                         .setLocale(value!);
+                    Repository().upsertUser(
+                        Provider.of<GetCurrentUser>(context, listen: false)
+                            .currentUser!);
                   });
                 },
               ),
             ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.black),
+              )),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20.0, top: 20),
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  FirebaseAuth auth = FirebaseAuth.instance;
+                  setState(() {
+                    NavigationController navigation =
+                        Provider.of<NavigationController>(context,
+                            listen: false);
+                    navigation.changeScreen('/login');
+
+                    auth.signOut();
+                  });
+                },
+                child: Text('logout'))
           ]),
     );
   }

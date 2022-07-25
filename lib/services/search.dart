@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/account.dart';
-import 'package:hardwarestore/components/admin/product_admin_list_component.dart';
-import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +45,7 @@ class ApplySearch extends ChangeNotifier {
   }
 
   Future<List<SearchItem>> SearchProducts(String search) async {
+    print('SearchProducts Future: $search');
     await Repository().getProducts().then((value) {
       value
           ?.where((element) => element.name.toString().contains(search))
@@ -59,6 +56,17 @@ class ApplySearch extends ChangeNotifier {
           ?.where(
               (element) => element.product_number.toString().contains(search))
           .forEach((i) {
+        items.add(SearchItem(item: i, type: "Product"));
+      });
+    });
+
+    notifyListeners();
+    return items;
+  }
+
+  Future<List<SearchItem>> SearchProductsByCategory(String category) async {
+    await Repository().getProducts().then((value) {
+      value?.where((element) => element.category == category).forEach((i) {
         items.add(SearchItem(item: i, type: "Product"));
       });
     });

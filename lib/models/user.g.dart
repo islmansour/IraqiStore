@@ -8,6 +8,7 @@ part of 'user.dart';
 
 AppUser _$AppUserFromJson(Map<String, dynamic> json) => AppUser(
       active: json['active'] as bool?,
+      admin: json['admin'] as bool?,
       language: json['language'] as String?,
       userType: json['userType'] as String? ?? "",
       token: json['token'] as String?,
@@ -26,4 +27,5 @@ Map<String, dynamic> _$AppUserToJson(AppUser instance) => <String, dynamic>{
       'created_by': instance.created_by,
       'userType': instance.userType,
       'language': instance.language,
+      'admin': instance.admin,
     };

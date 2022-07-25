@@ -17,6 +17,7 @@
   "account": "לקוח",
   "accounts": "לקוחות",
   "contact": "איש קשר",
+  "confirm": "אישור",
   "contacts": "אנשי קשר",
   "delivery": "משלוח",
   "quote": "הצעת",
@@ -76,5 +77,7 @@
   "price": "מחיר",
   "description": "תיאור",
   "files": "קבצים",
-  "newTitle": "חדש"
+  "newTitle": "חדש",
+  "continue": "הבא",
+  "back": "חזרה"
 }
