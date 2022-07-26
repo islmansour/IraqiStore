@@ -77,6 +77,8 @@
   "description": "Description",
   "files": "Files",
   "newTitle": "New",
-  "continue": "Continue",
-  "back": "Back"
+  "proceed": "Continue",
+  "back": "Back",
+  "items": "Items",
+  "noRecords": "No Records"
 }

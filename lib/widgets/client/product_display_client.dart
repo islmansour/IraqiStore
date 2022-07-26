@@ -29,7 +29,7 @@ class DisplayProductClient extends StatelessWidget {
                   )
                 : SizedBox(child: Image.network(img!)),
           ),
-          if (discount!.isNotEmpty)
+          if (discount!.isNotEmpty && double.parse(discount!) > 0)
             Positioned(
               top: -20,
               left: -20,

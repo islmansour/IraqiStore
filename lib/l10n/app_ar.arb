@@ -77,6 +77,8 @@
   "description": "وصف",
   "files": "ملفات",
   "newTitle": "جديد",
-  "continue": "التالي",
-  "back": "رجوع"
+  "proceed": "التالي",
+  "back": "رجوع",
+  "items": "بضاعة",
+  "noRecords": "لم تختار بضاعة"
 }

@@ -45,16 +45,18 @@ class ApplySearch extends ChangeNotifier {
   }
 
   Future<List<SearchItem>> SearchProducts(String search) async {
-    print('SearchProducts Future: $search');
     await Repository().getProducts().then((value) {
       value
-          ?.where((element) => element.name.toString().contains(search))
+          ?.where((element) =>
+              element.name.toString().contains(search) &&
+              element.hidden == false)
           .forEach((i) {
         items.add(SearchItem(item: i, type: "Product"));
       });
       value
-          ?.where(
-              (element) => element.product_number.toString().contains(search))
+          ?.where((element) =>
+              element.product_number.toString().contains(search) &&
+              element.hidden == false)
           .forEach((i) {
         items.add(SearchItem(item: i, type: "Product"));
       });

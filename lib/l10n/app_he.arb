@@ -47,7 +47,7 @@
   "errorDisplayContact": "תקלה בהצגת אנשי קשר",
   "addProduct": "הוספת מוצר",
   "save": "שמור",
-  "orderNum": "הסמנה מס׳",
+  "orderNum": "הזמנה מס׳",
   "quoteNum": "הצעה מס׳",
   "status": "מצב",
   "na": "אין",
@@ -78,6 +78,8 @@
   "description": "תיאור",
   "files": "קבצים",
   "newTitle": "חדש",
-  "continue": "הבא",
-  "back": "חזרה"
+  "proceed": "הבא",
+  "back": "חזרה",
+  "items": "פרטים",
+  "noRecords": "אין פרטים"
 }

@@ -35,11 +35,15 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
 
     Account? orderAccount;
     Contact? orderContact;
-
-    orderAccount = Provider.of<EntityModification>(context)
-        .accounts
-        .where((f) => f.id == widget.item.accountId)
-        .first;
+    try {
+      orderAccount = Provider.of<EntityModification>(context)
+          .accounts
+          .where((f) => f.id == widget.item.accountId)
+          .first;
+    } catch (e) {
+      print(e);
+      orderAccount = Account();
+    }
 
     widget.item.contactId != null && widget.item.contactId != 0
         ? orderContact = Provider.of<EntityModification>(context)

@@ -42,10 +42,15 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
     var format = NumberFormat.simpleCurrency(locale: 'he');
     Product? _product;
 
-    _product = Provider.of<EntityModification>(context)
-        .products
-        .where((f) => f.id == widget.item.productId)
-        .first;
+    try {
+      _product = Provider.of<EntityModification>(context)
+          .products
+          .where((f) => f.id == widget.item.productId)
+          .first;
+    } catch (e) {
+      print(e);
+      _product = Product(name: '', price: 0, discount: 0, product_number: '-1');
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -226,11 +231,18 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    (_product.price! * widget.item.quantity! -
-                                            (widget.item.quantity! *
-                                                (widget.item.discount! *
-                                                    _product.price! /
-                                                    100)))
+                                    (_product.price == null
+                                            ? 0
+                                            : _product.price! *
+                                                    widget.item.quantity! -
+                                                (widget.item.quantity! *
+                                                    (widget.item.discount ==
+                                                            null
+                                                        ? 0
+                                                        : widget.item
+                                                                .discount! *
+                                                            _product.price! /
+                                                            100)))
                                         .toStringAsFixed(2),
                                     style: const TextStyle(
                                         fontSize: 10,

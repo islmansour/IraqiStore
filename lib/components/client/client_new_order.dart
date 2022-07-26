@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:hardwarestore/components/client/add_order_items_client.dart';
+import 'package:hardwarestore/components/client/client_order_item_total.dart';
+import 'package:hardwarestore/components/client/order_items_confirmation.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/controllers/navigation.dart';
+import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -24,6 +28,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
   Order _data = Order();
+  bool hasDelivery = false;
   @override
   void initState() {
     super.initState();
@@ -94,12 +99,28 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                           return Row(
                             children: <Widget>[
                               TextButton(
-                                onPressed: () {},
-                                child: Text(translation!.cancel),
+                                onPressed: (_data.accountId == null ||
+                                        _data.accountId == 0 ||
+                                        _currentStep == 2)
+                                    ? null
+                                    : () {
+                                        continued();
+                                      },
+                                child: Text(translation!.proceed),
                               ),
                               TextButton(
-                                onPressed: () {},
-                                child: const Text('EXIT'),
+                                onPressed: () {
+                                  if (_currentStep == 0)
+                                    Provider.of<NavigationController>(context,
+                                            listen: false)
+                                        .changeScreen('/');
+                                  else {
+                                    back();
+                                  }
+                                },
+                                child: _currentStep > 0
+                                    ? Text(translation.back)
+                                    : Text(translation.cancel),
                               ),
                             ],
                           );
@@ -181,26 +202,113 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                             title: Text(translation.confirm),
                             content: Column(
                               children: <Widget>[
-                                TextFormField(
-                                  onChanged: (value) {
-                                    Provider.of<ClientEnvironment>(context,
-                                            listen: false)
-                                        .currentOrder!
-                                        .notes = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: translation.notes),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      translation.delivery,
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 0.0, left: 0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              translation.delivery,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineMedium,
+                                            ),
+                                            Checkbox(
+                                                value: hasDelivery,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    hasDelivery = value!;
+
+                                                    Repository()
+                                                        .getSingleProducts(
+                                                            '000000000')
+                                                        .then((value) {
+                                                      if (value != null) {
+                                                        OrderItem _delivery =
+                                                            OrderItem(
+                                                                productId: value
+                                                                    .first.id,
+                                                                quantity: 1,
+                                                                price: value
+                                                                    .first
+                                                                    .price,
+                                                                orderId:
+                                                                    _data.id);
+                                                        if (hasDelivery)
+                                                          Provider.of<ClientEnvironment>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .currentOrder!
+                                                              .orderItems!
+                                                              .add(_delivery);
+                                                        else
+                                                          Provider.of<ClientEnvironment>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .currentOrder!
+                                                              .orderItems!
+                                                              .removeWhere((element) =>
+                                                                  element
+                                                                      .productId ==
+                                                                  _delivery
+                                                                      .productId);
+                                                      }
+                                                    });
+                                                  });
+                                                }),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.65,
+                                              child: TextFormField(
+                                                onChanged: (value) {
+                                                  Provider.of<ClientEnvironment>(
+                                                          context,
+                                                          listen: false)
+                                                      .currentOrder!
+                                                      .notes = value;
+                                                },
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        translation.notes),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                    Checkbox(
-                                        value: false, onChanged: (value) {}),
-                                  ],
+                                  ),
                                 ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                          //   width: 4.0,
+                                          color: Colors.lightBlue.shade600),
+                                    ),
+                                    //color: Colors.white,
+                                  ),
+                                  alignment: Alignment.bottomRight,
+                                  child: Text(
+                                    translation.items,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                                ClientOrderItemsConfirmation(order: this._data),
+                                ClientOrderItemsTotal(order: this._data),
                                 ElevatedButton(
                                     onPressed: () {
                                       try {
@@ -268,7 +376,11 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
     _currentStep < 2 ? setState(() => _currentStep += 1) : null;
   }
 
-  cancel() {
+  back() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
+  }
+
+  cancel() {
+    NavigationController().changeScreen('/');
   }
 }

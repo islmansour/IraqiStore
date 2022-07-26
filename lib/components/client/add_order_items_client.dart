@@ -61,7 +61,7 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SingleChildScrollView(
         child: FutureBuilder<List<Product>?>(
-            future: Repository().getProducts(),
+            future: Repository().getVisibleProducts(),
             builder: (context, AsyncSnapshot<List<Product>?> productSnap) {
               if (productSnap.connectionState == ConnectionState.none &&
                   productSnap.hasData == null) {

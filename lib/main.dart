@@ -275,6 +275,7 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
     SharedPreferences.getInstance().then((value) {
       print(value.get('ipAddress').toString());
     });
+
     return FutureBuilder(
       // Initialize FlutterFire
       future: Firebase.initializeApp(),

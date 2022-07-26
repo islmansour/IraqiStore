@@ -221,12 +221,25 @@ class Repository {
     return productFromJson(response);
   }
 
+  Future<List<Product>?> getVisibleProducts() async {
+    final response = await _helper.get("/IraqiStore/product_list");
+    return productFromJson(response)
+        .where((element) => element.hidden == false)
+        .toList();
+  }
+
   Future<int>? upsertProduct(Product product) async {
     final response = await _helper.post(
         '/IraqiStore/upsert_product/' + product.id.toString(),
         body: product.toJson());
 
     return int.parse(response.toString());
+  }
+
+  Future<List<Product>?> getSingleProducts(String prod_num) async {
+    final response =
+        await _helper.get("/IraqiStore/single_product/" + prod_num);
+    return productFromJson(response);
   }
 
   /////////////////////////// END PRODUCT

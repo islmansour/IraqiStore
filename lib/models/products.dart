@@ -10,6 +10,7 @@ class Product {
   String? name;
   String? desc;
   String? alias;
+  bool? hidden;
   // ignore: non_constant_identifier_names
   int? created_by;
 
@@ -29,6 +30,7 @@ class Product {
       {this.active,
       this.alias,
       this.category,
+      this.hidden,
       // ignore: non_constant_identifier_names
       this.product_number,
       // ignore: non_constant_identifier_names
