@@ -40,7 +40,6 @@ class _AccountLegalFormsListState extends State<AccountLegalFormsList> {
                       itemBuilder: (context, index) {
                         return LegalFormMiniAdmin(item: snapshot.data![index]);
                       });
-                  return Container();
                 }),
                 future: Repository().getFormsByAccount(
                   widget.account!.id.toString(),

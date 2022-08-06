@@ -34,7 +34,7 @@ class _ClientOrderItemsTotalState extends State<ClientOrderItemsTotal> {
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(width: 4.0, color: Colors.lightBlue.shade600),
+          top: BorderSide(width: 4.0, color: Colors.redAccent),
         ),
         //color: Colors.white,
       ),
@@ -49,7 +49,7 @@ class _ClientOrderItemsTotalState extends State<ClientOrderItemsTotal> {
               children: [
                 Text(
                   translation!.totalAmount,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   width: 0,

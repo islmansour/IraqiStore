@@ -21,11 +21,11 @@ class _NewsListState extends State<NewsList> {
               return ListTile(
                 subtitle: Text(Provider.of<CurrentNewsUpdates>(context)
                     .activeNews[index]
-                    .desc),
+                    .desc!),
                 title: Text(DateFormat.MEd().format(
                     Provider.of<CurrentNewsUpdates>(context)
                         .activeNews[index]
-                        .date)),
+                        .date!)),
               );
             })
         : const Text('אין חדשות');
@@ -35,7 +35,7 @@ class _NewsListState extends State<NewsList> {
 class CurrentNewsUpdates extends ChangeNotifier {
   List<News> activeNews = [];
   void changeNews(News newNews) {
-    newNews.desc = newNews.desc + " " + activeNews.length.toString();
+    newNews.desc = newNews.desc! + " " + activeNews.length.toString();
     activeNews.add((newNews));
     notifyListeners();
   }

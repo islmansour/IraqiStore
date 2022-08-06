@@ -52,7 +52,7 @@ class _OrderItemClientState extends State<OrderItemClient> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
           decoration: BoxDecoration(
-              border: Border.all(width: 0.5, color: Colors.lightBlue.shade400),
+              border: Border.all(width: 0.5, color: Colors.redAccent.shade400),
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(20),
                   bottomLeft: Radius.circular(20),

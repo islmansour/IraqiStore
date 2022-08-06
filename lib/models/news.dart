@@ -6,12 +6,16 @@ part 'news.g.dart';
 
 @JsonSerializable()
 class News {
-  String id;
-  String desc;
-  DateTime date;
-  bool active;
+  String? url;
+  int? id;
+  String? desc;
+  DateTime? date;
+  bool? active;
+  int? productId;
+  DateTime created;
 
-  News(this.id, this.desc, this.active, this.date);
+  News(this.id, this.desc, this.active, this.date, this.url, this.productId,
+      this.created);
 
   factory News.fromJson(Map<String, dynamic> json) => _$NewsFromJson(json);
 

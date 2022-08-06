@@ -69,13 +69,13 @@ class _categoriesFilterState extends State<CategoriesFilter> {
                                     .searchCategory ==
                                 _categories[index].name!
                             ? Colors.green
-                            : Colors.blue,
+                            : Colors.redAccent,
                         border: Border.all(
                           color: Provider.of<CategoryFilterNotifier>(context)
                                       .searchCategory ==
                                   _categories[index].name!
                               ? Colors.green
-                              : Colors.blue,
+                              : Colors.redAccent,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: TextButton(

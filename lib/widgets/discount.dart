@@ -35,7 +35,8 @@ class ShowDiscount extends StatelessWidget {
         ),
       ]),
       margin: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+      decoration:
+          BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
     );
   }
 }

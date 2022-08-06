@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
+import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:http/http.dart' as http;
@@ -170,6 +171,12 @@ class Repository {
 /////////////////////////// START ORDERS
   Future<List<Order>?> getOrders() async {
     final response = await _helper.get("/IraqiStore/order_list");
+    return orderFromJson(response);
+  }
+
+  Future<List<Order>?> getOrdersByUser(int? userId) async {
+    final response =
+        await _helper.get("/IraqiStore/order_list_by_contact/${userId}");
     return orderFromJson(response);
   }
 
@@ -384,7 +391,17 @@ class Repository {
     final response = await _helper.get("/IraqiStore/lov");
     return lovFromJson(response);
   }
+
   /////////////////////////// END RELATED LIST OF VALUES
+
+//////////////////// START OF NEWS DATA//////////////////
+  ///
+  Future<List<News>?> getActiveNews() async {
+    final response = await _helper.get("/IraqiStore/active_news_list");
+    return newsFromJson(response);
+  }
+
+  ///
 
   /////////////////////////// START USERS
   Future<List<AppUser>?> getUser(String id) async {

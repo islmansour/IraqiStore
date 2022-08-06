@@ -76,9 +76,9 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Colors.redAccent,
                             border: Border.all(
-                              color: Colors.blue,
+                              color: Colors.redAccent,
                             ),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
@@ -135,7 +135,7 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
                                 border: InputBorder.none,
                               ),
                               style: const TextStyle(
-                                color: Colors.blue,
+                                color: Colors.redAccent,
                               ),
                             ),
                           )

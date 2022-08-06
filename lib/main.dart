@@ -10,6 +10,7 @@ import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
+import 'package:hardwarestore/screens/client/client_all_orders_screen.dart';
 import 'package:hardwarestore/screens/client/client_home.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/screens/login_page.dart';
@@ -284,7 +285,6 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
         if (snapshot.hasError) {
           print('error');
         }
-
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return OverlaySupport(
@@ -350,7 +350,11 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                     labelSmall: TextStyle(fontSize: 12.0, color: Colors.grey),
                     labelMedium: TextStyle(
                         fontSize: 14.0,
-                        color: Colors.deepOrangeAccent,
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold),
+                    labelLarge: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.lightBlue,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -396,6 +400,8 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                       const MaterialPage(child: SettingsScreen()),
                     if (navigation.screenName == '/login')
                       MaterialPage(child: LoginPage()),
+                    if (navigation.screenName == '/client-orders')
+                      MaterialPage(child: ClientOrdersScreen()),
                   ],
                   onPopPage: (route, result) {
                     bool popStatus = (route.didPop(result));

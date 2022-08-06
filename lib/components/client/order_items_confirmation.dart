@@ -59,15 +59,20 @@ class _ClientOrderItemsConfirmationState
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_quantity!),
+                        Text(_quantity!,
+                            style: Theme.of(context).textTheme.bodyMedium),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(_price),
+                        Text(_price,
+                            style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
                   ),
-                  title: Text(_name!)),
+                  title: Text(
+                    _name!,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )),
             );
           }),
     );

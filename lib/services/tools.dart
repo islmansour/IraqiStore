@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/account.dart';
+import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/models/quote_item.dart';
 import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/services/api.dart';
@@ -18,10 +19,20 @@ import '../models/products.dart';
 import '../models/quote.dart';
 
 class ClientEnvironment extends ChangeNotifier {
-  Order? _currentOrder = Order();
+  Order? theCurrentOrder;
 
-  set currentOrder(Order? order) => _currentOrder = order;
-  Order? get currentOrder => _currentOrder;
+  set currentOrder(Order? order) => theCurrentOrder = order;
+  Order? get currentOrder => theCurrentOrder;
+
+  resetCurrentOrder() {
+    theCurrentOrder = null;
+    notifyListeners();
+  }
+
+  initCurrentOrder() {
+    theCurrentOrder = Order();
+    notifyListeners();
+  }
 }
 
 class EntityModification extends ChangeNotifier {
@@ -200,6 +211,18 @@ class EntityModification extends ChangeNotifier {
 
   refreshDeliveriesFromDB() async {
     _deliveries = (await Repository().getDeliverys())!;
+    notifyListeners();
+  }
+
+  List<News> _news = [];
+  List<News> get activeNews => _news;
+  set activeNews(List<News> initNews) {
+    // a setter to set the list of global orders.
+    _news = initNews;
+  }
+
+  refreshActiveNewsFromDB() async {
+    _news = (await Repository().getActiveNews())!;
     notifyListeners();
   }
 

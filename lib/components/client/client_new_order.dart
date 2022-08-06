@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import '../../models/account.dart';
 
 class NewOrderStepper extends StatefulWidget {
-  bool newRecord = false;
   NewOrderStepper({Key? key}) : super(key: key);
 
   @override
@@ -65,13 +64,14 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            !widget.newRecord
+            Provider.of<ClientEnvironment>(context).theCurrentOrder == null
                 ? Padding(
                     padding: const EdgeInsets.only(top: 100.0),
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          widget.newRecord = true;
+                          Provider.of<ClientEnvironment>(context, listen: false)
+                              .initCurrentOrder();
                         });
                       },
                       child: Card(
@@ -93,7 +93,8 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                     child: Theme(
                       data: ThemeData(
                           colorScheme: ColorScheme.light(
-                              primary: Colors.blue, secondary: Colors.green)),
+                              primary: Colors.redAccent,
+                              secondary: Colors.green)),
                       child: Stepper(
                         controlsBuilder: (context, _) {
                           return Row(
@@ -110,11 +111,14 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  if (_currentStep == 0)
+                                  if (_currentStep == 0) {
                                     Provider.of<NavigationController>(context,
                                             listen: false)
                                         .changeScreen('/');
-                                  else {
+                                    Provider.of<ClientEnvironment>(context,
+                                            listen: false)
+                                        .resetCurrentOrder();
+                                  } else {
                                     back();
                                   }
                                 },
@@ -148,7 +152,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                               const Icon(
                                                 Icons.people,
                                                 size: 14,
-                                                color: Colors.lightBlue,
+                                                color: Colors.redAccent,
                                               ),
                                               const Text(' '),
                                               Text(
@@ -164,6 +168,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                       // do other stuff with _category
                                       try {
                                         setState(() {
+                                          _data.status = 'new';
                                           _data.accountId =
                                               int.parse(newValue.toString());
                                         });
@@ -296,7 +301,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                     border: Border(
                                       bottom: BorderSide(
                                           //   width: 4.0,
-                                          color: Colors.lightBlue.shade600),
+                                          color: Colors.redAccent),
                                     ),
                                     //color: Colors.white,
                                   ),
@@ -304,7 +309,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                   child: Text(
                                     translation.items,
                                     style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                        Theme.of(context).textTheme.labelMedium,
                                   ),
                                 ),
                                 ClientOrderItemsConfirmation(order: this._data),
@@ -327,8 +332,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                             Provider.of<ClientEnvironment>(
                                                     context,
                                                     listen: false)
-                                                .currentOrder!
-                                                .id = value;
+                                                .resetCurrentOrder();
                                           });
                                           Navigator.pop(context);
                                           // Save our form now.

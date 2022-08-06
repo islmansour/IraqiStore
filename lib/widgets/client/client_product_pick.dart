@@ -75,36 +75,6 @@ class _ProductPickState extends State<ClientProductPick> {
       Provider.of<ClientEnvironment>(context, listen: false).currentOrder =
           order;
 
-      // // adding a new product to the order items of the order.
-      // if (newItem) {
-      //   if (quantity == 0) return;
-
-      //   orderItem = OrderItem();
-      //   orderItem.id = 0;
-      //   orderItem.productId = widget.item.id;
-      //   orderItem.quantity = quantity.toDouble();
-      //   orderItem.discount = widget.item.discount;
-      //   orderItem.price = (widget.item.price! -
-      //           (widget.item.price! * widget.item.discount! / 100)) *
-      //       quantity.toDouble();
-      //   orderItem.created_by =
-      //       Provider.of<GetCurrentUser>(context, listen: false).currentUser?.id;
-      //   //  orderItem.orderId = order.id;
-
-      //   Provider.of<EntityModification>(context, listen: false)
-      //       .order
-      //       .where((element) => element.id == order.id)
-      //       .first
-      //       .tmpItems ??= <OrderItem>[];
-
-      //   //once the new item is ready, add it to the order we are working on.
-      //   Provider.of<EntityModification>(context, listen: false)
-      //       .order
-      //       .where((element) => element.id == order.id)
-      //       .first
-      //       .tmpItems
-      //       ?.add(orderItem);
-      // }
       setState(() {});
     } catch (e) {
       print(e);
@@ -120,7 +90,6 @@ class _ProductPickState extends State<ClientProductPick> {
 
   @override
   Widget build(BuildContext context) {
-    // this is used to determine the currency
     var format = NumberFormat.simpleCurrency(locale: 'he');
     OrderItem? orderItem = OrderItem(productId: widget.item.id);
     var translation = AppLocalizations.of(context);
@@ -158,7 +127,7 @@ class _ProductPickState extends State<ClientProductPick> {
           ),
           Container(
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue.withOpacity(0.1)),
+                border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             width: MediaQuery.of(context).size.width * 0.80,
             child: Padding(
@@ -205,7 +174,8 @@ class _ProductPickState extends State<ClientProductPick> {
                 Container(
                   height: 120,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue.withOpacity(0.1)),
+                      border:
+                          Border.all(color: Colors.redAccent.withOpacity(0.3)),
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Padding(
@@ -225,7 +195,8 @@ class _ProductPickState extends State<ClientProductPick> {
                   alignment: Alignment.center,
                   height: 80,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue.withOpacity(0.1)),
+                      border:
+                          Border.all(color: Colors.redAccent.withOpacity(0.3)),
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   width: MediaQuery.of(context).size.width * 0.15,
                   child: TextFormField(

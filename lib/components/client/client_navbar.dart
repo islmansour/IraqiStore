@@ -14,8 +14,10 @@ class ClientBottomNav extends StatelessWidget {
     var translation = AppLocalizations.of(context);
     NavigationController navigation =
         Provider.of<NavigationController>(context, listen: false);
+
     return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
+      type: BottomNavigationBarType.fixed, // Fixed
+      selectedItemColor: Colors.redAccent,
       currentIndex: activeButtonIndex,
       onTap: (buttonIndex) {
         switch (buttonIndex) {
@@ -23,14 +25,14 @@ class ClientBottomNav extends StatelessWidget {
             navigation.changeScreen('/');
             break;
           case 1:
-            navigation.changeScreen('/orders');
+            navigation.changeScreen('/client-orders');
             break;
 
           case 2:
-            navigation.changeScreen('/manage');
+            navigation.changeScreen('/client-manage');
             break;
           case 3:
-            navigation.changeScreen('/chat');
+            navigation.changeScreen('/client-chat');
             break;
           case 9:
             navigation.changeScreen('/login');
@@ -39,7 +41,10 @@ class ClientBottomNav extends StatelessWidget {
       },
       items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.home), label: translation!.home),
+            icon: Icon(
+              Icons.home,
+            ),
+            label: translation!.home),
         BottomNavigationBarItem(
             icon: Icon(Icons.history), label: translation.orders),
         BottomNavigationBarItem(

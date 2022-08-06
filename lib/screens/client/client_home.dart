@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/screens/settings.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/widgets/client/client_home_news.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/client/client_navbar.dart';
@@ -20,6 +21,7 @@ class _ClientHomeState extends State<ClientHome> {
   void initState() {
     setState(() {
       setState(() {
+        _loadActiveNews(context);
         _loadAccounts(context);
 
         _loadContacts(context);
@@ -38,6 +40,7 @@ class _ClientHomeState extends State<ClientHome> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.redAccent,
           leading: IconButton(
             icon: Icon(Icons.portrait_outlined),
             onPressed: () {
@@ -56,15 +59,17 @@ class _ClientHomeState extends State<ClientHome> {
             width: double.infinity,
             child: SingleChildScrollView(
               child: Column(children: [
-                Row(
-                  children: [NewOrderStepper()],
-                ), //operational row
+                if (Provider.of<ClientEnvironment>(context).theCurrentOrder ==
+                    null)
+                  Row(
+                    children: [ClientHomeNews()],
+                  ), //operational row
                 Row(
                   children: [],
                 ), //News
 
                 Row(
-                  children: [],
+                  children: [NewOrderStepper()],
                 ), //latest orders
               ]),
             )),
@@ -112,4 +117,9 @@ void _loadUsers(BuildContext context) async {
 void _loadLovs(BuildContext context) async {
   await Provider.of<EntityModification>(context, listen: false)
       .refreshLOVFromDB();
+}
+
+void _loadActiveNews(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshActiveNewsFromDB();
 }
