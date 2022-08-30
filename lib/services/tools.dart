@@ -29,6 +29,10 @@ class ClientEnvironment extends ChangeNotifier {
     notifyListeners();
   }
 
+  updateScreens() {
+    notifyListeners();
+  }
+
   initCurrentOrder() {
     theCurrentOrder = Order();
     notifyListeners();
@@ -91,7 +95,6 @@ class EntityModification extends ChangeNotifier {
   }
 
   Future<List<QuoteItem>?> getQuoteItemsForOrder(int quoteId) async {
-    //return DjangoServices().getQuoteItems(quoteId);
     return Repository().getQuoteItems(quoteId);
   }
 
@@ -139,11 +142,14 @@ class EntityModification extends ChangeNotifier {
   }
 
   void updateAccount(Account update) {
-    _accounts.removeWhere((element) => element.id == update.id);
+    try {
+      _accounts.removeWhere((element) => element.id == update.id);
 
-    _accounts.add(update);
-    _accounts.sort((a, b) => a.account_number!.compareTo(b.account_number!));
-
+      _accounts.add(update);
+      //  _accounts.sort((a, b) => a.account_number!.compareTo(b.account_number!));
+    } catch (e) {
+      throw "EntityModification: $e";
+    }
     notifyListeners();
   }
 
@@ -223,6 +229,17 @@ class EntityModification extends ChangeNotifier {
 
   refreshActiveNewsFromDB() async {
     _news = (await Repository().getActiveNews())!;
+    notifyListeners();
+  }
+
+  List<News> _allNews = [];
+  List<News> get allNews => _allNews;
+  set allNews(List<News> initNews) {
+    _allNews = initNews;
+  }
+
+  refreshAllNewsFromDB() async {
+    _allNews = (await Repository().getNews())!;
     notifyListeners();
   }
 

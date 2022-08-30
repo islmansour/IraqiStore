@@ -102,7 +102,7 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                             auth
                                 .signInWithCredential(_credential)
                                 .then((UserCredential result) {
-                              print(result.user!.uid);
+                              // print(result.user!.uid);
                               // There is a provider that hold current user
                               // Once a user is authenticated, call django send the uid and get the user object back.
                               Repository().getUser(result.user!.uid).then(

@@ -3,6 +3,7 @@ import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +12,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProductPick extends StatefulWidget {
   final Product item;
-  final int orderId;
+  //final int orderId;
 
-  const ProductPick({Key? key, required this.item, required this.orderId})
-      : super(key: key);
+  const ProductPick({
+    Key? key,
+    required this.item,
+    /*required this.orderId*/
+  }) : super(key: key);
 
   @override
   State<ProductPick> createState() => _ProductPickState();
@@ -29,11 +33,11 @@ class _ProductPickState extends State<ProductPick> {
   void addToOrderItem(Order order, OrderItem? orderItem) {
     try {
       // need to add error handling, can not be on this widget with no orders in the system.
-      if (Provider.of<EntityModification>(context, listen: false).order ==
-          null) {
-        print('error while adding items to an order, order is null');
-        return;
-      }
+      // if (Provider.of<EntityModification>(context, listen: false).order ==
+      //     null) {
+      //   print('error while adding items to an order, order is null');
+      //   return;
+      // }
 
       setState(() {
         bool newItem = true;
@@ -85,17 +89,25 @@ class _ProductPickState extends State<ProductPick> {
           orderItem?.orderId = order.id;
 
           // if Order has a null orderItems, initiate it.
-          Provider.of<EntityModification>(context, listen: false)
-              .order
-              .where((element) => element.id == order.id)
-              .first
-              .tmpItems ??= <OrderItem>[];
+          // Provider.of<EntityModification>(context, listen: false)
+          //     .order
+          //     .where((element) => element.id == order.id)
+          //     .first
+          //     .tmpItems ??= <OrderItem>[];
 
           //once the new item is ready, add it to the order we are working on.
-          Provider.of<EntityModification>(context, listen: false)
-              .order
-              .where((element) => element.id == order.id)
-              .first
+          // Provider.of<EntityModification>(context, listen: false)
+          //     .order
+          //     .where((element) => element.id == order.id)
+          //     .first
+          //     .tmpItems
+          //     ?.add(orderItem!);
+          Provider.of<ClientEnvironment>(context, listen: false)
+              .currentOrder!
+              .tmpItems ??= <OrderItem>[];
+
+          Provider.of<ClientEnvironment>(context, listen: false)
+              .currentOrder!
               .tmpItems
               ?.add(orderItem!);
         }
@@ -113,22 +125,23 @@ class _ProductPickState extends State<ProductPick> {
     OrderItem? orderItem;
     Order? order;
     try {
-      order = Provider.of<EntityModification>(context)
-          .order
-          .where((element) => element.id == widget.orderId)
-          .first;
+      // order = Provider.of<EntityModification>(context)
+      //     .order
+      //     .where((element) => element.id == widget.orderId)
+      //     .first;
+
+      order =
+          Provider.of<ClientEnvironment>(context, listen: false).currentOrder;
 
       // if product is already in order, take it's data and put then in the instance of the orderItem in this widget.
       // This will allow showing the quantity that is already been added to the item.
-      order.orderItems?.forEach(
+      order!.orderItems?.forEach(
         (item) {
           if (item.productId == widget.item.id) orderItem = item;
         },
       );
     } catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content:
-              Text(AppLocalizations.of(context)!.errorCreatingProductScreen)));
+      print(e);
     }
 
     return Padding(

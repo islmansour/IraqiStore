@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +10,8 @@ import '../services/search.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddItemToOrder extends StatefulWidget {
-  final int? orderId;
-  const AddItemToOrder({Key? key, required this.orderId}) : super(key: key);
+  final Order? order;
+  const AddItemToOrder({Key? key, required this.order}) : super(key: key);
 
   @override
   State<AddItemToOrder> createState() => _AddItemToOrderState();
@@ -32,22 +31,14 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
   Widget build(BuildContext context) {
     Order? _order = Order();
     try {
-      _order = Provider.of<EntityModification>(context)
-          .order
-          .where(
-            (order) => order.id == widget.orderId,
-          )
-          .first;
-
 // prepare tmpItems for modifications. This variable will allow user cancel the operation and not have it confirmed when working with widget ProductPick.
 // In this file, right at the end, there is a confirm button. This buttom will take the tmpItems , merge them with the current orderitems then updade the db.
-      Provider.of<EntityModification>(context)
-          .order
-          .where(
-            (order) => order.id == widget.orderId,
-          )
-          .first
-          .initOrderItems();
+      // Provider.of<ClientEnvironment>(context, listen: false)
+      //     .currentOrder!
+      //     .initOrderItems();
+      _order =
+          Provider.of<ClientEnvironment>(context, listen: false).currentOrder;
+      _order!.initOrderItems();
     } catch (e) {}
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -146,7 +137,7 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                                     item: searchSnap
                                                         .data![index]
                                                         .item as Product,
-                                                    orderId: widget.orderId!,
+                                                    // orderId: widget.order!.id,
                                                   );
                                                   break;
                                               }
@@ -166,48 +157,62 @@ class _AddItemToOrderState extends State<AddItemToOrder> {
                                   itemCount: productSnap.data?.length ?? 0,
                                   itemBuilder: (context, index) {
                                     return ProductPick(
-                                        item: productSnap.data![index],
-                                        orderId: widget.orderId!);
+                                      item: productSnap.data![index],
+                                      //  orderId: widget.order!.id
+                                    );
                                   }))),
                     TextButton(
                         onPressed: () {
                           try {
                             if (_order!.isReadOnly) return null;
-                            Provider.of<EntityModification>(context,
-                                    listen: false)
-                                .order
-                                .where(
-                                    (element) => element.id == widget.orderId)
-                                .first
-                                .confirmOrder();
 
-                            Provider.of<EntityModification>(context,
+                            _order.confirmOrder();
+                            Provider.of<ClientEnvironment>(context,
                                     listen: false)
-                                .order
-                                .where(
-                                    (element) => element.id == widget.orderId)
-                                .first
-                                .orderItems
-                                ?.forEach((item) {
-                              Order? x = Provider.of<EntityModification>(
-                                      context,
-                                      listen: false)
-                                  .order
-                                  .where(
-                                      (element) => element.id == widget.orderId)
-                                  .first;
-                              // DjangoServices()
-                              Repository().upsertOrderItem(item)?.then((value) {
-                                item.id = value;
-                                Provider.of<EntityModification>(context,
-                                        listen: false)
-                                    .update(x);
-                              });
+                                .currentOrder = _order;
 
-                              Provider.of<EntityModification>(context,
-                                      listen: false)
-                                  .update(x);
-                            });
+                            if (_order.id > 0) {
+                              Repository().upsertOrderV2(_order);
+                            }
+                            Provider.of<ClientEnvironment>(context,
+                                    listen: false)
+                                .updateScreens();
+
+                            // Provider.of<EntityModification>(context,
+                            //         listen: false)
+                            //     .order
+                            //     .where(
+                            //         (element) => element.id == widget.order!.id)
+                            //     .first
+                            //     .confirmOrder();
+
+                            // Provider.of<EntityModification>(context,
+                            //         listen: false)
+                            //     .order
+                            //     .where(
+                            //         (element) => element.id == widget.order!.id)
+                            //     .first
+                            //     .orderItems
+                            //     ?.forEach((item) {
+                            //   Order? x = Provider.of<EntityModification>(
+                            //           context,
+                            //           listen: false)
+                            //       .order
+                            //       .where((element) =>
+                            //           element.id == widget.order!.id)
+                            //       .first;
+                            //   // DjangoServices()
+                            //   Repository().upsertOrderItem(item)?.then((value) {
+                            //     item.id = value;
+                            //     Provider.of<EntityModification>(context,
+                            //             listen: false)
+                            //         .update(x);
+                            //   });
+
+                            //   Provider.of<EntityModification>(context,
+                            //           listen: false)
+                            //       .update(x);
+                            // });
                           } catch (e) {}
                           Navigator.pop(context);
                         },

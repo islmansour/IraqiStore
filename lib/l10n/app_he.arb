@@ -11,7 +11,7 @@
   "delivered": "נמסרה",
   "Confirm": "אישור",
   "search": "חפש...",
-  "business": "עיראקי",
+  "business": "בלוק עיראקי",
   "order": "הזמנה",
   "orders": "הזמנות",
   "account": "לקוח",
@@ -81,5 +81,11 @@
   "proceed": "הבא",
   "back": "חזרה",
   "items": "פרטים",
-  "noRecords": "אין פרטים"
+  "noRecords": "אין פרטים",
+  "news": "פרסומות",
+  "writeDescription": "מה תוכן הפרסומת שלך...",
+  "chooseImage": "בחר תמונה",
+  "notifications": "התראות",
+  "new": "חדש",
+  "appUser": "משתמש"
 }

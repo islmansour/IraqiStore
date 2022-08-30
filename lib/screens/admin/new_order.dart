@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
 import 'package:hardwarestore/models/account.dart';
@@ -29,43 +30,61 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
     try {
       // First validate form.
       if (_formKey.currentState!.validate()) {
-        _formKey.currentState?.save();
-        //DjangoServices().upsertOrder(_data)?.then((value) {
-        Repository().upsertOrder(_data)?.then((value) {
+        // _formKey.currentState?.save();
+        // //DjangoServices().upsertOrder(_data)?.then((value) {
+        _data = Provider.of<ClientEnvironment>(context, listen: false)
+            .currentOrder!;
+        Repository().upsertOrderV2(_data)?.then((value) {
           _data.id == value;
-          Provider.of<EntityModification>(context, listen: false).update(_data);
+          Repository().getSingleOrder(value).then((newOrder) {
+            // not using data.id = newOrder!.first because I want to keep order items that were added. The  getSingleOrder returns the order itself without the items.
+            //
+            _data.id = newOrder!.first.id;
+            _data.order_number = newOrder.first.order_number;
+            _data.created = newOrder.first.created;
+
+            Provider.of<EntityModification>(context, listen: false)
+                .update(_data);
+          });
         });
+        Provider.of<ClientEnvironment>(context, listen: false).currentOrder =
+            null;
         Navigator.pop(context);
         // Save our form now.
       }
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
-          const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
+      // Scaffold.of(context).showSnackBar(
+      //     const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
     }
   }
 
   void submitProducts() {
     try {
-      // First validate form.
       if (_formKey.currentState!.validate()) {
         _formKey.currentState?.save();
-        //DjangoServices().upsertOrder(_data)?.then((value) {
-        Repository().upsertOrder(_data)?.then((value) {
-          _data.id == value;
-          Provider.of<EntityModification>(context, listen: false).update(_data);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      AddItemToOrder(orderId: _data.id)));
-        });
+        // Repository().upsertOrderV2(_data)?.then((value) {
+        //   _data.id == value;
+        //   Provider.of<EntityModification>(context, listen: false).update(_data);
+        //   Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (BuildContext context) =>
+        //               AddItemToOrder(orderId: _data.id)));
+        // });
 
-        // Save our form now.
+        Provider.of<ClientEnvironment>(context, listen: false).currentOrder =
+            _data;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    AddItemToOrder(order: _data)));
       }
     } catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content:
-              Text(AppLocalizations.of(context)!.errorCreatingProductScreen)));
+      print('CreateNewOrderForm: $e');
+      // Scaffold.of(context).showSnackBar(SnackBar(
+      //     content:
+      //         Text(AppLocalizations.of(context)!.errorCreatingProductScreen)));
     }
   }
 
@@ -247,7 +266,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                       child: ElevatedButton(
                         child: Text(
                           translation.addProduct,
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(color: Colors.white),
                         ),
                         onPressed: submitProducts,
                       ),
@@ -258,7 +277,7 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                       child: ElevatedButton(
                         child: Text(
                           translation.save,
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(color: Colors.white),
                         ),
                         onPressed: submit,
                       ),

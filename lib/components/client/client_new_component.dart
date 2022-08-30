@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/admin/lov.dart';
-import 'package:hardwarestore/models/lov.dart';
+
 import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/widgets/client/client_news_card.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ClientNewsComponent extends StatefulWidget {
   ClientNewsComponent({Key? key}) : super(key: key);

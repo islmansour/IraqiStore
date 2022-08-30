@@ -3,28 +3,28 @@ import '../models/news.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class NewsList extends StatefulWidget {
-  NewsList({Key? key}) : super(key: key);
+class xNewsList extends StatefulWidget {
+  xNewsList({Key? key}) : super(key: key);
 
   @override
-  State<NewsList> createState() => _NewsListState();
+  State<xNewsList> createState() => _xNewsListState();
 }
 
-class _NewsListState extends State<NewsList> {
+class _xNewsListState extends State<xNewsList> {
   @override
   Widget build(BuildContext context) {
-    return Provider.of<CurrentNewsUpdates>(context).activeNews.isNotEmpty
+    return Provider.of<CurrentNewsUpdates>(context).activexNews.isNotEmpty
         ? ListView.builder(
             itemCount:
-                Provider.of<CurrentNewsUpdates>(context).activeNews.length,
+                Provider.of<CurrentNewsUpdates>(context).activexNews.length,
             itemBuilder: (context, index) {
               return ListTile(
                 subtitle: Text(Provider.of<CurrentNewsUpdates>(context)
-                    .activeNews[index]
+                    .activexNews[index]
                     .desc!),
                 title: Text(DateFormat.MEd().format(
                     Provider.of<CurrentNewsUpdates>(context)
-                        .activeNews[index]
+                        .activexNews[index]
                         .date!)),
               );
             })
@@ -33,10 +33,10 @@ class _NewsListState extends State<NewsList> {
 }
 
 class CurrentNewsUpdates extends ChangeNotifier {
-  List<News> activeNews = [];
-  void changeNews(News newNews) {
-    newNews.desc = newNews.desc! + " " + activeNews.length.toString();
-    activeNews.add((newNews));
+  List<News> activexNews = [];
+  void changexNews(News newxNews) {
+    newxNews.desc = newxNews.desc! + " " + activexNews.length.toString();
+    activexNews.add((newxNews));
     notifyListeners();
   }
 }

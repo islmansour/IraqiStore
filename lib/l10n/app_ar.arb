@@ -11,7 +11,7 @@
   "helloWorld": "",
   "search": "بحث...",
   "confirm": "تأكيد",
-  "business": "عراقي",
+  "business": "بلوك عراقي",
   "order": "طلبية",
   "orders": "طلبيات",
   "account": "حساب",
@@ -80,5 +80,9 @@
   "proceed": "التالي",
   "back": "رجوع",
   "items": "بضاعة",
-  "noRecords": "لم تختار بضاعة"
+  "noRecords": "لم تختار بضاعة",
+  "news": "دعايات",
+  "writeDescription": "اكتب فحوى الدعاية...",
+  "chooseImage": "اختر صورة",
+  "appUser": "مستخدم"
 }

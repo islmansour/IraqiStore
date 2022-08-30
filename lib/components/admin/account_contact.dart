@@ -72,16 +72,18 @@ class _AccountContactsListState extends State<AccountContactsList> {
                     Icons.add,
                     size: 35,
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateAccountContactForm(
-                                // CreateNewContactForm(
-                                account: widget.account,
-                              )),
-                    );
-                  },
+                  onPressed: widget.account == null
+                      ? null
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateAccountContactForm(
+                                      // CreateNewContactForm(
+                                      account: widget.account,
+                                    )),
+                          );
+                        },
                 ),
               )),
         )

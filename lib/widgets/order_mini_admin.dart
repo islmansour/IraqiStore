@@ -61,6 +61,8 @@ class _OrderMiniAdminState extends State<OrderMiniAdmin> {
     );
     return InkWell(
       onTap: () {
+        Provider.of<ClientEnvironment>(context, listen: false).currentOrder =
+            widget.item;
         Navigator.push(
           context,
           MaterialPageRoute(

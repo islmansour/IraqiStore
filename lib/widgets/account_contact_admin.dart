@@ -108,6 +108,8 @@ class _AccountContactFromState extends State<AccountContactFrom> {
                                 widget.account?.accountContacts!
                                     .add(widget.item);
                                 AccountContact ac = AccountContact(
+                                    active: true,
+                                    id: -1,
                                     accountId: widget.account?.id,
                                     contactId: widget.item.id);
                                 Repository().insertAccountContact(ac);

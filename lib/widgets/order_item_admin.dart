@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/order_item.dart';
 import 'package:hardwarestore/models/products.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

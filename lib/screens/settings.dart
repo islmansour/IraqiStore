@@ -7,6 +7,7 @@ import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -17,9 +18,19 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Contact? _data = Contact();
+  SharedPreferences? _prefs;
+  String? env = "";
+
+  _getInvIp() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      env = _prefs!.getString("ipAddress");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _getInvIp();
     String? _lang = "";
     var translation = AppLocalizations.of(context);
     try {
@@ -98,6 +109,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+            ),
+            Text(
+              '$env',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -205,7 +219,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('username', "");
                   FirebaseAuth auth = FirebaseAuth.instance;
                   setState(() {
                     NavigationController navigation =

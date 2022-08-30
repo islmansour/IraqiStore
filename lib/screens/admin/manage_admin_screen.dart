@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:hardwarestore/components/navbaradmin.dart';
+
 import 'package:hardwarestore/screens/admin/accounts_screen.dart';
+import 'package:hardwarestore/screens/admin/all_news_scree.dart';
 import 'package:hardwarestore/screens/admin/all_quotes_screen.dart';
 import 'package:hardwarestore/screens/admin/users_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -312,27 +315,46 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                       )
                     ],
                   )),
-              // Card(
-              //     //statistics
-              //     elevation: 10,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(150),
-              //     ),
-              //     child: Container(
-              //         child: IconButton(
-              //           icon: const Icon(
-              //             Icons.bar_chart,
-              //             color: Colors.blue,
-              //             size: 50,
-              //           ),
-              //           onPressed: () {},
-              //         ),
-              //         width: 80,
-              //         height: 80,
-              //         decoration: const BoxDecoration(
-              //             // The child of a round Card should be in round shape
-              //             shape: BoxShape.circle,
-              //             color: Colors.white))),
+              Card(
+                  //profile setting
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.newspaper,
+                              color: Colors.blue,
+                              size: 40,
+                            ),
+                            onPressed: () {
+                              try {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AllNewsScreen()),
+                                );
+                              } catch (e) {}
+                            },
+                          ),
+                          width: 80,
+                          height: 45,
+                          decoration: const BoxDecoration(
+                              // The child of a round Card should be in round shape
+                              shape: BoxShape.circle,
+                              color: Colors.white)),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: Text(
+                          AppLocalizations.of(context)!.news,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      )
+                    ],
+                  )),
             ],
           )
         ],

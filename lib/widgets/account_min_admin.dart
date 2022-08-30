@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/contact.dart';
+
 import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/screens/admin/new_account.dart';
 import 'package:hardwarestore/services/tools.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,18 +24,20 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
   Widget build(BuildContext context) {
     var translation = AppLocalizations.of(context);
     if (widget.item.contactId != null &&
-        Provider.of<EntityModification>(context).contacts != null &&
         Provider.of<EntityModification>(context).contacts.isNotEmpty &&
         Provider.of<EntityModification>(context)
-                .contacts
-                .where((element) => element.id == widget.item.contactId) !=
-            null) {
-      accountContact = Provider.of<EntityModification>(context)
-          .contacts
-          .where((element) => element.id == widget.item.contactId)
-          .first;
+            .contacts
+            .where((element) => element.id == widget.item.contactId)
+            .isNotEmpty) {
+      try {
+        accountContact = Provider.of<EntityModification>(context)
+            .contacts
+            .where((element) => element.id == widget.item.contactId)
+            .first;
+      } catch (e) {
+        throw "$e";
+      }
     }
-    var format = NumberFormat.simpleCurrency(locale: 'he');
     return InkWell(
       onTap: () {
         Navigator.push(

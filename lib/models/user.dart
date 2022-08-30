@@ -47,10 +47,18 @@ class AppUser {
   }
 
   Contact userContactDetails(BuildContext context) {
-    return Provider.of<EntityModification>(context)
+    Contact _tmp = Contact();
+
+    if (Provider.of<EntityModification>(context)
         .contacts
         .where((element) => element.id == contactId)
-        .first;
+        .isNotEmpty)
+      _tmp = Provider.of<EntityModification>(context)
+          .contacts
+          .where((element) => element.id == contactId)
+          .first;
+
+    return _tmp;
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) =>

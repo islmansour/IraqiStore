@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hardwarestore/models/contact.dart';
@@ -11,7 +9,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../components/user.dart';
 import '../../l10n/l10n.dart';
 import '../../models/user.dart';
-import '../opt_login.dart';
 
 class CreateNewContactForm extends StatefulWidget {
   final Contact? item;
@@ -48,29 +45,31 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
         _data.id = value;
         Provider.of<EntityModification>(context, listen: false)
             .updateContact(_data);
-        Provider.of<EntityModification>(context, listen: false)
-            .accounts
-            .where((element) => element.id == widget.accountId)
-            .first
-            .accountContacts
-            ?.add(_data);
-
-        if (Provider.of<EntityModification>(context, listen: false)
-                .accounts
-                .where((element) => element.id == widget.accountId)
-                .first
-                .contactId ==
-            null) {
+        if (widget.accountId != null) {
           Provider.of<EntityModification>(context, listen: false)
               .accounts
               .where((element) => element.id == widget.accountId)
               .first
-              .contactId = value;
-          Repository().upsertAccount(
-              Provider.of<EntityModification>(context, listen: false)
+              .accountContacts
+              ?.add(_data);
+
+          if (Provider.of<EntityModification>(context, listen: false)
                   .accounts
                   .where((element) => element.id == widget.accountId)
-                  .first);
+                  .first
+                  .contactId ==
+              null) {
+            Provider.of<EntityModification>(context, listen: false)
+                .accounts
+                .where((element) => element.id == widget.accountId)
+                .first
+                .contactId = value;
+            Repository().upsertAccount(
+                Provider.of<EntityModification>(context, listen: false)
+                    .accounts
+                    .where((element) => element.id == widget.accountId)
+                    .first);
+          }
         }
         Navigator.pop(context);
       });
@@ -330,14 +329,18 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                                     return;
                                   setState(() {
                                     AppUser user;
+
                                     if (data.data!.isNotEmpty) {
                                       user = data.data!.first;
                                     } else {
                                       user = AppUser(
+                                          id: -1,
                                           active: value,
                                           contactId: widget.item?.id,
                                           uid: widget.item!.phone,
-                                          token: 'TBD');
+                                          admin: false,
+                                          userType: "production",
+                                          token: '');
                                     }
                                     user.active = value;
                                     Repository().upsertUser(user);

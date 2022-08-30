@@ -28,27 +28,32 @@ class _AccountLegalFormsListState extends State<AccountLegalFormsList> {
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,
           child: Scrollbar(
-            child: FutureBuilder<List<LegalDocument>?>(
-                builder: ((context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    return Container();
+            child: widget.account == null
+                ? Container()
+                : FutureBuilder<List<LegalDocument>?>(
+                    builder: ((context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Container();
 
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return LegalFormMiniAdmin(item: snapshot.data![index]);
-                      });
-                }),
-                future: Repository().getFormsByAccount(
-                  widget.account!.id.toString(),
-                )),
+                      return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return LegalFormMiniAdmin(
+                                item: snapshot.data![index]);
+                          });
+                    }),
+                    future: Repository().getFormsByAccount(
+                      widget.account!.id.toString(),
+                    )),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: LegalFormBubbleButtons(account: widget.account!),
+          child: widget.account == null
+              ? Container()
+              : LegalFormBubbleButtons(account: widget.account!),
         )
       ],
     );

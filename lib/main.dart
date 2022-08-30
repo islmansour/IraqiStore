@@ -35,7 +35,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
+late final SharedPreferences? prefs;
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -83,6 +87,8 @@ class IraqiStoreApp extends StatefulWidget {
 
 class _IraqiStoreAppState extends State<IraqiStoreApp> {
   NavigationController? navigation;
+  User? user;
+
   late final FirebaseMessaging _messaging;
   // late int _totalNotifications;
   PushNotification? _notificationInfo;
@@ -120,7 +126,6 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
 
       // For handling notification when the app is in background
       // but not terminated
-
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         PushNotification notification = PushNotification(
           title: message.notification?.title,
@@ -143,12 +148,24 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
 
   void autoLogIn() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? userId = prefs.getString('username');
+    // final String? userId = prefs.getString('username');
+    user = await FirebaseAuth.instance.currentUser;
 
-    if (userId != null) {
+    if (user != null) {
+      List<AppUser>? users = await Repository()
+          .getUserByLogin("0" + user!.phoneNumber!.substring(4));
+
+      if (users!.isNotEmpty) {
+        Provider.of<GetCurrentUser>(context, listen: false)
+            .updateUser(users.first);
+      }
       setState(() {
+        prefs.setString('username', "0" + user!.phoneNumber!.substring(4));
         isLoggedIn = true;
-        name = userId;
+        name = "0" + user!.phoneNumber!.substring(4);
+
+        Provider.of<NavigationController>(context, listen: false)
+            .changeScreen('/');
       });
       return;
     }
@@ -165,13 +182,13 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
   }
 
   Future<Null> loginUser() async {
-    User? user = await FirebaseAuth.instance.currentUser;
+    user = await FirebaseAuth.instance.currentUser;
     if (user == null) {
       Provider.of<NavigationController>(context, listen: false)
           .changeScreen('/login');
     } else {
       List<AppUser>? users = await Repository()
-          .getUserByLogin("0" + user.phoneNumber!.substring(4));
+          .getUserByLogin("0" + user!.phoneNumber!.substring(4));
       if (users!.isNotEmpty) {
         Provider.of<GetCurrentUser>(context, listen: false)
             .updateUser(users.first);
@@ -196,10 +213,10 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
         });
 
         final SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('username', "0" + user.phoneNumber!.substring(4));
+        prefs.setString('username', "0" + user!.phoneNumber!.substring(4));
 
         setState(() {
-          name = "0" + user.phoneNumber!.substring(4);
+          name = "0" + user!.phoneNumber!.substring(4);
           isLoggedIn = true;
         });
       }
@@ -227,7 +244,6 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print('User granted permission');
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           print('message: ${message.notification?.body}');
           // Parse the message received
@@ -249,22 +265,19 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
 
   @override
   Widget build(BuildContext context) {
+    String? userId = prefs!.getString('username');
+
     bool? isAdmin = false;
     NavigationController navigation =
         Provider.of<NavigationController>(context);
-    print('1: $isAdmin');
 
-    if (Provider.of<GetCurrentUser>(context, listen: false).currentUser ==
-        null) {
+    if (userId == null) {
       Provider.of<NavigationController>(context, listen: false).gotoLoginPage();
     } else {
-      print('2: $isAdmin');
-
       try {
         isAdmin = Provider.of<GetCurrentUser>(context, listen: false)
             .currentUser!
             .admin;
-        print('3: $isAdmin');
       } catch (e) {}
       if (Provider.of<CurrentListOfValuesUpdates>(context, listen: false)
           .activeListOfValues
@@ -272,10 +285,6 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
         Provider.of<CurrentListOfValuesUpdates>(context, listen: false)
             .loadLovs();
     }
-
-    SharedPreferences.getInstance().then((value) {
-      print(value.get('ipAddress').toString());
-    });
 
     return FutureBuilder(
       // Initialize FlutterFire
@@ -375,17 +384,14 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                 home: Navigator(
                   pages: [
                     MaterialPage(
-                        child:
-                            Provider.of<GetCurrentUser>(context, listen: false)
-                                        .currentUser ==
-                                    null
-                                ? CircularProgressIndicator()
-                                : Provider.of<GetCurrentUser>(context,
-                                            listen: false)
-                                        .currentUser!
-                                        .admin!
-                                    ? HomeAdmin()
-                                    : ClientHome()),
+                        child: prefs!.getString('username') == null
+                            ? LoginPage()
+                            : Provider.of<GetCurrentUser>(context,
+                                        listen: false)
+                                    .currentUser!
+                                    .admin!
+                                ? HomeAdmin(userPref: prefs)
+                                : ClientHome()),
                     if (navigation.screenName == '/orders')
                       const MaterialPage(child: Orders()),
                     if (navigation.screenName == '/products')

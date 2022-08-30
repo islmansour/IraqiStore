@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/screens/settings.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:hardwarestore/widgets/client/client_home_news.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +22,20 @@ class ClientHome extends StatefulWidget {
 class _ClientHomeState extends State<ClientHome> {
   @override
   void initState() {
+    try {
+      FirebaseMessaging.instance.getToken().then((value) {
+        AppUser? _user =
+            Provider.of<GetCurrentUser>(context, listen: false).currentUser;
+        if (_user != null) {
+          _user.token = value;
+          Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
+          value;
+          Repository().upsertUser(_user);
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
     setState(() {
       setState(() {
         _loadActiveNews(context);

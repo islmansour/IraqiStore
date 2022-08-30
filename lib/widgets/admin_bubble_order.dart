@@ -58,7 +58,7 @@ class _OrderBubbleButtonsState extends State<OrderBubbleButtons>
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              AddItemToOrder(orderId: widget.order.id)));
+                              AddItemToOrder(order: widget.order)));
                   _animationController.reverse();
                 },
               ),

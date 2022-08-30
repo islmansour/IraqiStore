@@ -80,5 +80,10 @@
   "proceed": "Continue",
   "back": "Back",
   "items": "Items",
-  "noRecords": "No Records"
+  "noRecords": "No Records",
+  "news": "News",
+  "writeDescription": "Enter your description",
+  "chooseImage": "Choose Image",
+  "notifications": "Notifications",
+  "appUser": "User"
 }

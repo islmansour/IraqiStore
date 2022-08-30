@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -25,16 +26,6 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
   // ignore: unnecessary_new
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Contact _data = Contact();
-
-  String? _validateEmail(String? value) {
-    // If empty value, the isEmail function throw a error.
-    // So I changed this function with try and catch.
-    try {} catch (e) {
-      return 'The E-mail Address must be a valid email address.';
-    }
-
-    return "";
-  }
 
   void submit() {
     // First validate form.
@@ -67,6 +58,12 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                   .accounts
                   .where((element) => element.id == widget.account?.id)
                   .first);
+          AccountContact ac = AccountContact(
+              accountId: widget.account!.id,
+              contactId: value,
+              active: true,
+              id: -1);
+          Repository().insertAccountContact(ac);
         }
         Navigator.pop(context);
       });
@@ -92,6 +89,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    var translation = AppLocalizations.of(context);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -173,7 +171,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                 },
               ),
               title: widget.item == null
-                  ? Text('חדש')
+                  ? Text(translation!.newTitle)
                   : Text(widget.item!.first_name.toString() +
                       ' ' +
                       widget.item!.last_name.toString()),
@@ -213,9 +211,9 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                 _data.first_name = value;
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'first name',
-                                labelText: 'First Name'),
+                            decoration: InputDecoration(
+                                hintText: translation!.firstName,
+                                labelText: translation.firstName),
                           ),
                           TextFormField(
                             initialValue: _data.last_name ?? "",
@@ -234,32 +232,36 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                 _data.last_name = value;
                               });
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'last name', labelText: 'Last Name'),
+                            decoration: InputDecoration(
+                                hintText: translation.lastName,
+                                labelText: translation.lastName),
                           ),
                           TextFormField(
                             initialValue: _data.phone ?? "",
                             onSaved: (String? value) {
                               _data.phone = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'phone', labelText: 'Phone'),
+                            decoration: InputDecoration(
+                                hintText: translation.phone,
+                                labelText: translation.phone),
                           ),
                           TextFormField(
                             initialValue: _data.street ?? "",
                             onSaved: (String? value) {
                               _data.street = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'street', labelText: 'Street'),
+                            decoration: InputDecoration(
+                                hintText: translation.street,
+                                labelText: translation.street),
                           ),
                           TextFormField(
                             initialValue: _data.town ?? "",
                             onSaved: (String? value) {
                               _data.town = value;
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'town', labelText: 'Town'),
+                            decoration: InputDecoration(
+                                hintText: translation.town,
+                                labelText: translation.town),
                           ),
                           TextFormField(
                             initialValue: _data.pobox != null
@@ -268,8 +270,9 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                             onSaved: (String? value) {
                               if (value != "") _data.pobox = int.parse(value!);
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'pobox', labelText: 'POBox'),
+                            decoration: InputDecoration(
+                                hintText: translation.pobox,
+                                labelText: translation.pobox),
                           ),
                           TextFormField(
                             initialValue:
@@ -277,8 +280,9 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                             onSaved: (String? value) {
                               if (value != "") _data.zip = int.parse(value!);
                             },
-                            decoration: const InputDecoration(
-                                hintText: 'zip', labelText: 'ZIP'),
+                            decoration: InputDecoration(
+                                hintText: translation.zip,
+                                labelText: translation.zip),
                           ),
                           TextFormField(
                               initialValue: _data.email != null
@@ -286,49 +290,61 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                   : "",
                               keyboardType: TextInputType
                                   .emailAddress, // Use email input type for emails.
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                   hintText: 'you@example.com',
-                                  labelText: 'E-mail Address'),
+                                  labelText: translation.email),
                               // validator: _validateEmail,
                               onSaved: (String? value) {
                                 _data.email = value;
                               }),
-                          FutureBuilder<List<AppUser>?>(
-                            future: Repository().getUserByLogin(
-                                (widget.item == null ||
-                                        widget.item!.phone.toString() == '')
-                                    ? '-0'
-                                    : widget.item!.phone.toString()),
-                            builder: (context, data) {
-                              if (data.connectionState ==
-                                  ConnectionState.waiting) return Container();
-                              return Switch(
-                                activeColor: Colors.green,
-                                value: data.data!.isNotEmpty
-                                    ? data.data!.first.active!
-                                    : false,
-                                onChanged: (value) {
-                                  if (widget.item?.phone == null ||
-                                      widget.item?.phone.toString() == '')
-                                    return;
-                                  setState(() {
-                                    AppUser user;
-                                    if (data.data!.isNotEmpty) {
-                                      user = data.data!.first;
-                                    } else {
-                                      user = AppUser(
-                                          active: value,
-                                          contactId: widget.item?.id,
-                                          uid: widget.item!.phone,
-                                          token: 'TBD');
-                                    }
-                                    user.active = value;
-                                    Repository().upsertUser(user);
-                                  });
-                                },
-                              );
-                            },
-                          ),
+                          _data.id == null
+                              ? Container()
+                              : FutureBuilder<List<AppUser>?>(
+                                  future: Repository().getUserByLogin(
+                                      (widget.item == null ||
+                                              widget.item!.phone.toString() ==
+                                                  '')
+                                          ? '-0'
+                                          : widget.item!.phone.toString()),
+                                  builder: (context, data) {
+                                    if (data.connectionState ==
+                                        ConnectionState.waiting)
+                                      return Container();
+                                    return Row(
+                                      children: [
+                                        Text(translation.appUser),
+                                        Switch(
+                                          activeColor: Colors.green,
+                                          value: data.data!.isNotEmpty
+                                              ? data.data!.first.active!
+                                              : false,
+                                          onChanged: (value) {
+                                            if (widget.item?.phone == null ||
+                                                widget.item?.phone.toString() ==
+                                                    '') return;
+                                            setState(() {
+                                              AppUser user;
+                                              if (data.data!.isNotEmpty) {
+                                                user = data.data!.first;
+                                              } else {
+                                                user = AppUser(
+                                                    id: -1,
+                                                    active: value,
+                                                    contactId: widget.item?.id,
+                                                    uid: widget.item!.phone,
+                                                    admin: false,
+                                                    userType: "production",
+                                                    token: '');
+                                              }
+                                              user.active = value;
+                                              Repository().upsertUser(user);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0),
                             child: Row(
@@ -361,9 +377,6 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                         ],
                       ),
                     )),
-                // ContactContactsList(contact: widget.item),
-                // ContactOrdersList(contact: widget.item),
-                // ContactQuotesList(contact: widget.item),
                 AccountContactsList(account: widget.account)
               ],
             ),

@@ -74,15 +74,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> verifyPhone() async {
-    print('starting to  verifyPhone ');
-
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
-          print('starting to  verifyPhone verificationCompleted ');
-
           // ANDROID ONLY!
           // Sign the user in (or link) with the auto-generated credential
           await widget.auth.signInWithCredential(credential).then(
@@ -90,24 +86,18 @@ class _LoginPageState extends State<LoginPage> {
               );
         },
         verificationFailed: (FirebaseAuthException e) {
-          print('starting to  verifyPhone verificationFailed ');
-
           if (e.code == 'invalid-phone-number') {
             setState(() {
               _status = "Incorrect code, please try again.";
             });
           }
-          print('verificationFailed verifyPhone ${e.message}');
 
           // Handle other errors
         },
         codeSent: (String verificationId, [int? forceResendingToken]) {
-          print('codeSent verifyPhone $verificationId');
-
           widget.authCodeVerId = verificationId;
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          print('timeout verifyPhone');
           // Auto-resolution timed out...
         },
       );

@@ -12,10 +12,16 @@ class News {
   DateTime? date;
   bool? active;
   int? productId;
-  DateTime created;
+  DateTime? created;
 
-  News(this.id, this.desc, this.active, this.date, this.url, this.productId,
-      this.created);
+  News(
+      {this.id,
+      this.desc,
+      this.active,
+      this.date,
+      this.url,
+      this.productId,
+      this.created});
 
   factory News.fromJson(Map<String, dynamic> json) => _$NewsFromJson(json);
 

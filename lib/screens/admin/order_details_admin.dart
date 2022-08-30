@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/order_item_list_component.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/orders.dart';
 import '../../widgets/admin_bubble_order.dart';
@@ -22,6 +24,7 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ClientEnvironment>(context);
     return Scaffold(
       floatingActionButton: OrderBubbleButtons(order: widget.item),
       body: SingleChildScrollView(

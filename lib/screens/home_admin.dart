@@ -1,11 +1,15 @@
+import 'package:badges/badges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/quote.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/models/user.dart';
+import 'package:hardwarestore/models/userNotifications.dart';
 import 'package:hardwarestore/screens/settings.dart';
+import 'package:hardwarestore/screens/usernotification_screen.dart';
 import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
@@ -24,7 +28,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' show Platform;
 
 class HomeAdmin extends StatefulWidget {
-  const HomeAdmin({Key? key}) : super(key: key);
+  final userPref;
+  const HomeAdmin({Key? key, this.userPref}) : super(key: key);
 
   @override
   State<HomeAdmin> createState() => _HomeAdminState();
@@ -36,6 +41,20 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   void initState() {
+    try {
+      FirebaseMessaging.instance.getToken().then((value) {
+        AppUser? _user =
+            Provider.of<GetCurrentUser>(context, listen: false).currentUser;
+        if (_user != null) {
+          _user.token = value;
+          Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
+          value;
+          Repository().upsertUser(_user);
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
     super.initState();
   }
 
@@ -47,8 +66,12 @@ class _HomeAdminState extends State<HomeAdmin> {
       List<AppUser>? users = await Repository()
           .getUserByLogin("0" + user.phoneNumber!.substring(4));
       if (users!.isNotEmpty) {
-        Provider.of<GetCurrentUser>(context, listen: false)
-            .updateUser(users.first);
+        try {
+          Provider.of<GetCurrentUser>(context, listen: false)
+              .updateUser(users.first);
+        } catch (e) {
+          throw "$e";
+        }
       }
     }
     String _env = 'production';
@@ -91,34 +114,40 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<GetCurrentUser>(context).currentUser != null) {
-      if (Provider.of<EntityModification>(context, listen: false)
-          .accounts
-          .isEmpty) _loadAccounts(context);
-      if (Provider.of<EntityModification>(context, listen: false)
-          .contacts
-          .isEmpty) {
-        _loadContacts(context);
-        _loadUsers(context);
-      }
-      if (Provider.of<EntityModification>(context, listen: false)
-          .products
-          .isEmpty) _loadProductss(context);
-      if (Provider.of<EntityModification>(context, listen: false)
-          .order
-          .isEmpty) {
-        _loadOrders(context);
-      }
-      if (Provider.of<EntityModification>(context, listen: false)
-          .quotes
-          .isEmpty) {
-        _loadQuotes(context);
-      }
+    try {
+      if (widget.userPref.getString('username') != null &&
+          widget.userPref.getString('username') != "") {
+        if (Provider.of<EntityModification>(context, listen: false)
+            .accounts
+            .isEmpty) _loadAccounts(context);
+        if (Provider.of<EntityModification>(context, listen: false)
+            .contacts
+            .isEmpty) {
+          _loadContacts(context);
+          _loadUsers(context);
+        }
+        if (Provider.of<EntityModification>(context, listen: false)
+            .products
+            .isEmpty) _loadProductss(context);
+        if (Provider.of<EntityModification>(context, listen: false)
+            .order
+            .isEmpty) {
+          _loadOrders(context);
+        }
+        if (Provider.of<EntityModification>(context, listen: false)
+            .quotes
+            .isEmpty) {
+          _loadQuotes(context);
+        }
 
-      if (Provider.of<EntityModification>(context, listen: false).lov.isEmpty) {
-        _loadLovs(context);
+        if (Provider.of<EntityModification>(context, listen: false)
+            .lov
+            .isEmpty) {
+          _loadLovs(context);
+        }
       }
-    }
+    } catch (e) {}
+
     return Scaffold(
       floatingActionButton: const AdminBubbleButtons(),
       body: RefreshIndicator(
@@ -169,6 +198,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 ],
               ),
             ),
+
             if (_searching == false) const OrdersListHome(),
             if (_searching == false) const QuotesListHome(),
             // if (_searching == false) DeliverysList(),
@@ -230,16 +260,68 @@ class _HomeAdminState extends State<HomeAdmin> {
         ),
       ),
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.portrait_outlined),
-          onPressed: () {
-            try {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
-            } catch (e) {}
-          },
+        leadingWidth: 100,
+        leading: Container(
+          child: Row(
+            //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.portrait_outlined,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    try {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsScreen()),
+                      );
+                    } catch (e) {}
+                  },
+                ),
+              ),
+              FutureBuilder<List<UserNotifications>?>(
+                  future: Repository().getUserNotifications(
+                      Provider.of<GetCurrentUser>(context).currentUser!),
+                  builder: (context,
+                      AsyncSnapshot<List<UserNotifications>?>
+                          userNotificationSnap) {
+                    if (userNotificationSnap.connectionState ==
+                            ConnectionState.none &&
+                        // ignore: unnecessary_null_comparison
+                        userNotificationSnap.hasData == null) {
+                      return Container();
+                    }
+                    int len = 0;
+                    if (userNotificationSnap.data != null)
+                      len = userNotificationSnap.data!
+                          .where((element) => element.seen == null)
+                          .length;
+
+                    return InkWell(
+                        onTap: () {
+                          //UserNotificationsSceeen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    UserNotificationsSceeen()),
+                          );
+                        },
+                        child: Badge(
+                            badgeContent: Text(
+                              len.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: Icon(
+                              Icons.notifications,
+                              size: 30,
+                            )));
+                  }),
+            ],
+          ),
         ),
         title: Text(AppLocalizations.of(context)!.business),
       ),
