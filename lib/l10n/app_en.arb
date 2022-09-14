@@ -85,5 +85,6 @@
   "writeDescription": "Enter your description",
   "chooseImage": "Choose Image",
   "notifications": "Notifications",
-  "appUser": "User"
+  "appUser": "User",
+  "priceafterdiscount": "price before discount"
 }

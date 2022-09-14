@@ -89,6 +89,10 @@ class Order {
 }
 
 List<Order> orderFromJson(String str) {
+  if (str == '"{}"') {
+    return <Order>[];
+  }
+
   return List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
 }
 

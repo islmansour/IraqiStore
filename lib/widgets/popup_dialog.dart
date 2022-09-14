@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class ShowDiaglog extends StatelessWidget {
   final String? title;
   final String? content;
+  Color titleColor = Colors.redAccent;
   final List<Widget> actions;
 
   ShowDiaglog({
+    titleColor,
     this.title,
     this.content,
     this.actions = const [],
@@ -15,7 +17,7 @@ class ShowDiaglog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Container(
-        color: Colors.redAccent,
+        color: titleColor,
         child: Text(
           this.title!,
           style: Theme.of(context).textTheme.displayMedium,

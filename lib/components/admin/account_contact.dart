@@ -20,6 +20,9 @@ class _AccountContactsListState extends State<AccountContactsList> {
   var isLoaded = false;
   @override
   void initState() {
+    setState(() {
+      widget.account!.loadAccountContact();
+    });
     super.initState();
   }
 
@@ -39,15 +42,24 @@ class _AccountContactsListState extends State<AccountContactsList> {
                   Account _account = repo.accounts
                       .where((element) => element.id == widget.account?.id)
                       .first;
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _account.accountContacts == null
-                          ? 0
-                          : _account.accountContacts!.length,
-                      itemBuilder: (context, index) {
-                        Contact _contact = _account.accountContacts![index];
-                        return ContactMiniAdmin(item: _contact);
+                  return FutureBuilder<void>(
+                      future: _account.loadAccountContact(),
+                      builder: (context, AsyncSnapshot<void> snap) {
+                        if (snap.connectionState == ConnectionState.none &&
+                            snap.hasData == null) {
+                          return Container();
+                        }
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: _account.accountContacts == null
+                                ? 0
+                                : _account.accountContacts!.length,
+                            itemBuilder: (context, index) {
+                              Contact _contact =
+                                  _account.accountContacts![index];
+                              return ContactMiniAdmin(item: _contact);
+                            });
                       });
                 } else {
                   return Container();

@@ -11,12 +11,12 @@ import '../models/orders.dart';
 
 class OrderItemAdmin extends StatefulWidget {
   final OrderItem item;
-  final int orderId;
+  final Order order;
 
   const OrderItemAdmin({
     Key? key,
     required this.item,
-    required this.orderId,
+    required this.order,
   }) : super(key: key);
 
   @override
@@ -65,26 +65,26 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
           width: double.infinity,
           child: Row(
             children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10))),
-                      //   height: 75,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         decoration: const BoxDecoration(
+              //             color: Colors.lightBlue,
+              //             borderRadius: BorderRadius.only(
+              //                 bottomRight: Radius.circular(10),
+              //                 bottomLeft: Radius.circular(10),
+              //                 topLeft: Radius.circular(10),
+              //                 topRight: Radius.circular(10))),
+              //         //   height: 75,
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [],
+              //         ),
+              //       ),
+              //     )
+              //   ],
+              // ),
               Expanded(
                 child: Column(
                   children: [
@@ -196,19 +196,24 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                                   alignment: Alignment.bottomCenter,
                                   width: 40,
                                   child: TextFormField(
+                                    enabled:
+                                        widget.order.isReadOnly ? false : true,
+                                    readOnly: widget.order.isReadOnly,
                                     style: TextStyle(fontSize: 12),
                                     initialValue:
                                         widget.item.quantity.toString(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        try {
-                                          quantity = double.parse(value);
-                                        } catch (e) {
-                                          quantity = 0;
-                                        }
-                                        recordChanged = true;
-                                      });
-                                    },
+                                    onChanged: widget.order.isReadOnly
+                                        ? null
+                                        : (value) {
+                                            setState(() {
+                                              try {
+                                                quantity = double.parse(value);
+                                              } catch (e) {
+                                                quantity = 0;
+                                              }
+                                              recordChanged = true;
+                                            });
+                                          },
                                     keyboardType:
                                         const TextInputType.numberWithOptions(),
                                     decoration: const InputDecoration(
@@ -279,55 +284,62 @@ class _OrderItemAdminState extends State<OrderItemAdmin> {
                               size: 34,
                             ),
                             tooltip: 'עדכון',
-                            onPressed: recordChanged
-                                ? () {
-                                    setState(() {
-                                      try {
-                                        OrderItem _updatedItem = OrderItem();
-                                        Order x = Provider.of<
-                                                    EntityModification>(context,
-                                                listen: false)
-                                            .order
-                                            .where((element) =>
-                                                element.id == widget.orderId)
-                                            .first;
+                            onPressed: widget.order.isReadOnly
+                                ? null
+                                : recordChanged
+                                    ? () {
+                                        setState(() {
+                                          try {
+                                            OrderItem _updatedItem =
+                                                OrderItem();
+                                            Order x =
+                                                Provider.of<EntityModification>(
+                                                        context,
+                                                        listen: false)
+                                                    .order
+                                                    .where((element) =>
+                                                        element.id ==
+                                                        widget.order.id)
+                                                    .first;
 
-                                        x.orderItems!
-                                            .where(
-                                                (it) => it.id == widget.item.id)
-                                            .forEach((_item) {
-                                          _item.quantity = quantity;
-                                          _item.discount = discount;
+                                            x.orderItems!
+                                                .where((it) =>
+                                                    it.productId ==
+                                                    widget.item.productId)
+                                                .forEach((_item) {
+                                              _item.quantity = quantity;
+                                              _item.discount = discount;
 
-                                          _item.price = (_product!.price! -
-                                                  (_product.price! *
-                                                      discount /
-                                                      100)) *
-                                              quantity;
-                                          _updatedItem = _item;
-                                          // DjangoServices()
-                                          Repository()
-                                              .upsertOrderItem(_updatedItem)
-                                              ?.then((value) {
-                                            _updatedItem.id = value;
-                                            _item.id = value;
+                                              _item.price = (_product!.price! -
+                                                      (_product.price! *
+                                                          discount /
+                                                          100)) *
+                                                  quantity;
+                                              _updatedItem = _item;
+                                              // DjangoServices()
+                                              Repository()
+                                                  .upsertOrderItem(_updatedItem)
+                                                  ?.then((value) {
+                                                _updatedItem.id = value;
+                                                _item.id = value;
+                                                Provider.of<EntityModification>(
+                                                        context,
+                                                        listen: false)
+                                                    .update(x);
+                                              });
+                                            });
                                             Provider.of<EntityModification>(
                                                     context,
                                                     listen: false)
                                                 .update(x);
-                                          });
+                                          } catch (e) {
+                                            print(
+                                                'unable to upsert order item, error: ' +
+                                                    e.toString());
+                                          }
                                         });
-                                        Provider.of<EntityModification>(context,
-                                                listen: false)
-                                            .update(x);
-                                      } catch (e) {
-                                        print(
-                                            'unable to upsert order item, error: ' +
-                                                e.toString());
                                       }
-                                    });
-                                  }
-                                : null,
+                                    : null,
                           ),
                         ],
                       ),

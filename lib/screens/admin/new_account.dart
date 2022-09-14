@@ -126,7 +126,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                 ? const Locale('he', 'HE')
                 : const Locale('en', 'EN'),
         home: DefaultTabController(
-          length: 5,
+          length: 4,
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.indigo.shade300,
@@ -154,10 +154,10 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                     ),
                     text: translation.orders,
                   ),
-                  Tab(
-                    icon: const Icon(Icons.shopping_basket),
-                    text: translation.quotes,
-                  ),
+                  // Tab(
+                  //   icon: const Icon(Icons.shopping_basket),
+                  //   text: translation.quotes,
+                  // ),
                   Tab(
                     icon: Icon(Icons.attach_file),
                     text: translation.files,
@@ -340,7 +340,7 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                     )),
                 AccountContactsList(account: widget.item),
                 AccountOrdersList(account: widget.item),
-                AccountQuotesList(account: widget.item),
+                // AccountQuotesList(account: widget.item),
                 AccountLegalFormsList(account: widget.item),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/controllers/navigation.dart';
 import 'package:hardwarestore/models/user.dart';
@@ -46,24 +47,26 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<GetCurrentUser>(context, listen: false)
             .updateUser(users.first);
 
-        SharedPreferences.getInstance().then((value) {
-          switch (Provider.of<GetCurrentUser>(context, listen: false)
-              .currentUser!
-              .userType
-              .toString()) {
-            case 'dev':
-              if (Platform.isIOS)
-                value.setString('ipAddress', 'http://127.0.0.1:8000');
-              else
-                value.setString('ipAddress', 'http://10.0.2.2:8000');
-              break;
-            case 'test':
-              value.setString('ipAddress', 'http://139.162.139.161:8000');
-              break;
-            default:
-              value.setString('ipAddress', 'http://www.arabapps.biz:8000');
-          }
-        });
+        // SharedPreferences.getInstance().then((value) {
+        switch (users.first.userType.toString()) {
+          case 'dev':
+            if (Platform.isIOS)
+              prefs.setString('ipAddress', 'http://127.0.0.1:8000');
+            else
+              prefs.setString('ipAddress', 'http://10.0.2.2:8000');
+            break;
+          case 'test':
+            prefs.setString('ipAddress', 'http://139.162.139.161:8000');
+            break;
+          default:
+            prefs.setString('ipAddress', 'http://www.arabapps.biz:8000');
+        }
+
+        String? _token = await FirebaseMessaging.instance.getToken();
+        users.first.token = _token;
+        Repository().upsertUser(users.first);
+
+        // });
 
         Provider.of<NavigationController>(context, listen: false)
             .changeScreen('/');

@@ -318,6 +318,7 @@ class _CreateNewContactFormState extends State<CreateNewContactForm> {
                             builder: (context, data) {
                               if (data.connectionState ==
                                   ConnectionState.waiting) return Container();
+
                               return Switch(
                                 activeColor: Colors.green,
                                 value: data.data!.isNotEmpty

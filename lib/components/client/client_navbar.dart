@@ -22,18 +22,27 @@ class ClientBottomNav extends StatelessWidget {
       onTap: (buttonIndex) {
         switch (buttonIndex) {
           case 0:
+            print('0..');
+
             navigation.changeScreen('/');
             break;
           case 1:
+            print('1..');
+
             navigation.changeScreen('/client-orders');
             break;
 
           case 2:
-            navigation.changeScreen('/client-manage');
-            break;
-          case 3:
+            print('3..');
+
             navigation.changeScreen('/client-chat');
             break;
+          case 3:
+            print('4..');
+
+            navigation.changeScreen('/qrscanner');
+            break;
+
           case 9:
             navigation.changeScreen('/login');
             break;
@@ -49,8 +58,8 @@ class ClientBottomNav extends StatelessWidget {
             icon: Icon(Icons.history), label: translation.orders),
         BottomNavigationBarItem(
             icon: Icon(Icons.chat), label: translation.chat),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.chat), label: translation.chat),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner), label: translation.delivered),
       ],
     );
   }

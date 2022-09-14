@@ -25,11 +25,16 @@ class AppUser {
   @JsonKey(ignore: true)
   Contact? contact;
 
+  static toNull(_) => null;
+  @JsonKey(toJson: toNull, includeIfNull: false)
+  List<Contact>? contactsList;
+
   AppUser({
     this.active,
     this.admin,
     this.language,
     this.userType = "",
+    this.contactsList,
     //  this.contact,
     this.token,
     this.contactId,
@@ -38,11 +43,13 @@ class AppUser {
     this.id,
   }) {
     if (contactId != null) {
-      Repository().getSingleContact(contactId.toString()).then((value) {
-        if (value != null) {
-          contact = value;
-        }
-      });
+      if (contactsList != null)
+        print('AppUser dart: ' + contactsList!.length.toString());
+      // Repository().getSingleContact(contactId.toString()).then((value) {
+      //   if (value != null) {
+      //     contact = value;
+      //   }
+      // });
     }
   }
 

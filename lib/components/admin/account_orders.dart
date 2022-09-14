@@ -23,15 +23,24 @@ class _AccountOrdersListState extends State<AccountOrdersList> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-        child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: widget.account?.accountOrders == null
-                ? 0
-                : widget.account?.accountOrders!.length ?? 0,
-            itemBuilder: (context, index) {
-              Order _order = widget.account!.accountOrders![index];
-              return OrderMiniAdmin(item: _order);
+        child: FutureBuilder<void>(
+            future: widget.account!.loadAccountOrders(),
+            builder: (context, AsyncSnapshot<void> productSnap) {
+              if (productSnap.connectionState == ConnectionState.none &&
+                  productSnap.hasData == null) {
+                return Container();
+              }
+
+              return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: widget.account?.accountOrders == null
+                      ? 0
+                      : widget.account?.accountOrders!.length ?? 0,
+                  itemBuilder: (context, index) {
+                    Order _order = widget.account!.accountOrders![index];
+                    return OrderMiniAdmin(item: _order);
+                  });
             }));
     ;
   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/quote.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'contact.dart';
@@ -56,6 +57,14 @@ class Account {
       this.street2,
       this.town,
       this.zip}) {}
+
+  loadAccountContact() async {
+    accountContacts = await Repository().getAccountContact(this.id.toString());
+  }
+
+  loadAccountOrders() async {
+    accountOrders = await Repository().getAccountOrders(this.id.toString());
+  }
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);

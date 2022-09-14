@@ -23,7 +23,7 @@ class _ListOfValuesListState extends State<ListOfValuesList> {
 
 class CurrentListOfValuesUpdates extends ChangeNotifier {
   List<ListOfValues> activeListOfValues = [];
-  void loadLovs() {
+  loadLovs() {
     Repository().getLOVs().then((value) => activeListOfValues = value!);
     //notifyListeners();
   }

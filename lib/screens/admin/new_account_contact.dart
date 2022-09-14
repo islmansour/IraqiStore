@@ -58,13 +58,14 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                   .accounts
                   .where((element) => element.id == widget.account?.id)
                   .first);
-          AccountContact ac = AccountContact(
-              accountId: widget.account!.id,
-              contactId: value,
-              active: true,
-              id: -1);
-          Repository().insertAccountContact(ac);
         }
+        AccountContact ac = AccountContact(
+            created: DateTime.now(),
+            accountId: widget.account!.id,
+            contactId: value,
+            active: true,
+            id: -1);
+        Repository().insertAccountContact(ac);
         Navigator.pop(context);
       });
       // Save our form now.
@@ -310,6 +311,7 @@ class _CreateAccountContactFormState extends State<CreateAccountContactForm> {
                                     if (data.connectionState ==
                                         ConnectionState.waiting)
                                       return Container();
+
                                     return Row(
                                       children: [
                                         Text(translation.appUser),

@@ -18,6 +18,7 @@ import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/notification_management.dart';
 import 'package:hardwarestore/services/search.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/widgets/client/QRScanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -118,6 +119,20 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
       value.setString('ipAddress', 'http://www.arabapps.biz:8000');
     });
     try {
+      // FirebaseMessaging.instance.getToken().then((value) {
+      //   AppUser? _user =
+      //       Provider.of<GetCurrentUser>(context, listen: false).currentUser;
+      //   if (_user != null) {
+      //     print('main.dart user not null');
+      //     _user.token = value;
+      //     Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
+      //     value;
+      //     Repository().upsertUser(_user);
+      //   } else {
+      //     print('main.dart user  null');
+      //   }
+      // });
+
       autoLogIn();
 
       // _totalNotifications = 0;
@@ -139,7 +154,10 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
           // _totalNotifications++;
         });
       });
-    } catch (e) {}
+    } catch (e) {
+      print('main initState $e');
+    }
+
     super.initState();
   }
 
@@ -152,22 +170,55 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
     user = await FirebaseAuth.instance.currentUser;
 
     if (user != null) {
+      //  print('main user not null');
       List<AppUser>? users = await Repository()
           .getUserByLogin("0" + user!.phoneNumber!.substring(4));
 
       if (users!.isNotEmpty) {
-        Provider.of<GetCurrentUser>(context, listen: false)
-            .updateUser(users.first);
-      }
-      setState(() {
-        prefs.setString('username', "0" + user!.phoneNumber!.substring(4));
-        isLoggedIn = true;
-        name = "0" + user!.phoneNumber!.substring(4);
+        String? _token = await FirebaseMessaging.instance.getToken();
+        if (users.first.token != _token) {
+          Provider.of<NavigationController>(context, listen: false)
+              .changeScreen('/login');
+          print('invalid token: ${users.first.token} vs ${_token}');
+        } else {
+          Provider.of<GetCurrentUser>(context, listen: false)
+              .updateUser(users.first);
 
-        Provider.of<NavigationController>(context, listen: false)
-            .changeScreen('/');
-      });
+          setState(() {
+            prefs.setString('username', "0" + user!.phoneNumber!.substring(4));
+            isLoggedIn = true;
+            name = "0" + user!.phoneNumber!.substring(4);
+
+            switch (users.first.userType) {
+              case 'dev':
+                if (Platform.isIOS)
+                  prefs.setString('ipAddress', 'http://127.0.0.1:8000');
+                else
+                  prefs.setString('ipAddress', 'http://10.0.2.2:8000');
+                break;
+              case 'test':
+                prefs.setString('ipAddress', 'http://139.162.139.161:8000');
+                break;
+              default:
+                prefs.setString('ipAddress', 'http://www.arabapps.biz:8000');
+            }
+            _loadAccounts(context);
+
+            _loadContacts(context);
+            _loadUsers(context);
+            _loadProductss(context);
+            _loadOrders(context);
+            _loadLovs(context);
+            _loadQuotes(context);
+            _loadActiveNews(context);
+            Provider.of<NavigationController>(context, listen: false)
+                .changeScreen('/');
+          });
+        }
+      }
       return;
+    } else {
+      print('main user is null');
     }
   }
 
@@ -218,6 +269,15 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
         setState(() {
           name = "0" + user!.phoneNumber!.substring(4);
           isLoggedIn = true;
+          _loadAccounts(context);
+
+          _loadContacts(context);
+          _loadUsers(context);
+          _loadProductss(context);
+          _loadOrders(context);
+          _loadLovs(context);
+          _loadQuotes(context);
+          _loadActiveNews(context);
         });
       }
     }
@@ -386,10 +446,7 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                     MaterialPage(
                         child: prefs!.getString('username') == null
                             ? LoginPage()
-                            : Provider.of<GetCurrentUser>(context,
-                                        listen: false)
-                                    .currentUser!
-                                    .admin!
+                            : isAdmin!
                                 ? HomeAdmin(userPref: prefs)
                                 : ClientHome()),
                     if (navigation.screenName == '/orders')
@@ -408,6 +465,8 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                       MaterialPage(child: LoginPage()),
                     if (navigation.screenName == '/client-orders')
                       MaterialPage(child: ClientOrdersScreen()),
+                    if (navigation.screenName == '/qrscanner')
+                      MaterialPage(child: QRScanOrder())
                   ],
                   onPopPage: (route, result) {
                     bool popStatus = (route.didPop(result));
@@ -438,3 +497,55 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 );
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
+void _loadAccounts(BuildContext context) async {
+  try {
+    await Provider.of<EntityModification>(context, listen: false)
+        .refreshAccountsByUserFromDB(
+            Provider.of<GetCurrentUser>(context, listen: false).currentUser!);
+  } catch (e) {}
+  return;
+}
+
+void _loadProductss(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshProductsFromDB();
+  return;
+}
+
+void _loadContacts(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshContactsFromDB();
+  return;
+}
+
+void _loadOrders(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshOrdersFromDB();
+}
+
+void _loadQuotes(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshQuotesFromDB();
+}
+
+void _loadUsers(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshUsersFromDB();
+}
+
+void _loadLovs(BuildContext context) async {
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshLOVFromDB();
+}
+
+void _loadActiveNews(BuildContext context) async {
+  print('main _loadActiveNews');
+  await Provider.of<EntityModification>(context, listen: false)
+      .refreshActiveNewsFromDB();
+  // await Provider.of<EntityModification>(context, listen: false)
+  //     .refreshAllNewsFromDB();
+  // await Provider.of<CurrentListOfValuesUpdates>(context, listen: false)
+  //     .loadLovs();
+  //CurrentListOfValuesUpdates
+}

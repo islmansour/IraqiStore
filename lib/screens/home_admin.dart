@@ -2,10 +2,9 @@ import 'package:badges/badges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/components/quote.dart';
+import 'package:hardwarestore/components/admin/homepage_news.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/orders.dart';
-import 'package:hardwarestore/models/quote.dart';
 import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/models/userNotifications.dart';
 import 'package:hardwarestore/screens/settings.dart';
@@ -16,7 +15,6 @@ import 'package:hardwarestore/services/tools.dart';
 import 'package:hardwarestore/widgets/account_min_admin.dart';
 import 'package:hardwarestore/widgets/contact_mini_admin.dart';
 import 'package:hardwarestore/widgets/order_mini_admin.dart';
-import 'package:hardwarestore/widgets/quote_mini_admin.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/navbaradmin.dart';
@@ -26,6 +24,8 @@ import '../models/contact.dart';
 import '../widgets/admin_bubble_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' show Platform;
+
+bool data_loaded = false;
 
 class HomeAdmin extends StatefulWidget {
   final userPref;
@@ -41,20 +41,22 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   void initState() {
-    try {
-      FirebaseMessaging.instance.getToken().then((value) {
-        AppUser? _user =
-            Provider.of<GetCurrentUser>(context, listen: false).currentUser;
-        if (_user != null) {
-          _user.token = value;
-          Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
-          value;
-          Repository().upsertUser(_user);
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   FirebaseMessaging.instance.getToken().then((value) {
+    //     AppUser? _user =
+    //         Provider.of<GetCurrentUser>(context, listen: false).currentUser;
+    //     if (_user != null) {
+    //       _user.token = value;
+    //       Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
+    //       value;
+    //       print('_HomeAdminState upsertUser');
+    //       Repository().upsertUser(_user);
+    //     }
+    //   });
+    // } catch (e) {
+    //   print(e);
+    // }
+    _pullRefresh();
     super.initState();
   }
 
@@ -109,44 +111,53 @@ class _HomeAdminState extends State<HomeAdmin> {
       _loadOrders(context);
       _loadLovs(context);
       _loadQuotes(context);
+      _loadNews(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    try {
-      if (widget.userPref.getString('username') != null &&
-          widget.userPref.getString('username') != "") {
-        if (Provider.of<EntityModification>(context, listen: false)
-            .accounts
-            .isEmpty) _loadAccounts(context);
-        if (Provider.of<EntityModification>(context, listen: false)
-            .contacts
-            .isEmpty) {
-          _loadContacts(context);
-          _loadUsers(context);
-        }
-        if (Provider.of<EntityModification>(context, listen: false)
-            .products
-            .isEmpty) _loadProductss(context);
-        if (Provider.of<EntityModification>(context, listen: false)
-            .order
-            .isEmpty) {
-          _loadOrders(context);
-        }
-        if (Provider.of<EntityModification>(context, listen: false)
-            .quotes
-            .isEmpty) {
-          _loadQuotes(context);
-        }
+    // try {
+    //   if (widget.userPref.getString('username') != null &&
+    //       widget.userPref.getString('username') != "") {
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .accounts
+    //         .isEmpty) _loadAccounts(context);
+    //     print('loaded accounts...');
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .contacts
+    //         .isEmpty) {
+    //       _loadContacts(context);
+    //       _loadUsers(context);
+    //       print('loaded contacts & users...');
+    //     }
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .products
+    //         .isEmpty) _loadProductss(context);
+    //     print('loaded products...');
 
-        if (Provider.of<EntityModification>(context, listen: false)
-            .lov
-            .isEmpty) {
-          _loadLovs(context);
-        }
-      }
-    } catch (e) {}
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .order
+    //         .isEmpty) {
+    //       _loadOrders(context);
+    //     }
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .quotes
+    //         .isEmpty) {
+    //       _loadQuotes(context);
+    //     }
+
+    //     if (Provider.of<EntityModification>(context, listen: false)
+    //         .lov
+    //         .isEmpty) {
+    //       _loadLovs(context);
+    //     }
+    //     if (Provider.of<EntityModification>(context).allNews.isEmpty) {
+    //       _loadNews(context);
+    //     }
+    //   }
+    //   data_loaded = true;
+    // } catch (e) {}
 
     return Scaffold(
       floatingActionButton: const AdminBubbleButtons(),
@@ -200,7 +211,8 @@ class _HomeAdminState extends State<HomeAdmin> {
             ),
 
             if (_searching == false) const OrdersListHome(),
-            if (_searching == false) const QuotesListHome(),
+            if (_searching == false) NewssList(),
+            // if (_searching == false) const QuotesListHome(),
             // if (_searching == false) DeliverysList(),
             if (_searching == true && _newSearch.length >= 3)
               FutureBuilder<List<SearchItem>?>(
@@ -245,11 +257,11 @@ class _HomeAdminState extends State<HomeAdmin> {
                                               item: searchSnap.data![index].item
                                                   as Order);
                                           break;
-                                        case "Quote":
-                                          output = QuoteMiniAdmin(
-                                              item: searchSnap.data![index].item
-                                                  as Quote);
-                                          break;
+                                        // case "Quote":
+                                        //   output = QuoteMiniAdmin(
+                                        //       item: searchSnap.data![index].item
+                                        //           as Quote);
+                                        //   break;
                                       }
                                     }
                                     return output;
@@ -366,4 +378,13 @@ void _loadUsers(BuildContext context) async {
 void _loadLovs(BuildContext context) async {
   await Provider.of<EntityModification>(context, listen: false)
       .refreshLOVFromDB();
+}
+
+void _loadNews(BuildContext context) async {
+  try {
+    await Provider.of<EntityModification>(context, listen: false)
+        .refreshActiveNewsFromDB();
+    await Provider.of<EntityModification>(context, listen: false)
+        .refreshAllNewsFromDB();
+  } catch (e) {}
 }

@@ -85,6 +85,7 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
+      _data.hidden = false;
       Repository().upsertProduct(_data);
       Navigator.pop(context); // Save our form now.
     }

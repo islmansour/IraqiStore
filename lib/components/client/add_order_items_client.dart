@@ -69,8 +69,10 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
               }
 
               return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
                         width: 40,
@@ -179,13 +181,12 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
                                       switch (type) {
                                         case "Product":
                                           output = Card(
-                                            elevation: 10,
+                                            elevation: 0,
                                             child: Container(
-                                              height: 400,
+                                              height: 140,
                                               width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.8,
+                                                  .size
+                                                  .width,
                                               child: ClientProductPick(
                                                 item: searchSnap.data![index]
                                                     .item as Product,
@@ -208,25 +209,34 @@ class _AddItemToOrderState extends State<AddItemToOrderClient> {
                         productSnap.data!.isNotEmpty)
                       SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: 400,
+                          //  height: MediaQuery.of(context).size.height * 0.48,
                           child: Scrollbar(
                               child: Container(
                             color: Colors.white,
                             child: ListView.builder(
                                 physics: const ScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
+                                scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 itemCount: productSnap.data?.length ?? 0,
                                 itemBuilder: (context, index) {
                                   return Card(
-                                    elevation: 10,
+                                    elevation: 0,
                                     child: Container(
-                                      height: 400,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      child: ClientProductPick(
-                                          item: productSnap.data![index],
-                                          stepperOrder: widget.clientOrder!),
+                                      height: 140,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: ClientProductPick(
+                                                item: productSnap.data![index],
+                                                stepperOrder:
+                                                    widget.clientOrder!),
+                                          ),
+                                          Divider(
+                                            color: Colors.black54,
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   );
                                 }),

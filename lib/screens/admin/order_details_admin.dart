@@ -33,7 +33,7 @@ class _OrderDetailAdminState extends State<OrderDetailAdmin> {
           item: widget.item,
         ),
         OrderItemList(
-          orderId: widget.item.id,
+          order: widget.item,
         ),
       ])),
       appBar: AppBar(

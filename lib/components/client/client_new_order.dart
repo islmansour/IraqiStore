@@ -55,8 +55,10 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
   @override
   Widget build(BuildContext context) {
     var translation = AppLocalizations.of(context);
-    _data.contactId =
-        Provider.of<GetCurrentUser>(context).currentUser!.contactId;
+    try {
+      _data.contactId =
+          Provider.of<GetCurrentUser>(context).currentUser!.contactId;
+    } catch (e) {}
     return Form(
       key: _formKey,
       child: Container(
@@ -220,11 +222,13 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              translation.delivery,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineMedium,
+                                            Expanded(
+                                              child: Text(
+                                                translation.delivery,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineSmall,
+                                              ),
                                             ),
                                             Checkbox(
                                                 value: hasDelivery,
@@ -297,6 +301,7 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                   height: 20,
                                 ),
                                 Container(
+                                  padding: EdgeInsets.only(top: 4),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(

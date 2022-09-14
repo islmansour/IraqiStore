@@ -83,7 +83,7 @@ class _ClientNewsCardState extends State<ClientNewsCard> {
                               }),
                             ),
                     )
-                  : DisplayProductClient(
+                  : DisplayProductClientLarge(
                       discount: _prod.discount.toString(),
                       img: _prod.img,
                     ),

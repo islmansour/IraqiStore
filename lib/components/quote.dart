@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
-
-import '../models/quote.dart';
 import '../services/tools.dart';
 import '../widgets/quote_mini_admin.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

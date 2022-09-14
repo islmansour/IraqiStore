@@ -222,7 +222,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () async {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
-                  prefs.setString('username', "");
+                  await prefs.clear();
+                  Future.delayed(const Duration(seconds: 1), () {
+                    print(
+                        prefs.getString('username')); // Prints after 1 second.
+                  });
                   FirebaseAuth auth = FirebaseAuth.instance;
                   setState(() {
                     NavigationController navigation =

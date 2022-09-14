@@ -9,8 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/tools.dart';
 
 class OrderItemList extends StatefulWidget {
-  final int orderId;
-  OrderItemList({Key? key, required this.orderId}) : super(key: key);
+  final Order order;
+  OrderItemList({Key? key, required this.order}) : super(key: key);
 
   @override
   State<OrderItemList> createState() => _OrderItemListState();
@@ -29,7 +29,7 @@ class _OrderItemListState extends State<OrderItemList> {
     if (Provider.of<EntityModification>(context)
         .order
         .where(
-          (element) => element.id == widget.orderId,
+          (element) => element.id == widget.order.id,
         )
         .isEmpty) {
       Provider.of<EntityModification>(context).refreshOrdersFromDB();
@@ -37,7 +37,7 @@ class _OrderItemListState extends State<OrderItemList> {
     Order order = Provider.of<EntityModification>(context)
         .order
         .where(
-          (element) => element.id == widget.orderId,
+          (element) => element.id == widget.order.id,
         )
         .first;
     List<OrderItem>? _items = order.orderItems;
@@ -58,7 +58,7 @@ class _OrderItemListState extends State<OrderItemList> {
                     ? Container(
                         child: OrderItemAdmin(
                           item: _items![index],
-                          orderId: widget.orderId,
+                          order: widget.order,
                         ),
                       )
                     : Dismissible(
@@ -75,7 +75,7 @@ class _OrderItemListState extends State<OrderItemList> {
                           Provider.of<EntityModification>(context,
                                   listen: false)
                               .order
-                              .where((element) => element.id == widget.orderId)
+                              .where((element) => element.id == widget.order.id)
                               .first
                               .orderItems!
                               .forEach((item) {
@@ -83,8 +83,8 @@ class _OrderItemListState extends State<OrderItemList> {
                               Provider.of<EntityModification>(context,
                                       listen: false)
                                   .order
-                                  .where(
-                                      (element) => element.id == widget.orderId)
+                                  .where((element) =>
+                                      element.id == widget.order.id)
                                   .first
                                   .orderItems
                                   ?.forEach(
@@ -100,7 +100,7 @@ class _OrderItemListState extends State<OrderItemList> {
                                     listen: false)
                                 .order
                                 .where(
-                                    (element) => element.id == widget.orderId)
+                                    (element) => element.id == widget.order.id)
                                 .first;
 
                             Provider.of<EntityModification>(context,
@@ -117,7 +117,7 @@ class _OrderItemListState extends State<OrderItemList> {
                         },
                         child: OrderItemAdmin(
                           item: _items[index],
-                          orderId: widget.orderId,
+                          order: widget.order,
                         ),
                       );
               }),

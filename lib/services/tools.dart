@@ -160,8 +160,8 @@ class EntityModification extends ChangeNotifier {
 
   refreshAccountsByUserFromDB(AppUser currUser) async {
     try {
-      _accounts =
-          (await Repository().getAccountByUser(currUser.contactId.toString()))!;
+      _accounts = (await Repository()
+          .initAccountByUser(currUser.contactId.toString()))!;
       notifyListeners();
     } catch (e) {}
   }

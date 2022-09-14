@@ -45,8 +45,10 @@ class _categoriesFilterState extends State<CategoriesFilter> {
     List<ListOfValues> _categories =
         Provider.of<CurrentListOfValuesUpdates>(context).getListOfValue(
             'PRODUCT_CATEGORY', AppLocalizations.of(context)!.localeName);
-
-    if (_categories == null || _categories.isEmpty) return Container();
+    if (_categories == null || _categories.isEmpty)
+      return Container(
+        child: Text('no filter'),
+      );
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.75,

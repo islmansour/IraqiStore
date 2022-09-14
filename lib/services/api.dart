@@ -50,9 +50,11 @@ class ApiBaseHelper {
     //print('api [get]: ' + _baseUrl! + url);
 
     try {
-      final response =
-          await http.get(Uri.parse(_baseUrl! + url), headers: headers);
-      responseJson = _returnResponse(response);
+      if (_baseUrl != null) {
+        final response =
+            await http.get(Uri.parse(_baseUrl! + url), headers: headers);
+        responseJson = _returnResponse(response);
+      }
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -61,8 +63,8 @@ class ApiBaseHelper {
 
   Future<dynamic> getUserOperations(String url) async {
     var _pref = await SharedPreferences.getInstance();
-    _baseUrl = "http://arabapps.biz:8000";
-    //_baseUrl = 'http://127.0.0.1:8000';
+    // _baseUrl = "http://arabapps.biz:8000";
+    _baseUrl = 'http://127.0.0.1:8000';
     //print('api [getUserOperations]: ' + _baseUrl! + url);
 
     try {
@@ -100,8 +102,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postUserOperations(String url, {Object? body}) async {
-    _baseUrl = "http://arabapps.biz:8000";
-    //_baseUrl = 'http://127.0.0.1:8000';
+    // _baseUrl = "http://arabapps.biz:8000";
+    _baseUrl = 'http://127.0.0.1:8000';
     var responseJson;
 
     try {
@@ -324,17 +326,37 @@ class Repository {
     return <Account>[];
   }
 
+  Future<List<Account>?> initAccountByUser(String contactId) async {
+    try {
+      final response =
+          await _helper.get("/IraqiStore/get_accounts_by_user/$contactId");
+
+      List<Account> _results = accountFromJson(response);
+      _results.forEach((element) async {
+        element.accountContacts = <Contact>[];
+        // element.accountContacts =
+        //     await getAccountContact(element.id.toString());
+
+        // element.accountOrders = await getAccountOrders(element.id.toString());
+        // element.accountQuotes = await getAccountQuotes(element.id.toString());
+      });
+
+      return _results;
+    } catch (e) {}
+    return <Account>[];
+  }
+
   Future<List<Account>?> getAccounts() async {
     final response = await _helper.get("/IraqiStore/account_list");
     try {
       List<Account> _results = accountFromJson(response);
       _results.forEach((element) async {
         element.accountContacts = <Contact>[];
-        element.accountContacts =
-            await getAccountContact(element.id.toString());
+        // element.accountContacts =
+        //     await getAccountContact(element.id.toString());
 
-        element.accountOrders = await getAccountOrders(element.id.toString());
-        element.accountQuotes = await getAccountQuotes(element.id.toString());
+        // element.accountOrders = await getAccountOrders(element.id.toString());
+        // element.accountQuotes = await getAccountQuotes(element.id.toString());
       });
 
       return _results;
@@ -485,7 +507,7 @@ class Repository {
   Future<List<AppUser>?> getUserByLogin(String login) async {
     final response =
         await _helper.getUserOperations("/IraqiStore/get_user_by_uid/" + login);
-    //print('getUserByLogin  $response');
+    // print('getUserByLogin  $response');
     return userFromJson(response);
   }
 

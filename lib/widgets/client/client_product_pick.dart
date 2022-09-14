@@ -119,116 +119,244 @@ class _ProductPickState extends State<ClientProductPick> {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          DisplayProductClient(
-            discount: widget.item.discount.toString(),
-            img: currentImg,
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            width: MediaQuery.of(context).size.width * 0.80,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 4.0, left: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(0.0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.item.name.toString(),
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20.0,
+                  Expanded(
+                    child: DisplayProductClient(
+                      discount: widget.item.discount.toString(),
+                      img: currentImg,
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        widget.item.price.toString() +
-                            " " +
-                            format.currencySymbol +
-                            " ",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
-            ),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      widget.item.desc.toString(),
-                      maxLines: 6,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10.0,
+              Flexible(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.topRight,
+                  //    color: Colors.yellow,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Container(
+                      //   // decoration: BoxDecoration(
+                      //   //     border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
+                      //   //     borderRadius: BorderRadius.all(Radius.circular(10))),
+                      //   //    width: MediaQuery.of(context).size.width * 0.90,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(right: 0.0, left: 0),
+                      //     child: Row(
+                      //   //    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       children: [
+                      //         Text(
+                      //           widget.item.name.toString(),
+                      //           style: TextStyle(
+                      //             color: Colors.black54,
+                      //             fontWeight: FontWeight.w600,
+                      //             fontSize: 20.0,
+                      //           ),
+                      //         ),
+                      //         Row(
+                      //           children: [
+                      //             Text(
+                      //               widget.item.price.toString() +
+                      //                   " " +
+                      //                   format.currencySymbol +
+                      //                   " ",
+                      //               style: TextStyle(
+                      //                 color: Colors.black54,
+                      //                 fontWeight: FontWeight.w600,
+                      //                 fontSize: 16.0,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      Flexible(
+                        flex: 1,
+                        child: Text(
+                          widget.item.name.toString(),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18.0,
+                          ),
+                        ),
                       ),
-                    ),
+
+                      Container(
+                        height: 40,
+                        // decoration: BoxDecoration(
+                        //     border: Border.all(
+                        //         color: Colors.redAccent.withOpacity(0.3)),
+                        //     borderRadius: BorderRadius.all(Radius.circular(10))),
+                        //      width: MediaQuery.of(context).size.width * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Text(
+                            widget.item.desc.toString(),
+                            maxLines: 3,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // SizedBox(
+                      //   height: 4,
+                      // ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ((widget.item.price! * widget.item.discount!) -
+                                            widget.item.price!)
+                                        .toString() +
+                                    " " +
+                                    format.currencySymbol +
+                                    " ",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .priceafterdiscount,
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10.0,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                widget.item.price.toString() +
+                                    " " +
+                                    format.currencySymbol +
+                                    " ",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 60,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.redAccent.withOpacity(0.3)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                              initialValue: orderItem!.quantity == null
+                                  ? ""
+                                  : orderItem!.quantity.toString(),
+                              onChanged: (value) {
+                                setState(() {
+                                  try {
+                                    quantity = double.parse(value);
+                                  } catch (e) {
+                                    quantity = 0;
+                                  }
+                                  addToOrderItem(
+                                      widget.stepperOrder, orderItem);
+                                  // recordChanged = true;
+                                });
+                              },
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+
+                                labelStyle: TextStyle(fontSize: 12),
+                                // border: OutlineInputBorder(),0
+                                labelText: '    ' + translation!.quantity,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Expanded(
+                      //   // width: MediaQuery.of(context).size.width,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.end,
+                      //     children: [
+                      //       Container(
+                      //         alignment: Alignment.center,
+                      //         height: 60,
+                      //         decoration: BoxDecoration(
+                      //             border: Border.all(
+                      //                 color: Colors.redAccent.withOpacity(0.3)),
+                      //             borderRadius:
+                      //                 BorderRadius.all(Radius.circular(10))),
+                      //         width: MediaQuery.of(context).size.width * 0.15,
+                      //         child: TextFormField(
+                      //           style: TextStyle(
+                      //               fontSize: 18, fontWeight: FontWeight.bold),
+                      //           initialValue: orderItem!.quantity == null
+                      //               ? ""
+                      //               : orderItem!.quantity.toString(),
+                      //           onChanged: (value) {
+                      //             setState(() {
+                      //               try {
+                      //                 quantity = double.parse(value);
+                      //               } catch (e) {
+                      //                 quantity = 0;
+                      //               }
+                      //               addToOrderItem(
+                      //                   widget.stepperOrder, orderItem);
+                      //               // recordChanged = true;
+                      //             });
+                      //           },
+                      //           keyboardType:
+                      //               const TextInputType.numberWithOptions(),
+                      //           decoration: InputDecoration(
+                      //             border: InputBorder.none,
+
+                      //             labelStyle: TextStyle(fontSize: 12),
+                      //             // border: OutlineInputBorder(),0
+                      //             labelText: '    ' + translation!.quantity,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // )
+                    ],
                   ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  height: 80,
-                  decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  width: MediaQuery.of(context).size.width * 0.15,
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    initialValue: orderItem!.quantity == null
-                        ? ""
-                        : orderItem!.quantity.toString(),
-                    onChanged: (value) {
-                      setState(() {
-                        try {
-                          quantity = double.parse(value);
-                        } catch (e) {
-                          quantity = 0;
-                        }
-                        addToOrderItem(widget.stepperOrder, orderItem);
-                        // recordChanged = true;
-                      });
-                    },
-                    keyboardType: const TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      labelStyle: TextStyle(fontSize: 12),
-                      // border: OutlineInputBorder(),0
-                      labelText: '    ' + translation!.quantity,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ]),
+              ),
+            ]),
       ),
     );
   }
