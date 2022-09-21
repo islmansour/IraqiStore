@@ -111,9 +111,9 @@ class _OrderItemListState extends State<OrderItemList> {
                           setState(() {
                             _items.removeAt(index);
                           });
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(AppLocalizations.of(context)!
-                                  .removedSuccessfuly)));
+                          // Scaffold.of(context).showSnackBar(SnackBar(
+                          //     content: Text(AppLocalizations.of(context)!
+                          //         .removedSuccessfuly)));
                         },
                         child: OrderItemAdmin(
                           item: _items[index],

@@ -141,8 +141,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                               ?.id;
                         });
                       } catch (e) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text(translation.errorDisplayAccount)));
+                        // Scaffold.of(context).showSnackBar(SnackBar(
+                        //     content: Text(translation.errorDisplayAccount)));
                       }
                     },
                     decoration: const InputDecoration(
@@ -179,9 +179,9 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                               _data.contactId = int.parse(newValue.toString());
                             });
                           } catch (e) {
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text(translation.errorDisplayContact)));
+                            // Scaffold.of(context).showSnackBar(SnackBar(
+                            //     content:
+                            //         Text(translation.errorDisplayContact)));
                           }
                         },
                         decoration: const InputDecoration(
@@ -213,8 +213,8 @@ class _CreateNewOrderFormState extends State<CreateNewOrderForm> {
                         // do other stuff with _category
                         setState(() => _data.status = newValue.toString());
                       } catch (e) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text(translation.errorDisplayStatus)));
+                        // Scaffold.of(context).showSnackBar(SnackBar(
+                        //     content: Text(translation.errorDisplayStatus)));
                       }
                     },
                     value: _data.status == "" || _data.status == null

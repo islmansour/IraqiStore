@@ -79,7 +79,7 @@ class _ProductPickState extends State<ClientProductPick> {
     } catch (e) {
       print(e);
       String err = AppLocalizations.of(context)!.errorCreatingProductScreen;
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
+      // Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
     }
   }
 

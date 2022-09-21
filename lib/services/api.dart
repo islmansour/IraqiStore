@@ -63,8 +63,8 @@ class ApiBaseHelper {
 
   Future<dynamic> getUserOperations(String url) async {
     var _pref = await SharedPreferences.getInstance();
-    // _baseUrl = "http://arabapps.biz:8000";
-    _baseUrl = 'http://127.0.0.1:8000';
+    _baseUrl = "http://arabapps.biz:8000";
+    //_baseUrl = 'http://127.0.0.1:8000';
     //print('api [getUserOperations]: ' + _baseUrl! + url);
 
     try {
@@ -102,8 +102,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postUserOperations(String url, {Object? body}) async {
-    // _baseUrl = "http://arabapps.biz:8000";
-    _baseUrl = 'http://127.0.0.1:8000';
+    _baseUrl = "http://arabapps.biz:8000";
+    // _baseUrl = 'http://127.0.0.1:8000';
     var responseJson;
 
     try {
@@ -538,6 +538,12 @@ class Repository {
   /////////////////////////// END USERS
   Future<List<Delivery>?> getDeliverys() async {
     final response = await _helper.get("/IraqiStore/delivery_list");
+    return deliveryFromJson(response);
+  }
+
+  Future<List<Delivery>?> getDeliveryByContact(String contactId) async {
+    final response =
+        await _helper.get("/IraqiStore/delivery_list_by_contact/" + contactId);
     return deliveryFromJson(response);
   }
 

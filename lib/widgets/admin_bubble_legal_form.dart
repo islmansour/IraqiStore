@@ -81,8 +81,8 @@ class _LegalFormBubbleButtonsState extends State<LegalFormBubbleButtons>
                 });
               }
             } catch (e) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(AppLocalizations.of(context)!.errorChoosen)));
+              // Scaffold.of(context).showSnackBar(SnackBar(
+              //     content: Text(AppLocalizations.of(context)!.errorChoosen)));
             }
             _animationController.reverse();
           },
@@ -117,8 +117,8 @@ class _LegalFormBubbleButtonsState extends State<LegalFormBubbleButtons>
                 });
               }
             } catch (e) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(AppLocalizations.of(context)!.errorChoosen)));
+              // Scaffold.of(context).showSnackBar(SnackBar(
+              //     content: Text(AppLocalizations.of(context)!.errorChoosen)));
             }
             //
             _animationController.reverse();

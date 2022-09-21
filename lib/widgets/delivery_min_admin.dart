@@ -60,14 +60,14 @@ class DeliveryMiniAdmin extends StatelessWidget {
                       barcode: Barcode.qrCode(
                         errorCorrectLevel: BarcodeQRCorrectionLevel.high,
                       ),
-                      data: '${order!.order_number}#${DateTime.now()}',
+                      data: '${item.id}#${DateTime.now()}',
                       width: 200,
                       height: 200,
                     ),
                   ),
                 ],
                 title:
-                    '${order.order_number} (${order.orderItems!.length.toString()} ${AppLocalizations.of(context)!.items})',
+                    '${order!.order_number} (${order.orderItems!.length.toString()} ${AppLocalizations.of(context)!.items})',
                 content: '2',
               );
             },

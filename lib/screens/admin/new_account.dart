@@ -213,9 +213,9 @@ class _CreateNewAccountFormState extends State<CreateNewAccountForm> {
                                   setState(
                                       () => _data.type = newValue.toString());
                                 } catch (e) {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text(
-                                          translation.errorDisplayStatus)));
+                                  // Scaffold.of(context).showSnackBar(SnackBar(
+                                  //     content: Text(
+                                  //         translation.errorDisplayStatus)));
                                 }
                               },
                               value: _data.type == "" || _data.type == null

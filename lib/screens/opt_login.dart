@@ -85,10 +85,10 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                       ],
                     ),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: Text(translation.done),
-                        textColor: Colors.white,
-                        color: Colors.redAccent,
+                        // textColor: Colors.white,
+                        // color: Colors.redAccent,
                         onPressed: () {
                           try {
                             FirebaseAuth auth = FirebaseAuth.instance;

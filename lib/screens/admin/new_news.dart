@@ -124,8 +124,8 @@ class _NewNewsStepperState extends State<NewNewsStepper> {
         // Save our form now.
       }
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
-          const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
+      // Scaffold.of(context).showSnackBar(
+      //     const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
     }
   }
 
@@ -292,9 +292,9 @@ class _NewNewsStepperState extends State<NewNewsStepper> {
                                           int.parse(newValue.toString());
                                     });
                                   } catch (e) {
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                        content: Text(
-                                            translation.errorDisplayAccount)));
+                                    // Scaffold.of(context).showSnackBar(SnackBar(
+                                    //     content: Text(
+                                    //         translation.errorDisplayAccount)));
                                   }
                                 },
                                 decoration: const InputDecoration(

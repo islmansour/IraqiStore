@@ -302,10 +302,10 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                       if (await canLaunchUrl(url)) {
                                         await launchUrl(url);
                                       } else {
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'Could not launch $url')));
+                                        // Scaffold.of(context).showSnackBar(
+                                        //     SnackBar(
+                                        //         content: Text(
+                                        //             'Could not launch $url')));
                                       }
                                     },
                                   )),
@@ -332,10 +332,10 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                       if (await canLaunchUrl(url)) {
                                         await launchUrl(url);
                                       } else {
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'Could not launch $url')));
+                                        // Scaffold.of(context).showSnackBar(
+                                        //     SnackBar(
+                                        //         content: Text(
+                                        //             'Could not launch $url')));
                                       }
                                     },
                                   )),
@@ -365,10 +365,10 @@ class _AccountMiniAdminState extends State<AccountMiniAdmin> {
                                       if (await canLaunchUrl(url)) {
                                         await launchUrl(url);
                                       } else {
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'Could not launch $url')));
+                                        // Scaffold.of(context).showSnackBar(
+                                        //     SnackBar(
+                                        //         content: Text(
+                                        //             'Could not launch $url')));
                                       }
                                     },
                                   )),

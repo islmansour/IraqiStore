@@ -22,24 +22,16 @@ class ClientBottomNav extends StatelessWidget {
       onTap: (buttonIndex) {
         switch (buttonIndex) {
           case 0:
-            print('0..');
-
             navigation.changeScreen('/');
             break;
           case 1:
-            print('1..');
-
             navigation.changeScreen('/client-orders');
             break;
 
           case 2:
-            print('3..');
-
             navigation.changeScreen('/client-chat');
             break;
           case 3:
-            print('4..');
-
             navigation.changeScreen('/qrscanner');
             break;
 

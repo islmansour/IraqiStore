@@ -14,9 +14,11 @@ class Delivery {
   String? approvalLink;
   DateTime? date;
   int? orderId;
+  String? qrData;
 
   Delivery(
       {this.id,
+      this.qrData,
       this.accountId,
       this.orderId,
       this.contactId,

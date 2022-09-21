@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/contact.dart';
-import 'package:hardwarestore/services/api.dart';
 import 'package:hardwarestore/services/tools.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:provider/provider.dart';

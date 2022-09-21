@@ -85,5 +85,6 @@
   "writeDescription": "اكتب فحوى الدعاية...",
   "chooseImage": "اختر صورة",
   "appUser": "مستخدم",
-  "priceafterdiscount": "السعر قبل التخفيض"
+  "priceafterdiscount": "السعر قبل التخفيض",
+  "noPermission": "يجب السماح للتطبيق ان يستمعل الكميرا"
 }

@@ -55,6 +55,8 @@
 	<array>
 		<string>_dartobservatory._tcp</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera in order to be able to read QR Barcode.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow access to photo library in order to be able to provide a photo of your product.</string>
 	<key>UIBackgroundModes</key>

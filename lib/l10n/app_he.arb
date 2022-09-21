@@ -88,5 +88,6 @@
   "notifications": "התראות",
   "new": "חדש",
   "appUser": "משתמש",
-  "priceafterdiscount": "מחיר לפני הנחה"
+  "priceafterdiscount": "מחיר לפני הנחה",
+  "noPermission": "צריך להפעיל הרשאת שימוש במצלימה על מנת לסרוק את הקוד"
 }

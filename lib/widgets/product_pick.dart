@@ -114,7 +114,7 @@ class _ProductPickState extends State<ProductPick> {
       });
     } catch (e) {
       String err = AppLocalizations.of(context)!.errorCreatingProductScreen;
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
+      // Scaffold.of(context).showSnackBar(SnackBar(content: Text(err)));
     }
   }
 
@@ -271,10 +271,10 @@ class _ProductPickState extends State<ProductPick> {
                                     });
                                     addToOrderItem(order!, orderItem);
                                   } catch (e) {
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .errorChoosen)));
+                                    // Scaffold.of(context).showSnackBar(SnackBar(
+                                    //     content: Text(
+                                    //         AppLocalizations.of(context)!
+                                    //             .errorChoosen)));
                                   }
                                 },
                                 keyboardType:

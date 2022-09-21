@@ -175,10 +175,10 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                               int.parse(newValue.toString());
                                         });
                                       } catch (e) {
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text(translation
-                                                    .errorDisplayAccount)));
+                                        // Scaffold.of(context).showSnackBar(
+                                        //     SnackBar(
+                                        //         content: Text(translation
+                                        //             .errorDisplayAccount)));
                                       }
                                     },
                                     decoration: const InputDecoration(
@@ -344,10 +344,10 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
                                         }
                                       } catch (e) {
                                         print(e);
-                                        Scaffold.of(context).showSnackBar(
-                                            const SnackBar(
-                                                content: Text(
-                                                    "התרחשה תקלה בשמירת  ההזמנה החדשה.")));
+                                        // Scaffold.of(context).showSnackBar(
+                                        //     const SnackBar(
+                                        //         content: Text(
+                                        //             "התרחשה תקלה בשמירת  ההזמנה החדשה.")));
                                       }
                                     },
                                     child: Text(translation.confirm))

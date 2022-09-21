@@ -8,6 +8,7 @@ part of 'delivery.dart';
 
 Delivery _$DeliveryFromJson(Map<String, dynamic> json) => Delivery(
       id: json['id'] as int?,
+      qrData: json['qrData'] as String?,
       accountId: json['accountId'] as int?,
       orderId: json['orderId'] as int?,
       contactId: json['contactId'] as int?,
@@ -27,4 +28,5 @@ Map<String, dynamic> _$DeliveryToJson(Delivery instance) => <String, dynamic>{
       'approvalLink': instance.approvalLink,
       'date': instance.date?.toIso8601String(),
       'orderId': instance.orderId,
+      'qrData': instance.qrData,
     };

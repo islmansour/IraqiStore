@@ -98,9 +98,9 @@ class _QuoteItemListState extends State<QuoteItemList> {
                     setState(() {
                       _items.removeAt(index);
                     });
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            AppLocalizations.of(context)!.removedSuccessfuly)));
+                    // Scaffold.of(context).showSnackBar(SnackBar(
+                    //     content: Text(
+                    //         AppLocalizations.of(context)!.removedSuccessfuly)));
                   },
                   child: QuoteItemAdmin(
                     item: _items[index],

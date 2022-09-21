@@ -168,7 +168,6 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // final String? userId = prefs.getString('username');
     user = await FirebaseAuth.instance.currentUser;
-
     if (user != null) {
       //  print('main user not null');
       List<AppUser>? users = await Repository()
@@ -445,7 +444,12 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                   pages: [
                     MaterialPage(
                         child: prefs!.getString('username') == null
-                            ? LoginPage()
+                            ? Scaffold(
+                                backgroundColor: Colors.white,
+                                resizeToAvoidBottomInset: false,
+                                body: Center(
+                                    child:
+                                        CircularProgressIndicator())) //LoginPage()
                             : isAdmin!
                                 ? HomeAdmin(userPref: prefs)
                                 : ClientHome()),

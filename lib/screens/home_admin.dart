@@ -72,7 +72,8 @@ class _HomeAdminState extends State<HomeAdmin> {
           Provider.of<GetCurrentUser>(context, listen: false)
               .updateUser(users.first);
         } catch (e) {
-          throw "$e";
+          //throw "$e";
+          print('home admin error' + e.toString());
         }
       }
     }
