@@ -95,17 +95,19 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
 
-          // Handle other errors
+          print('#1cerror in verifyPhone():' + e.toString());
         },
         codeSent: (String verificationId, [int? forceResendingToken]) {
           widget.authCodeVerId = verificationId;
         },
         codeAutoRetrievalTimeout: (String verificationId) {
+          print('#2 error in verifyPhone():' + verificationId);
+
           // Auto-resolution timed out...
         },
       );
     } catch (e) {
-      print('error in verifyPhone():' + e.toString());
+      print('#3 error in verifyPhone():' + e.toString());
     }
   }
 
@@ -180,8 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                           size: 22,
                                         ),
                                       ),
-                                      hintText:
-                                          'Enter Phone Number e.g 0548004990',
+                                      hintText: 'Enter Phone e.g 0501234567',
                                       border: InputBorder.none,
                                       hintStyle: const TextStyle(
                                           color: Colors.white60,
@@ -294,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () {
                             //onpressed();
-
+                            print('PRESSING LOFGIN');
                             if (phoneNo.length >= 13) {
                               verifyPhone();
                             } else {

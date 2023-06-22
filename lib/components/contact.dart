@@ -42,7 +42,11 @@ class _ContactsListState extends State<ContactsList> {
                       itemBuilder: (context, index) {
                         Provider.of<EntityModification>(context).contacts =
                             contactSnap.data!;
-                        return ContactMiniAdmin(item: contactSnap.data![index]);
+                        if (contactSnap.data![index].phone != '0548004990')
+                          return ContactMiniAdmin(
+                              item: contactSnap.data![index]);
+                        else
+                          return Container();
                       })));
         });
   }

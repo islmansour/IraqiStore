@@ -18,6 +18,12 @@ import '../models/orders.dart';
 import '../models/products.dart';
 import '../models/quote.dart';
 
+class ChatListenerNotifier extends ChangeNotifier {
+  insureChatReload() {
+    notifyListeners();
+  }
+}
+
 class ClientEnvironment extends ChangeNotifier {
   Order? theCurrentOrder;
 

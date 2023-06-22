@@ -110,9 +110,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            Text(
-              '$env',
-            ),
+            // Text(
+            //   '$env',
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

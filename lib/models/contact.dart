@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:hardwarestore/models/message.dart';
+import 'package:hardwarestore/services/api.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'contact.g.dart';
@@ -21,6 +23,9 @@ class Contact {
   int? created_by;
   int? accountId;
 
+  @JsonKey(ignore: true)
+  List<Message>? contactMessages;
+
   Contact(
       {this.active,
       this.accountId,
@@ -36,6 +41,11 @@ class Contact {
       this.street2,
       this.town,
       this.zip});
+
+  void loadMessages() async {
+    contactMessages =
+        await Repository().getMessageByContact(this.id.toString());
+  }
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
       _$ContactFromJson(json);

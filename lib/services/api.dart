@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:hardwarestore/models/account_contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
+import 'package:hardwarestore/models/message.dart';
 import 'package:hardwarestore/models/news.dart';
 import 'package:hardwarestore/models/orders.dart';
 import 'package:hardwarestore/models/products.dart';
@@ -27,7 +28,7 @@ class ApiBaseHelper {
     'content-type': 'application/json',
   };
 
-  String get apiURL => _baseUrl!;
+  String get apiURL => "http://arabapps.biz:8000";
 
   //String ipaddress = '139.162.139.161';
   //final String _baseUrl = 'http://127.0.0.1:8000';
@@ -318,7 +319,7 @@ class Repository {
             await getAccountContact(element.id.toString());
 
         element.accountOrders = await getAccountOrders(element.id.toString());
-        element.accountQuotes = await getAccountQuotes(element.id.toString());
+        // element.accountQuotes = await getAccountQuotes(element.id.toString());
       });
 
       return _results;
@@ -551,6 +552,27 @@ class Repository {
     final response = await _helper.post(
         '/IraqiStore/upsert_delivery/' + delivery.id.toString(),
         body: delivery.toJson());
+
+    return int.parse(response.toString());
+  }
+
+  Future<List<Message>?> getMessageByContact(String contactId) async {
+    final response =
+        await _helper.get("/IraqiStore/get_message_by_contact/" + contactId);
+    return messageFromJson(response);
+  }
+
+  //
+  Future<List<Message>?> getUnreadMessageByContact(String contactId) async {
+    final response = await _helper
+        .get("/IraqiStore/get_unread_message_by_contact/" + contactId);
+    return messageFromJson(response);
+  }
+
+  Future<int>? upsertMessage(Message message) async {
+    final response = await _helper.post(
+        '/IraqiStore/upsert_message/' + message.id.toString(),
+        body: message.toJson());
 
     return int.parse(response.toString());
   }

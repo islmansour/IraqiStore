@@ -70,7 +70,10 @@ class _FormDeliveryAgreementState extends State<FormDeliveryAgreement> {
                 return Row(
                   children: <Widget>[
                     TextButton(
-                      onPressed: dtl.onStepCancel,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      //   onPressed: dtl.onStepCancel,
                       child: Text(save == true ? 'ביטול' : 'ביטול'),
                     ),
                     TextButton(

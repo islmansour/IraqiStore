@@ -47,12 +47,16 @@ class _ShowPDFState extends State<ShowPDF> {
 
   @override
   Widget build(BuildContext context) {
-    final Uri _url = Uri.parse(
-        '${ApiBaseHelper().apiURL}:8000/IraqiStore/getPDF/' + widget.link!);
-    // void _launchUrl() async {
-    //   if (!await launchUrl(_url, webOnlyWindowName: "_blank"))
-    //     throw 'Could not launch $_url';
-    // }
+    try {
+      final Uri _url = Uri.parse(
+          '${ApiBaseHelper().apiURL}:8000/IraqiStore/getPDF/' + widget.link!);
+      // void _launchUrl() async {
+      //   if (!await launchUrl(_url, webOnlyWindowName: "_blank"))
+      //     throw 'Could not launch $_url';
+      // }
+    } catch (e) {
+      return Container();
+    }
 
     return Scaffold(
       appBar: AppBar(),

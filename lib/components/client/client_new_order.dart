@@ -33,25 +33,6 @@ class _NewOrderStepperState extends State<NewOrderStepper> {
     super.initState();
   }
 
-  // void submit() {
-  //   try {
-  //     // First validate form.
-  //     if (_formKey.currentState!.validate()) {
-  //       _formKey.currentState?.save();
-  //       //DjangoServices().upsertOrder(_data)?.then((value) {
-  //       Repository().upsertOrder(_data)?.then((value) {
-  //         _data.id == value;
-  //         Provider.of<EntityModification>(context, listen: false).update(_data);
-  //       });
-  //       Navigator.pop(context);
-  //       // Save our form now.
-  //     }
-  //   } catch (e) {
-  //     Scaffold.of(context).showSnackBar(
-  //         const SnackBar(content: Text("התרחשה תקלה בשמירת  ההזמנה החדשה.")));
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     var translation = AppLocalizations.of(context);

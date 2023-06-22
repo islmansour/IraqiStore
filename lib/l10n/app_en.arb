@@ -87,5 +87,8 @@
   "notifications": "Notifications",
   "appUser": "User",
   "priceafterdiscount": "price before discount",
-  "noPermission": "no Permission"
+  "noPermission": "no Permission",
+  "sendMessage": "Send a message...",
+  "noMessages": "No Messages Found.",
+  "clientMessages": "Client Messages"
 }

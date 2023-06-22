@@ -86,5 +86,8 @@
   "chooseImage": "اختر صورة",
   "appUser": "مستخدم",
   "priceafterdiscount": "السعر قبل التخفيض",
-  "noPermission": "يجب السماح للتطبيق ان يستمعل الكميرا"
+  "noPermission": "يجب السماح للتطبيق ان يستمعل الكميرا",
+  "sendMessage": "ابعث رسالة...",
+  "noMessages": "لا يوجد رسائل.",
+  "clientMessages": "رسائل من الزبون"
 }

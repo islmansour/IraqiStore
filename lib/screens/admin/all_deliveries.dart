@@ -68,42 +68,6 @@ class _AllDeliveriesScreenState extends State<AllDeliveriesScreen> {
               ),
               if (_searching == false) DeliverysList(),
               if (_searching == true && _newSearch.length >= 3) Container()
-              // FutureBuilder<List<SearchItem>?>(
-              //     future: ApplySearch().SearchDelivery(context, _newSearch),
-              //     builder:
-              //         (context, AsyncSnapshot<List<SearchItem>?> searchSnap) {
-              //       if (searchSnap.connectionState == ConnectionState.none &&
-              //           searchSnap.hasData == null) {
-              //         return Container();
-              //       }
-              //       if (searchSnap.data?.length == null) return Container();
-              //       return SizedBox(
-              //           child: Padding(
-              //         padding: const EdgeInsets.only(right: 8.0, left: 8),
-              //         child: Scrollbar(
-              //             child: ListView.builder(
-              //                 scrollDirection: Axis.vertical,
-              //                 shrinkWrap: true,
-              //                 itemCount: searchSnap.data?.length,
-              //                 itemBuilder: (context, index) {
-              //                   String type = "";
-              //                   Widget output = Text('');
-              //                   if (searchSnap.data != null) {
-              //                     type =
-              //                         searchSnap.data![index].type.toString();
-
-              //                     switch (type) {
-              //                       case "Delivery":
-              //                         output = DeliveryMiniAdmin(
-              //                             item: searchSnap.data![index].item
-              //                                 as Delivery);
-              //                         break;
-              //                     }
-              //                   }
-              //                   return output;
-              //                 })),
-              //       ));
-              //     }),
             ],
           ),
         ));

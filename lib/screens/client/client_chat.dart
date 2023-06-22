@@ -1,48 +1,51 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
+import 'package:hardwarestore/components/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/message.dart';
 import 'package:hardwarestore/services/api.dart';
+import 'package:hardwarestore/services/tools.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-class ChatScreen extends StatefulWidget {
-  final contact;
-  ChatScreen({Key? key, this.contact}) : super(key: key);
+class ClientChatScreen extends StatefulWidget {
+  ClientChatScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ClientChatScreenState createState() => _ClientChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ClientChatScreenState extends State<ClientChatScreen> {
   late Contact _con;
   late TextEditingController _controller;
   Timer? timer;
 
   @override
   void initState() {
-    _controller = TextEditingController()
-      ..addListener(() {
-        //setState(() {});
-      });
+    _controller = TextEditingController()..addListener(() {});
+    super.initState();
+
+    _con = Provider.of<EntityModification>(context, listen: false)
+        .contacts
+        .firstWhere((element) =>
+            element.id ==
+            Provider.of<GetCurrentUser>(context, listen: false)
+                .currentUser!
+                .contactId!);
     timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
       setState(() {});
     });
-    super.initState();
-    if (widget.contact == null)
-      _con = Contact(first_name: "", last_name: "");
-    else
-      _con = widget.contact as Contact;
   }
 
   @override
   void dispose() {
     _controller.dispose();
     timer?.cancel();
-
     super.dispose();
   }
 
@@ -107,47 +110,55 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void publishMyMessage() {
     Message msg = Message(
+        // time: DateTime.now(),
         unread: true,
         id: 0,
-        receiver: _con.id,
-        sender: 0,
+        receiver: 0, //_con.id,
+        sender: Provider.of<GetCurrentUser>(context, listen: false)
+            .currentUser!
+            .contactId,
         text: _controller.text);
     Repository().upsertMessage(msg);
   }
 
   _buildMessageComposer() {
-    if (widget.contact == null) return Container();
-    var children2 = <Widget>[
-      Expanded(
-        child: TextField(
-          textCapitalization: TextCapitalization.sentences,
-          controller: _controller,
-          onChanged: (value) {},
-          decoration: InputDecoration.collapsed(
-            hintText: AppLocalizations.of(context)!.sendMessage,
-          ),
-        ),
-      ),
-      Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.rotationY(math.pi),
-        child: IconButton(
-          icon: Icon(Icons.play_circle_outline),
-          iconSize: 40.0,
-          color: Theme.of(context).primaryColor,
-          onPressed: () {
-            publishMyMessage();
-            _controller.clear();
-          },
-        ),
-      )
-    ];
+    //if (widget.contact == null) return Container();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 70.0,
       color: Colors.white,
       child: Row(
-        children: children2,
+        children: <Widget>[
+          // IconButton(
+          //   icon: Icon(Icons.photo),
+          //   iconSize: 25.0,
+          //   color: Theme.of(context).primaryColor,
+          //   onPressed: () {},
+          // ),
+          Expanded(
+            child: TextField(
+              textCapitalization: TextCapitalization.sentences,
+              controller: _controller,
+              onChanged: (value) {},
+              decoration: InputDecoration.collapsed(
+                hintText: AppLocalizations.of(context)!.sendMessage,
+              ),
+            ),
+          ),
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.rotationY(math.pi),
+            child: IconButton(
+              icon: Icon(Icons.play_circle_outline),
+              iconSize: 40.0,
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                publishMyMessage();
+                _controller.clear();
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -192,75 +203,65 @@ class _ChatScreenState extends State<ChatScreen> {
                       topLeft: Radius.circular(30.0),
                       topRight: Radius.circular(30.0),
                     ),
-                    child: widget.contact == null
-                        ? Container()
-                        : FutureBuilder<List<Message>?>(
-                            future: Repository()
-                                .getMessageByContact(_con.id.toString()),
-                            builder: (context,
-                                AsyncSnapshot<List<Message>?> chatSnap) {
-                              if (chatSnap.connectionState ==
-                                      ConnectionState.none &&
-                                  chatSnap.hasData == null) {
-                                return Container();
-                              }
+                    child: FutureBuilder<List<Message>?>(
+                        future: Repository()
+                            .getMessageByContact(_con.id.toString()),
+                        builder:
+                            (context, AsyncSnapshot<List<Message>?> chatSnap) {
+                          if (chatSnap.connectionState ==
+                                  ConnectionState.none &&
+                              chatSnap.hasData == null) {
+                            return Container();
+                          }
 
-                              return SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.80,
-                                  child: Scrollbar(
-                                      // In DB we return the list of messages in a reversed order then in the listview builder
-                                      // we use "reverse:true" this will allow showing latest message at the end of the chat window
-                                      child: ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          reverse: true,
-                                          itemCount: chatSnap.data?.length ?? 0,
-                                          itemBuilder: (context, index) {
-                                            if ((chatSnap.data![index].unread ==
-                                                        null ||
-                                                    chatSnap.data![index]
-                                                            .unread ==
-                                                        true) &&
-                                                chatSnap.data![index].sender !=
-                                                    0) {
-                                              // Using "0" for admin users, so for this we display chat for all admins as in the client
-                                              // is always communicating with the store. In the store we can have multiple managers.
-                                              // therefore when adding a message reset sender!=0 (when admin sending)
-                                              chatSnap.data![index].unread =
-                                                  false;
-                                              Repository().upsertMessage(
-                                                  chatSnap.data![index]);
-                                            }
-                                            return chatSnap.data![index]
-                                                        .receiver ==
-                                                    0
-                                                // Provider.of<GetCurrentUser>(
-                                                //         context,
-                                                //         listen: false)
-                                                //     .currentUser!
-                                                //     .contactId
-                                                ? Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      recipientUserMessage(
-                                                        msg: chatSnap
-                                                            .data![index],
-                                                      ),
-                                                    ],
+                          return SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.80,
+                              child: Scrollbar(
+                                  // In DB we return the list of messages in a reversed order then in the listview builder
+                                  // we use "reverse:true" this will allow showing latest message at the end of the chat window
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      reverse: true,
+                                      itemCount: chatSnap.data?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        if ((chatSnap.data![index].unread ==
+                                                    null ||
+                                                chatSnap.data![index].unread ==
+                                                    true) &&
+                                            chatSnap.data![index].sender == 0) {
+                                          // Using "0" for admin users, so for this we display chat for all admins as in the client
+                                          // is always communicating with the store. In the store we can have multiple managers.
+                                          // therefore when adding a message reset sender=0 (when client receiving)
+                                          chatSnap.data![index].unread = false;
+                                          Repository().upsertMessage(
+                                              chatSnap.data![index]);
+                                        }
+                                        return chatSnap.data![index].receiver ==
+                                                Provider.of<GetCurrentUser>(
+                                                        context,
+                                                        listen: false)
+                                                    .currentUser!
+                                                    .contactId
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  recipientUserMessage(
+                                                    msg: chatSnap.data![index],
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  currentUserMessage(
+                                                    msg: chatSnap.data![index],
                                                   )
-                                                : Row(
-                                                    children: [
-                                                      currentUserMessage(
-                                                        msg: chatSnap
-                                                            .data![index],
-                                                      )
-                                                    ],
-                                                  );
-                                          })));
-                            })),
+                                                ],
+                                              );
+                                      })));
+                        })),
               ),
             ),
             _buildMessageComposer(),
@@ -308,19 +309,18 @@ class currentUserMessage extends StatelessWidget {
                     maxHeight: MediaQuery.of(context).size.height * 0.6,
                   ),
                   child: Text(
-                      msg == null || msg!.text == null ? "" : msg!.text!,
-                      maxLines: msg == null ||
-                              msg!.text == "" ||
-                              msg!.text!.length ~/ 20 == 0
-                          ? 1
-                          : msg!.text!.length ~/ 5,
-                      overflow: TextOverflow.ellipsis,
-                      style: msg!.unread == null || msg!.unread == true
-                          ? TextStyle(
-                              fontSize: 8,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold)
-                          : TextStyle(color: Colors.black)),
+                    msg == null || msg!.text == null ? "" : msg!.text!,
+                    maxLines: msg == null ||
+                            msg!.text == "" ||
+                            msg!.text!.length ~/ 20 == 0
+                        ? 1
+                        : msg!.text!.length ~/ 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: msg!.unread == null || msg!.unread == true
+                        ? TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold)
+                        : TextStyle(color: Colors.black),
+                  ),
                 ),
                 SizedBox(
                   //width: 50,

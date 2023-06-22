@@ -8,9 +8,11 @@ import 'package:hardwarestore/components/admin/quote_item_list_component.dart';
 import 'package:hardwarestore/components/client/categories_filter.dart';
 import 'package:hardwarestore/components/user.dart';
 import 'package:hardwarestore/models/user.dart';
+import 'package:hardwarestore/screens/admin/chat_list_admin.dart';
 import 'package:hardwarestore/screens/admin/manage_admin_screen.dart';
 import 'package:hardwarestore/screens/admin/product_admin_screen.dart';
 import 'package:hardwarestore/screens/client/client_all_orders_screen.dart';
+import 'package:hardwarestore/screens/client/client_chat.dart';
 import 'package:hardwarestore/screens/client/client_home.dart';
 import 'package:hardwarestore/screens/home_admin.dart';
 import 'package:hardwarestore/screens/login_page.dart';
@@ -30,7 +32,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:io' show Platform;
 import 'package:hardwarestore/l10n/l10n.dart';
-import 'dart:io' show Platform;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
@@ -72,6 +73,8 @@ void main() async {
       ListenableProvider<ApplySearch>(
         create: (_) => ApplySearch(),
       ),
+      ListenableProvider<ChatListenerNotifier>(
+          create: (_) => ChatListenerNotifier()),
       ListenableProvider<GetCurrentUser>(create: (_) => GetCurrentUser())
     ], child: const IraqiStoreApp()),
   );
@@ -460,7 +463,9 @@ class _IraqiStoreAppState extends State<IraqiStoreApp> {
                     if (navigation.screenName == '/manage')
                       const MaterialPage(child: ManageAdminScreen()),
                     if (navigation.screenName == '/chat')
-                      const MaterialPage(child: Chat()),
+                      MaterialPage(child: ChatListScreen()),
+                    if (navigation.screenName == '/client-chat')
+                      MaterialPage(child: ClientChatScreen()),
                     if (navigation.screenName == '/product-admin')
                       const MaterialPage(child: ProductsAdminScreen()),
                     if (navigation.screenName == '/settings-screen')

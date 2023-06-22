@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/contact.dart';
+import 'package:hardwarestore/screens/screens.dart';
 import '../screens/admin/new_contact.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -253,21 +254,31 @@ class _ContactMiniAdminState extends State<ContactMiniAdmin> {
                                   child: IconButton(
                                     color: Colors.orange,
                                     icon: const Icon(Icons.message),
-                                    onPressed: () async {
-                                      if (widget.item == null ||
-                                          widget.item.phone == null ||
-                                          widget.item.phone == "") return;
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                                  contact: widget.item,
+                                                )),
+                                      );
+                                      // if (widget.item == null ||
+                                      //     widget.item.phone == null ||
+                                      //     widget.item.phone == "") return;
 
-                                      var url =
-                                          Uri.parse("sms:${widget.item.phone}");
-                                      if (await canLaunchUrl(url)) {
-                                        await launchUrl(url);
-                                      } else {
-                                        // Scaffold.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //         content: Text(
-                                        //             'Could not launch $url')));
-                                      }
+                                      // var url =
+                                      //     Uri.parse("sms:${widget.item.phone}");
+                                      // if (await canLaunchUrl(url)) {
+                                      //   await launchUrl(url);
+                                      // } else {
+                                      //   Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) => ChatScreen(
+                                      //               contact: widget.item,
+                                      //             )),
+                                      //   );
+                                      // }
                                     },
                                   )),
                             ],

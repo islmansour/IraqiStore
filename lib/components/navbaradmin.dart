@@ -44,8 +44,8 @@ class AdminBottomNav extends StatelessWidget {
             icon: Icon(Icons.category), label: translation.products),
         BottomNavigationBarItem(
             icon: Icon(Icons.apps), label: translation.manage),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.chat), label: translation.chat),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.chat), label: translation.chat),
       ],
     );
   }

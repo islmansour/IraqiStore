@@ -100,9 +100,16 @@ class _ManageContactScreenState extends State<ManageContactScreen> {
 
                                     switch (type) {
                                       case "Contact":
-                                        output = ContactMiniAdmin(
-                                            item: searchSnap.data![index].item
-                                                as Contact);
+                                        if ((searchSnap.data![index].item
+                                                    as Contact)
+                                                .phone !=
+                                            '0548004990') {
+                                          output = ContactMiniAdmin(
+                                              item: searchSnap.data![index].item
+                                                  as Contact);
+                                        } else {
+                                          output = Container();
+                                        }
                                         break;
                                     }
                                   }

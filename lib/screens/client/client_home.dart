@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hardwarestore/components/admin/lov.dart';
+import 'package:hardwarestore/components/client/sign_legal_docs.dart';
 import 'package:hardwarestore/components/user.dart';
+import 'package:hardwarestore/models/account.dart';
 import 'package:hardwarestore/models/user.dart';
 import 'package:hardwarestore/screens/settings.dart';
 import 'package:hardwarestore/services/api.dart';
@@ -25,37 +27,24 @@ class ClientHome extends StatefulWidget {
 }
 
 class _ClientHomeState extends State<ClientHome> {
+  bool missingLegelSignature = false;
+  Account? _acc;
   @override
   void initState() {
-    // try {
-    //   FirebaseMessaging.instance.getToken().then((value) {
-    //     AppUser? _user =
-    //         Provider.of<GetCurrentUser>(context, listen: false).currentUser;
-    //     if (_user != null) {
-    //       _user.token = value;
-    //       Provider.of<GetCurrentUser>(context, listen: false).updateUser(_user);
-    //       value;
-    //       print('_ClientHomeState upsertUser');
-    //       Repository().upsertUser(_user);
-    //     }
-    //   });
-    // } catch (e) {
-    //   print(e);
-    // }
-    // setState(() {
-    //   setState(() {
-    //     _loadActiveNews(context);
-    //     _loadAccounts(context);
+    _pullRefresh();
 
-    //     _loadContacts(context);
-    //     _loadUsers(context);
-    //     _loadProductss(context);
-    //     _loadOrders(context);
-    //     _loadLovs(context);
-    //     _loadQuotes(context);
-    //   });
-    // });
     super.initState();
+  }
+
+  _validateLegalDocuments() {
+    Provider.of<EntityModification>(context, listen: false)
+        .accounts
+        .forEach((element) {
+      if (element.missingLegalDocument) {
+        missingLegelSignature = true;
+        _acc = element;
+      }
+    });
   }
 
   Future<void> _pullRefresh() async {
@@ -70,7 +59,7 @@ class _ClientHomeState extends State<ClientHome> {
           Provider.of<GetCurrentUser>(context, listen: false)
               .updateUser(users.first);
         } catch (e) {
-          throw "$e";
+          //       throw "$e";
         }
       }
     }
@@ -111,6 +100,7 @@ class _ClientHomeState extends State<ClientHome> {
       _loadQuotes(context);
       _loadActiveNews(context);
     });
+    _validateLegalDocuments();
   }
 
   @override
@@ -143,14 +133,16 @@ class _ClientHomeState extends State<ClientHome> {
                       null)
                     Row(
                       children: [ClientHomeNews()],
-                    ), //operational row
-                  Row(
-                    children: [],
-                  ), //News
+                    ),
+                  missingLegelSignature
+                      ? Row(
+                          children: [SignLegalDocuments(account: _acc!)],
+                        )
+                      : //News
 
-                  Row(
-                    children: [NewOrderStepper()],
-                  ), //latest orders
+                      Row(
+                          children: [NewOrderStepper()],
+                        ), //latest orders
                 ]),
               ),
             )),

@@ -75,9 +75,12 @@ class _ProductDetailsAdminState extends State<ProductDetailsAdmin> {
       loading = true;
     });
 
-    ByteData bytes = await rootBundle.load(_image.path);
-    var buffer = bytes.buffer;
-    var m = base64.encode(Uint8List.view(buffer));
+    List<int> imageBytes = _image.readAsBytesSync();
+    String baseimage = base64Encode(imageBytes);
+
+    // ByteData bytes = await rootBundle.load(_image.path);
+    // var buffer = bytes.buffer;
+    var m = baseimage; //base64.encode(Uint8List.view(buffer));
 
     FormData formData = FormData.fromMap({"key": imgBBkey, "image": m});
 

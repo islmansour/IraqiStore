@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hardwarestore/models/contact.dart';
 import 'package:hardwarestore/models/legal_document.dart';
 import 'package:hardwarestore/services/tools.dart';
+import 'package:hardwarestore/widgets/guarantee_legal_form.dart';
 import 'package:hardwarestore/widgets/legal_form.dart';
 import 'package:hardwarestore/widgets/show_pdf.dart';
 import 'package:provider/provider.dart';
@@ -33,11 +34,32 @@ class _LegalFormMiniAdminState extends State<LegalFormMiniAdmin> {
           .where((element) => element.id == widget.item.contactId)
           .first;
     }
+    print(' a doc ${widget.item.id}');
 
     return InkWell(
         onTap: () {
           if (widget.item.documentLink == null ||
-              widget.item.documentLink == "") return null;
+              widget.item.documentLink == "") {
+            if (widget.item.name != 'supply')
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FormGuaranteegreement(
+                          document: widget.item,
+                        )),
+              );
+            else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FormDeliveryAgreement(
+                          document: widget.item,
+                        )),
+              );
+            }
+            return;
+          }
+          ;
           Navigator.push(
             context,
             MaterialPageRoute(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:hardwarestore/components/navbaradmin.dart';
-
+import 'package:hardwarestore/components/user.dart';
+import 'package:provider/provider.dart';
 import 'package:hardwarestore/screens/admin/accounts_screen.dart';
 import 'package:hardwarestore/screens/admin/all_news_scree.dart';
 import 'package:hardwarestore/screens/admin/all_quotes_screen.dart';
@@ -20,6 +20,16 @@ class ManageAdminScreen extends StatefulWidget {
 }
 
 class _ManageAdminScreenState extends State<ManageAdminScreen> {
+  String? env = "";
+
+  @override
+  void initState() {
+    env = Provider.of<GetCurrentUser>(context, listen: false)
+        .currentUser!
+        .userType;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,27 +119,28 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                     ],
                   )),
               Card(
+                  //profile setting
                   elevation: 10,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(150),
                   ),
                   child: Column(
                     children: [
                       Container(
                           child: IconButton(
                             icon: const Icon(
-                              Icons.shopping_basket,
+                              Icons.newspaper,
                               color: Colors.blue,
                               size: 40,
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AllQuotesScreen()),
-                              );
-                              //
+                              try {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AllNewsScreen()),
+                                );
+                              } catch (e) {}
                             },
                           ),
                           width: 80,
@@ -141,12 +152,51 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6.0),
                         child: Text(
-                          AppLocalizations.of(context)!.quote,
+                          AppLocalizations.of(context)!.news,
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                       )
                     ],
                   )),
+              // Card(
+              //     elevation: 10,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(100),
+              //     ),
+              //     child: Column(
+              //       children: [
+              //         Container(
+              //             child: IconButton(
+              //               icon: const Icon(
+              //                 Icons.shopping_basket,
+              //                 color: Colors.blue,
+              //                 size: 40,
+              //               ),
+              //               onPressed: () {
+              //                 Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                       builder: (context) =>
+              //                           const AllQuotesScreen()),
+              //                 );
+              //                 //
+              //               },
+              //             ),
+              //             width: 80,
+              //             height: 45,
+              //             decoration: const BoxDecoration(
+              //                 // The child of a round Card should be in round shape
+              //                 shape: BoxShape.circle,
+              //                 color: Colors.white)),
+              //         Padding(
+              //           padding: const EdgeInsets.only(bottom: 6.0),
+              //           child: Text(
+              //             AppLocalizations.of(context)!.quote,
+              //             style: Theme.of(context).textTheme.titleSmall,
+              //           ),
+              //         )
+              //       ],
+              //     )),
             ],
           ),
           Row(
@@ -191,46 +241,47 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                       )
                     ],
                   )),
-              Card(
-                  //users settings
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(150),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.manage_accounts,
-                              color: Colors.blue,
-                              size: 40,
+              if (env != 'test')
+                Card(
+                    //users settings
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(150),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.manage_accounts,
+                                color: Colors.blue,
+                                size: 40,
+                              ),
+                              onPressed: () {
+                                //ManageUserScreen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ManageUserScreen()),
+                                );
+                              },
                             ),
-                            onPressed: () {
-                              //ManageUserScreen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ManageUserScreen()),
-                              );
-                            },
+                            width: 80,
+                            height: 45,
+                            decoration: const BoxDecoration(
+                                // The child of a round Card should be in round shape
+                                shape: BoxShape.circle,
+                                color: Colors.white)),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: Text(
+                            AppLocalizations.of(context)!.users,
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
-                          width: 80,
-                          height: 45,
-                          decoration: const BoxDecoration(
-                              // The child of a round Card should be in round shape
-                              shape: BoxShape.circle,
-                              color: Colors.white)),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: Text(
-                          AppLocalizations.of(context)!.users,
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      )
-                    ],
-                  )),
+                        )
+                      ],
+                    )),
               Card(
                   elevation: 10,
                   shape: RoundedRectangleBorder(
@@ -310,46 +361,6 @@ class _ManageAdminScreenState extends State<ManageAdminScreen> {
                         padding: const EdgeInsets.only(bottom: 6.0),
                         child: Text(
                           AppLocalizations.of(context)!.settings,
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      )
-                    ],
-                  )),
-              Card(
-                  //profile setting
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(150),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.newspaper,
-                              color: Colors.blue,
-                              size: 40,
-                            ),
-                            onPressed: () {
-                              try {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AllNewsScreen()),
-                                );
-                              } catch (e) {}
-                            },
-                          ),
-                          width: 80,
-                          height: 45,
-                          decoration: const BoxDecoration(
-                              // The child of a round Card should be in round shape
-                              shape: BoxShape.circle,
-                              color: Colors.white)),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: Text(
-                          AppLocalizations.of(context)!.news,
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                       )

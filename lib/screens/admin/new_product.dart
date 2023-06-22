@@ -45,10 +45,12 @@ class _CreateNewProductFormState extends State<CreateNewProductForm> {
     setState(() {
       loading = true;
     });
+    List<int> imageBytes = _image.readAsBytesSync();
+    String baseimage = base64Encode(imageBytes);
 
-    ByteData bytes = await rootBundle.load(_image.path);
-    var buffer = bytes.buffer;
-    var m = base64.encode(Uint8List.view(buffer));
+    // ByteData bytes = await rootBundle.load(_image.path);
+    // var buffer = bytes.buffer;
+    var m = baseimage; //base64.encode(Uint8List.view(buffer));
 
     FormData formData = FormData.fromMap({"key": imgBBkey, "image": m});
 

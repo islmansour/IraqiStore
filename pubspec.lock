@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "39.0.0"
+  ably_flutter:
+    dependency: "direct main"
+    description:
+      name: ably_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.15"
   advance_pdf_viewer:
     dependency: "direct main"
     description:

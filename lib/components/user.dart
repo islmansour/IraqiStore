@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/services/api.dart';
-import 'package:hardwarestore/services/django_services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -46,6 +45,13 @@ class GetCurrentUser extends ChangeNotifier {
 
   void updateUser(AppUser user) {
     currentUser = user;
+    if (currentUser!.contact == null && currentUser!.contactId != null) {
+      Repository()
+          .getSingleContact(currentUser!.contactId.toString())
+          .then((value) {
+        currentUser!.contact = value;
+      });
+    }
     notifyListeners();
   }
 

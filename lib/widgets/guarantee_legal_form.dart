@@ -121,7 +121,10 @@ class _FormGuaranteegreementState extends State<FormGuaranteegreement> {
                 return Row(
                   children: <Widget>[
                     TextButton(
-                      onPressed: dtl.onStepCancel,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      // onPressed: dtl.onStepCancel,
                       child: Text(save == true ? 'ביטול' : 'ביטול'),
                     ),
                     TextButton(

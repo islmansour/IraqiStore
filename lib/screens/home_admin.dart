@@ -1,6 +1,5 @@
 import 'package:badges/badges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hardwarestore/components/admin/homepage_news.dart';
 import 'package:hardwarestore/components/user.dart';
@@ -56,7 +55,7 @@ class _HomeAdminState extends State<HomeAdmin> {
     // } catch (e) {
     //   print(e);
     // }
-    _pullRefresh();
+    if (mounted) _pullRefresh();
     super.initState();
   }
 
@@ -78,88 +77,48 @@ class _HomeAdminState extends State<HomeAdmin> {
       }
     }
     String _env = 'production';
-    if (Provider.of<GetCurrentUser>(context, listen: false).currentUser !=
-            null &&
-        Provider.of<GetCurrentUser>(context, listen: false)
-                .currentUser!
-                .userType !=
-            null) {
-      _env = Provider.of<GetCurrentUser>(context, listen: false)
-          .currentUser!
-          .userType
-          .toString();
-    }
-    switch (_env) {
-      case 'dev':
-        if (Platform.isIOS)
-          pref.setString('ipAddress', 'http://127.0.0.1:8000');
-        else
-          pref.setString('ipAddress', 'http://10.0.2.2:8000');
-        break;
-      case 'test':
-        pref.setString('ipAddress', 'http://139.162.139.161:8000');
-        break;
-      default:
-        pref.setString('ipAddress', 'http://www.arabapps.biz:8000');
-    }
+    if (mounted) {
+      if (Provider.of<GetCurrentUser>(context, listen: false).currentUser !=
+              null &&
+          Provider.of<GetCurrentUser>(context, listen: false)
+                  .currentUser!
+                  .userType !=
+              null) {
+        _env = Provider.of<GetCurrentUser>(context, listen: false)
+            .currentUser!
+            .userType
+            .toString();
+      }
+      switch (_env) {
+        case 'dev':
+          if (Platform.isIOS)
+            pref.setString('ipAddress', 'http://127.0.0.1:8000');
+          else
+            pref.setString('ipAddress', 'http://10.0.2.2:8000');
+          break;
+        case 'test':
+          pref.setString('ipAddress', 'http://139.162.139.161:8000');
+          break;
+        default:
+          pref.setString('ipAddress', 'http://www.arabapps.biz:8000');
+      }
 
-    setState(() {
-      _loadAccounts(context);
+      setState(() {
+        _loadAccounts(context);
 
-      _loadContacts(context);
-      _loadUsers(context);
-      _loadProductss(context);
-      _loadOrders(context);
-      _loadLovs(context);
-      _loadQuotes(context);
-      _loadNews(context);
-    });
+        _loadContacts(context);
+        _loadUsers(context);
+        _loadProductss(context);
+        _loadOrders(context);
+        _loadLovs(context);
+        _loadQuotes(context);
+        _loadNews(context);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // try {
-    //   if (widget.userPref.getString('username') != null &&
-    //       widget.userPref.getString('username') != "") {
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .accounts
-    //         .isEmpty) _loadAccounts(context);
-    //     print('loaded accounts...');
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .contacts
-    //         .isEmpty) {
-    //       _loadContacts(context);
-    //       _loadUsers(context);
-    //       print('loaded contacts & users...');
-    //     }
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .products
-    //         .isEmpty) _loadProductss(context);
-    //     print('loaded products...');
-
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .order
-    //         .isEmpty) {
-    //       _loadOrders(context);
-    //     }
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .quotes
-    //         .isEmpty) {
-    //       _loadQuotes(context);
-    //     }
-
-    //     if (Provider.of<EntityModification>(context, listen: false)
-    //         .lov
-    //         .isEmpty) {
-    //       _loadLovs(context);
-    //     }
-    //     if (Provider.of<EntityModification>(context).allNews.isEmpty) {
-    //       _loadNews(context);
-    //     }
-    //   }
-    //   data_loaded = true;
-    // } catch (e) {}
-
     return Scaffold(
       floatingActionButton: const AdminBubbleButtons(),
       body: RefreshIndicator(

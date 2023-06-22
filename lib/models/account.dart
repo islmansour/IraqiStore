@@ -32,6 +32,17 @@ class Account {
   int? created_by;
 
   @JsonKey(ignore: true)
+  bool get missingLegalDocument {
+    bool result = false;
+    if (accountLegalForms != null)
+      accountLegalForms!.forEach((element) {
+        if (element.documentLink == null || element.documentLink!.isEmpty)
+          result = true;
+      });
+    return result;
+  }
+
+  @JsonKey(ignore: true)
   List<Contact>? accountContacts;
   @JsonKey(ignore: true)
   List<Order>? accountOrders;
@@ -56,10 +67,21 @@ class Account {
       this.street,
       this.street2,
       this.town,
-      this.zip}) {}
+      this.zip}) {
+    loadAccountLegal();
+  }
 
   loadAccountContact() async {
     accountContacts = await Repository().getAccountContact(this.id.toString());
+  }
+
+  loadAccountLegal() async {
+    try{
+    accountLegalForms =
+        await Repository().getFormsByAccount(this.id.toString());
+    }
+    catch(e)
+    {}
   }
 
   loadAccountOrders() async {
